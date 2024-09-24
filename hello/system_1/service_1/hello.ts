@@ -1,12 +1,13 @@
 import {api, APIError, Header} from "encore.dev/api";
 import {appMeta, currentRequest} from "encore.dev";
 import log from "encore.dev/log";
+import { my_service_three } from "~encore/clients";
 
 /**
  * Basic Description
  */
-export const get = api({expose: true, method: "GET", path: "/hello/:name"}, async (params: DefaultRequest): Promise<DefaultResponse> => {
-        const msg = `Hello ${params.name}!`;
+export const hello = api({expose: true, method: "GET", path: "/hello/:name"}, async (params: DefaultRequest): Promise<DefaultResponse> => {
+        const msg = `Hello ${params.name}! From service 1`;
 
         console.log(""); // New line
         log.trace("Metadata:", appMeta());
@@ -25,7 +26,9 @@ export const get = api({expose: true, method: "GET", path: "/hello/:name"}, asyn
         log.info("log message", {is_subscriber: true})
         // log.error("err", "something went terribly wrong!")
 
-        return { message: msg };
+        const { message: service_three_resp } = await my_service_three.hello3({ name: 'xxx', test: 'test '});
+
+        return { message: JSON.stringify({ msg, service_three_resp }) };
     }
 );
 
