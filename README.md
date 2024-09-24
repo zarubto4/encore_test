@@ -17,13 +17,9 @@ encore run
 
 While `encore run` is running, open <http://localhost:9400/> to view Encore's [local developer dashboard](https://encore.dev/docs/observability/dev-dash).
 
-## Using the API
+encore gen client --output=./client.ts --env=locale
 
-To see that your app is running, you can ping the API.
 
-```bash
-curl http://localhost:4000/hello/World
-```
 
 ## Deployment
 
@@ -46,3 +42,6 @@ Now off you go into the clouds!
 ```bash
 encore test
 ```
+
+
+

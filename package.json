@@ -6,7 +6,10 @@
   "license": "MPL-2.0",
   "type": "module",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "gen": " encore gen client test-app-fwsi --output=./client.ts --env=local",
+    "gen_open_api": "encore gen client --lang=openapi --output=./openapi.json --env=local"
+
   },
   "devDependencies": {
     "@types/node": "^20.5.7",
