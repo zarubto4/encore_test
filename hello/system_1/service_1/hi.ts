@@ -11,7 +11,6 @@ export const hi = api({expose: true, method: "GET", path: "/hi/:name"}, async (p
     }
 );
 
-
 interface DefaultRequest {
     name: string,
     test: string
@@ -19,19 +18,4 @@ interface DefaultRequest {
 
 export interface DefaultResponse {
     message: string;
-}
-
-
-async function audit(userID: string, event: Record<string, any>) {
-    const cloud = appMeta().environment.cloud;
-    switch (cloud) {
-        case "aws":
-            return; // writeIntoRedshift(userID, event);
-        case "gcp":
-            return; //writeIntoBigQuery(userID, event);
-        case "local":
-            return; // writeIntoFile(userID, event);
-        default:
-            throw new Error(`unknown cloud: ${cloud}`);
-    }
 }
