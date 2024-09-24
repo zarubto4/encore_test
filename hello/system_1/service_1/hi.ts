@@ -1,6 +1,5 @@
 import {api, APIError, Header} from "encore.dev/api";
-import {appMeta, currentRequest} from "encore.dev";
-import log from "encore.dev/log";
+
 
 /**
  * Basic Description

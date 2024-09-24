@@ -8,7 +8,7 @@ export const hello2 = api<Request, DefaultResponse>(
     const msg = `Hello ${params.name}! From service 2`;
     console.log("header ", params.language);
 
-    const { message: service_one_resp } = await my_service_one.hello({ name: "World", test: "test" });
+    const { message: service_one_resp } = await my_service_one.hallo1({ name: "World", test: "test" });
 
     const message = JSON.stringify({ msg, service_one_resp });
 

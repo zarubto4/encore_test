@@ -1,12 +1,15 @@
 import {api, APIError, Header} from "encore.dev/api";
 import {appMeta, currentRequest} from "encore.dev";
 import log from "encore.dev/log";
-import { my_service_three } from "~encore/clients";
+import {my_service_three} from "~encore/clients";
+
+
+
 
 /**
  * Basic Description
  */
-export const hello = api({expose: true, method: "GET", path: "/hello/:name"}, async (params: DefaultRequest): Promise<DefaultResponse> => {
+export const hallo1 = api({expose: true, method: "GET", path: "/hello/:name"}, async (params: DefaultRequest): Promise<DefaultResponse> => {
         const msg = `Hello ${params.name}! From service 1`;
 
         console.log(""); // New line

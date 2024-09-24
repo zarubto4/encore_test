@@ -49,7 +49,7 @@
   "paths": {
     "/hello/{name}": {
       "get": {
-        "operationId": "GET:my_service_one.get",
+        "operationId": "GET:my_service_one.hallo1",
         "parameters": [
           {
             "allowEmptyValue": true,
@@ -96,12 +96,13 @@
           "default": {
             "$ref": "#/components/responses/APIError"
           }
-        }
+        },
+        "summary": "Basic Description\n"
       }
     },
     "/hello2/{name}": {
       "get": {
-        "operationId": "GET:my_service_two.test",
+        "operationId": "GET:my_service_two.hello2",
         "parameters": [
           {
             "allowEmptyValue": true,
@@ -153,7 +154,7 @@
     },
     "/hello3/{name}": {
       "get": {
-        "operationId": "GET:my_service_three.get",
+        "operationId": "GET:my_service_three.hello3",
         "parameters": [
           {
             "allowEmptyValue": true,
@@ -201,6 +202,59 @@
             "$ref": "#/components/responses/APIError"
           }
         }
+      }
+    },
+    "/hi/{name}": {
+      "get": {
+        "operationId": "GET:my_service_one.hi",
+        "parameters": [
+          {
+            "allowEmptyValue": true,
+            "explode": false,
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "simple"
+          },
+          {
+            "allowEmptyValue": true,
+            "explode": true,
+            "in": "query",
+            "name": "test",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success response"
+          },
+          "default": {
+            "$ref": "#/components/responses/APIError"
+          }
+        },
+        "summary": "Basic Description\n"
       }
     }
   },
