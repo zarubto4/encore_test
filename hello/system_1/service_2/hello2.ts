@@ -1,25 +1,23 @@
-import {api, APIError, ErrCode, Header} from "encore.dev/api";
-import {DefaultResponse} from "../service_1/hello";
-import { my_service_one } from "~encore/clients"; // import 'hello' service
+import { api, APIError, ErrCode, Header } from "encore.dev/api";
+import { DefaultResponse } from "../service_1/hello";
+import { my_service_one } from "~encore/clients";
 
+export const hello2 = api<Request, DefaultResponse>(
+  { expose: true, method: "GET", path: "/hello2/:name" },
+  async (params) => {
+    const msg = `Hello ${params.name}! From service 2`;
+    console.log("header ", params.language);
 
+    const { message: service_one_resp } = await my_service_one.hello({ name: "World", test: "test" });
 
-export const test = api<Request2, DefaultResponse >({ expose: true, method: "GET", path: "/hello2/:name"}, async (params)=> {
-        const msg = `Hello ${params.name}!`;
-        console.log("HEader ", params.language);
+    const message = JSON.stringify({ msg, service_one_resp });
 
-        const resp = await my_service_one.get({ name: "World", test: "test"});
-
-      // throw new APIError(ErrCode.NotFound, "sprocket not found");
-
-        console.log("result middle:", resp);
-
-        return { message: msg };
-    }
+    // throw new APIError(ErrCode.NotFound, "sprocket not found");
+    return { message };
+  }
 );
 
-interface Request2 {
-    language: Header<"header-test">; // parsed from header
-    name: string; // not a header
+interface Request {
+  language: Header<"header-test">; // parsed from header
+  name: string; // not a header
 }
-
