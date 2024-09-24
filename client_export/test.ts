@@ -1,4 +1,5 @@
 
+/*
  import Client, {Environment} from "./client"; // import 'hello' service
 
  const client = new Client(Environment("stage"));
@@ -14,4 +15,4 @@ function sa() {
         })
 
 }
-
+*/

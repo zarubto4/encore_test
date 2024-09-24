@@ -10,9 +10,9 @@ export const test = api<Request2, DefaultResponse >({ expose: true, method: "GET
 
         const resp = await my_service_one.get({ name: "World", test: "test"});
 
-       throw new APIError(ErrCode.NotFound, "sprocket not found");
+      // throw new APIError(ErrCode.NotFound, "sprocket not found");
 
-      console.log("result middle:", resp);
+        console.log("result middle:", resp);
 
         return { message: msg };
     }

@@ -3,8 +3,8 @@
   "compilerOptions": {
     /* Basic Options */
     "lib": [
-      "ES2022",
-      "dom"
+      "ES2022"
+     // "dom"
     ],
     "target": "ES2022",
     "module": "ES2022",
