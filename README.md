@@ -90,7 +90,6 @@ event-driven and utilize "Functions as a Service" (FaaS) and automatically scale
       1) BECAUSE there is a system that tracks all the code you create and produces a quarterly evaluation of your work. 
       2) The cleanliness of the code, the amount of comments. Proper type protection.
       3) All of which the AI knows how to score.
-
 4) Set your IDE (Webstorm)
    1) Plugins to Install 
       1) Grazie pro: [link](https://plugins.jetbrains.com/plugin/16136-grazie-pro)

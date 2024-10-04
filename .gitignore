@@ -6,3 +6,4 @@ node_modules
 /encore.gen
 .idea
 /package-lock.json
+src/**/*.js
