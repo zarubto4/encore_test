@@ -39,19 +39,18 @@ export const hallo1 = api({expose: true, method: "POST", path: "/hello"}, async 
 );
 
 
-
 const validator = {
     validate: (request: DefaultRequest): z.infer<typeof DefaultValidRequest> => {
         const parsing = DefaultValidRequest.safeParse(request); // Valid incoming Request
         if (parsing.error) {
             //console.log("Co je špatně?:", parsing.error);
             console.log("Co je špatně? message:", parsing.error.errors);
-            throw new APIError(ErrCode.InvalidArgument, JSON.stringify(parsing.error.errors));
-            //return {
-            //    username: "string",
-            //    name: "string",
-            //    test: "string",
-            //};
+            //  throw new APIError(ErrCode.InvalidArgument, JSON.stringify(parsing.error.errors));
+            return {
+                username: "string",
+                name: "string",
+                test: "string",
+            };
         }
         return parsing.data;
     }
