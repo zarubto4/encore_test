@@ -49,6 +49,7 @@
   "paths": {
     "/hello/{name}": {
       "get": {
+        "description": "@param {{ name: string; method: string; url: string; isWarningDeprecated: boolean; isExistParams: boolean; defaultParams: object; }} params @param {{ swaggerData: { info: object; paths: object; components: object; }; requestSwaggerData: { operationId: string; requestBody?: object; responses: object }; changeCase: { paramCase: Function; camelCase: Function; pascalCase: Function; ... }; }} extra\n",
         "operationId": "GET:my_service_one.hallo1",
         "parameters": [
           {
@@ -64,6 +65,7 @@
           },
           {
             "allowEmptyValue": true,
+            "description": "Kinda piča @required false\n",
             "explode": true,
             "in": "query",
             "name": "test",

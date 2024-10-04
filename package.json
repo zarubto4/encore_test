@@ -9,15 +9,22 @@
     "test": "vitest",
     "gen": " encore gen client test-app-fwsi --output=./client_export/client.ts --env=local",
     "gen_open_api": "encore gen client --lang=openapi --output=./client_export/openapi.json --env=local"
-
   },
   "devDependencies": {
+    "@types/asana": "^0.18.16",
     "@types/node": "^20.5.7",
     "typescript": "^5.2.2",
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "encore.dev": "^1.41.4"
+    "asana": "^3.0.7",
+    "encore.dev": "^1.41.4",
+    "google-auth-library": "^9.10.0",
+    "google-spreadsheet": "^4.1.2",
+    "jira.js": "^4.0.1",
+    "jsonschema": "^1.4.1",
+    "moment": "^2.30.1",
+    "zod": "^3.23.8"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.13.0"

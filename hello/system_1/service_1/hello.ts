@@ -1,61 +1,60 @@
-import {api, APIError, Header} from "encore.dev/api";
+import {api, APIError, ErrCode, Header} from "encore.dev/api";
 import {appMeta, currentRequest} from "encore.dev";
 import log from "encore.dev/log";
 import {my_service_three} from "~encore/clients";
+import { z } from "zod";
 
 
 
-
-/**
- * Basic Description
- */
-export const hallo1 = api({expose: true, method: "GET", path: "/hello/:name"}, async (params: DefaultRequest): Promise<DefaultResponse> => {
-        const msg = `Hello ${params.name}! From service 1`;
-
-        console.log(""); // New line
-        log.trace("Metadata:", appMeta());
-
-        console.log(""); // New line
-        log.trace("Metadata:", {"call" : currentRequest()?.type ?? "not found" });
-
-        console.log(""); // New line
-        audit("sdasdasd", {"key": "value", "s": "sa"});
-
-        if(params.name == "test") {
-            throw APIError.notFound("url not found");
-        }
-
-        console.log(""); // New line
-        log.info("log message", {is_subscriber: true})
-        // log.error("err", "something went terribly wrong!")
-
-        const { message: service_three_resp } = await my_service_three.hello3({ name: 'xxx', test: 'test '});
-
-        return { message: JSON.stringify({ msg, service_three_resp }) };
-    }
-);
-
-
-interface DefaultRequest {
-    name: string,
-    test: string
+// ---- Request ----------------------------------------------------
+// Basic Description about this Default Request
+export interface DefaultRequest{
+    // User name description
+    username: string;
+    name: string;
+    test: string;
 }
 
+const DefaultValidRequest = z.object({
+    username: z.string().email(),
+    name: z.string(),
+    test: z.string().min(4).max(10)
+});
+
+// ---- Response ----------------------------------------------------
+// Basic Description about this Default Response
 export interface DefaultResponse {
     message: string;
 }
 
+/**
+ * Hello1 Best API description
+ * @param {object} request - Incoming Request
+ * @param {string} request.test - Testing Parameter
+ */
+export const hallo1 = api({expose: true, method: "POST", path: "/hello"}, async (request: DefaultRequest): Promise<DefaultResponse> => {
+        const parsing = validator.validate(request); // Valid incoming Request
+        return { message: "thanks"};
+    }
+);
 
-async function audit(userID: string, event: Record<string, any>) {
-    const cloud = appMeta().environment.cloud;
-    switch (cloud) {
-        case "aws":
-            return; // writeIntoRedshift(userID, event);
-        case "gcp":
-            return; //writeIntoBigQuery(userID, event);
-        case "local":
-            return; // writeIntoFile(userID, event);
-        default:
-            throw new Error(`unknown cloud: ${cloud}`);
+
+
+const validator = {
+    validate: (request: DefaultRequest): z.infer<typeof DefaultValidRequest> => {
+        const parsing = DefaultValidRequest.safeParse(request); // Valid incoming Request
+        if (parsing.error) {
+            //console.log("Co je špatně?:", parsing.error);
+            console.log("Co je špatně? message:", parsing.error.errors);
+            throw new APIError(ErrCode.InvalidArgument, JSON.stringify(parsing.error.errors));
+            //return {
+            //    username: "string",
+            //    name: "string",
+            //    test: "string",
+            //};
+        }
+        return parsing.data;
     }
 }
+
+
