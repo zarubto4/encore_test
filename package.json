@@ -1,9 +1,9 @@
 {
-  "name": "encore-ts-starter",
+  "name": "groupon-serverless-core",
   "private": true,
   "version": "0.0.1",
   "description": "Encore Typescript Starter",
-  "license": "MPL-2.0",
+  "license": "Private Groupon property",
   "type": "module",
   "scripts": {
     "test": "vitest",

@@ -1,6 +1,6 @@
 
 import moment from "moment";
-import {TransformationKindlyReminderUniversalRequest} from "../hello_3";
+import {TransformationKindlyReminderUniversalRequest} from "../controller";
 import {GetIssueUserStatistics} from "./getIssues/getIssueStatistics";
 import {UpdateWeekConditionIntoWeekOverview} from "./dashboard/updateWeekTotalReport";
 import {GetDashBoardAndConditions} from "./dashboard/getDashboardAndConditions";

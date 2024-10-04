@@ -1,6 +1,6 @@
 
 import moment from "moment/moment.js";
-import {TransformationKindlyReminderValidatorRequest} from "../hello_3";
+import {TransformationKindlyReminderValidatorRequest} from "../controller";
 import {UserStage} from "./userWorkSheet/prepareUserStatsStage";
 import {ProjectStage} from "./projectWorkSheet/prepareProjectStatsStage";
 import {ActiveIssueWorkSheetWithIssues, ActiveWorkSheetIssue} from "./getIssues/_models";
