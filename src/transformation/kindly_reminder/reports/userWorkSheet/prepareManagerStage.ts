@@ -5,8 +5,6 @@ import {
     kindlyReminder_spreadSheetId,
     KindlyReminderConfigApp
 } from "../../encore.service";
-import {ActiveWorkSheetIssue} from "../getIssues/_models";
-
 
 export class Groupon_VPS {
     public vps: string[] = [
@@ -20,8 +18,8 @@ export class Groupon_VPS {
         // "Barbara Weisz",       // CSO
         // "Jiri Ponrt",          // CFO
         "c_zvydrova@groupon.com", // "Zuzana Vydrova",       // FF Director
-       "alindsey@groupon.com",    // "Adam Lindsey",         // GO Director
-       "c_zlinc@groupon.com",     // "Zdenek Linc",          // CMO
+        "alindsey@groupon.com",    // "Adam Lindsey",         // GO Director
+        "c_zlinc@groupon.com",     // "Zdenek Linc",          // CMO
     ]
 }
 
@@ -36,85 +34,75 @@ export class ManagerStage {
     constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
-    public getManagers(): Promise<ManagerUserWorkSheet> {
+    public async getManagers(): Promise<ManagerUserWorkSheet> {
         console.log("getManagers: init =========================================================================");
         if (ManagerStage.sheetCopy) {
-            return new Promise((resolve, reject): void => {
-                resolve(
-                    ManagerStage.sheetCopy
-                );
-            });
+            return ManagerStage.sheetCopy;
         } else {
-            return new Promise((resolve): void => {
-                const managerStructure: { [userName: string]: ManagerStructure } = {};
-                this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_managersWorkSheetId)
-                    .then(async (result) => {
-                        console.log("getManagers: get Worksheet done");
-                        const rows = await result.sheet.getRows();
-                        await result.sheet.loadCells('A1:BD12');
-                        console.log("getManagers: get Rows done");
-                        return {...result, ...{rows: rows}};
-                    })
-                    .then(async (result) => {
-                        return result.sheet.loadHeaderRow(1).then(() => {
-                            console.log("getManagers: get Headers done");
-                            return result;
-                        });
-                    })
-                    .then(async (result) => {
 
-                        console.log("getManagers: Users overview ------------------------------");
-                        for (const row of result.rows) {
+            const managerStructure: { [userName: string]: ManagerStructure } = {};
+            const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_managersWorkSheetId)
 
-                            const workerNameCell = row.get("Worker Object");
-                            const workerEmailCell = row.get("Email - Primary Work");
-                            const workerUserNameCell = row.get("User Name");
-                            const activeStatusCell = row.get("Active Status");
-                            const lastDayCell = row.get("Last Day Of Work");
-                            let workerName: string = workerNameCell.replace(' [C]', '').replace(' (On Leave)', '');
+            console.log("getManagers: get Worksheet done");
+            const rows = await result.sheet.getRows();
+            await result.sheet.loadCells('A1:BD12');
+            console.log("getManagers: get Rows done");
 
-                            if (activeStatusCell != "Yes") {
-                                continue;
-                            }
+            await result.sheet.loadHeaderRow(1);
+            console.log("getManagers: get Headers done");
 
-                            console.log("getManagers: user:", workerName);
-                            if (!managerStructure[workerName]) {
-                                managerStructure[workerName] = {
-                                    workerName: workerName,
-                                    workerUserName: workerUserNameCell,
-                                    workerEmail: workerEmailCell,
-                                    stillWorking: (activeStatusCell != null && activeStatusCell == "YES"),
-                                    lastDayInJob: lastDayCell,
-                                    manager: null,
-                                    vicePresidentLevelManager: null
-                                }
-                            } else if (managerStructure[workerName]) {
-                                console.log("                 : user already Exist in schema");
-                                if (managerStructure[workerName].lastDayInJob == null && lastDayCell) {
-                                    console.log("                 : user already Exist and this position ended. Manager is probably obsolete");
-                                } else if (managerStructure[workerName].lastDayInJob != null && lastDayCell) {
-                                    console.log("                 : user already Exist and this position is still open. So manager must be overrided");
-                                }
-                            }
+            console.log("getManagers: Users overview ------------------------------");
+            for (const row of rows) {
 
-                            if (managerStructure[workerName] && !managerStructure[workerName].workerEmail) {
-                                console.log("                 : user already Exist in schema - Setting emails");
-                                managerStructure[workerName].workerEmail = workerEmailCell;
-                                managerStructure[workerName].workerUserName = workerUserNameCell;
-                            }
+                const workerNameCell = row.get("Worker Object");
+                const workerEmailCell = row.get("Email - Primary Work");
+                const workerUserNameCell = row.get("User Name");
+                const activeStatusCell = row.get("Active Status");
+                const lastDayCell = row.get("Last Day Of Work");
+                let workerName: string = workerNameCell.replace(' [C]', '').replace(' (On Leave)', '');
 
-                            // Get Direct Manager
-                            this.getDirectManager(row, managerStructure[workerName], managerStructure);
+                if (activeStatusCell != "Yes") {
+                    continue;
+                }
 
-                            // Find VP level Manager
-                            this.getVPLevelManager(row, managerStructure[workerName], managerStructure);
-                        }
+                console.log("getManagers: user:", workerName);
+                if (!managerStructure[workerName]) {
+                    managerStructure[workerName] = {
+                        workerName: workerName,
+                        workerUserName: workerUserNameCell,
+                        workerEmail: workerEmailCell,
+                        stillWorking: (activeStatusCell != null && activeStatusCell == "YES"),
+                        lastDayInJob: lastDayCell,
+                        manager: null,
+                        vicePresidentLevelManager: null
+                    }
+                } else if (managerStructure[workerName]) {
+                    console.log("                 : user already Exist in schema");
+                    if (managerStructure[workerName].lastDayInJob == null && lastDayCell) {
+                        console.log("                 : user already Exist and this position ended. Manager is probably obsolete");
+                    } else if (managerStructure[workerName].lastDayInJob != null && lastDayCell) {
+                        console.log("                 : user already Exist and this position is still open. So manager must be overrided");
+                    }
+                }
 
-                        ManagerStage.sheetCopy = {...result, ...{managerStructure: managerStructure}}
+                if (managerStructure[workerName] && !managerStructure[workerName].workerEmail) {
+                    console.log("                 : user already Exist in schema - Setting emails");
+                    managerStructure[workerName].workerEmail = workerEmailCell;
+                    managerStructure[workerName].workerUserName = workerUserNameCell;
+                }
 
-                        resolve(ManagerStage.sheetCopy);
-                    });
-            });
+                // Get Direct Manager
+                this.getDirectManager(row, managerStructure[workerName], managerStructure);
+
+                // Find VP level Manager
+                this.getVPLevelManager(row, managerStructure[workerName], managerStructure);
+            }
+
+            ManagerStage.sheetCopy = {...result, ...{managerStructure: managerStructure}}
+
+            return  ManagerStage.sheetCopy;
+
+
         }
     }
 

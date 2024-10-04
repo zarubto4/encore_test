@@ -10,10 +10,9 @@ export const cronValidWeek = api({expose: false}, async (): Promise<void> => {
     );
 });
 
-
 const _kindlyReminder_weeklyChecker = new CronJob("transformation-kindlyReminder-weeklyChecker", {
     title: "Check Latest Week",
     every: "4h",
     endpoint: cronValidWeek,
-})
+});
 

@@ -8,12 +8,23 @@
   "scripts": {
     "test": "vitest",
     "gen": " encore gen client test-app-fwsi --output=./client_export/client.ts --env=local",
-    "gen_open_api": "encore gen client --lang=openapi --output=./client_export/openapi.json --env=local"
+    "gen_open_api": "encore gen client --lang=openapi --output=./client_export/openapi.json --env=local",
+
+
+    "lint": "npx eslint .",
+    "validate": "npm-run-all --parallel test lint",
+    "precommit": "npm validate",
+    "prepush": "npm validate"
   },
   "devDependencies": {
+    "@eslint/js": "^9.11.1",
     "@types/asana": "^0.18.16",
+    "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.5.7",
-    "typescript": "^5.2.2",
+    "eslint": "^9.11.1",
+    "husky": "^9.1.6",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0",
     "vitest": "^1.5.0"
   },
   "dependencies": {
