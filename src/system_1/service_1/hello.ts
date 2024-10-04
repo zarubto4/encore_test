@@ -34,7 +34,7 @@ export interface DefaultResponse {
  */
 export const hallo1 = api({expose: true, method: "POST", path: "/hello"}, async (request: DefaultRequest): Promise<DefaultResponse> => {
         const parsing = validator.validate(request); // Valid incoming Request
-        return { message: "thanks"};
+        return { message: "Hello world!"};
     }
 );
 
