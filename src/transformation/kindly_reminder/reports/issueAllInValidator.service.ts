@@ -1,13 +1,13 @@
 
 import moment from "moment/moment.js";
-import {TransformationKindlyReminderValidatorRequest} from "../controller";
 import {UserStage} from "./userWorkSheet/prepareUserStatsStage";
-import {ProjectStage} from "./projectWorkSheet/prepareProjectStatsStage";
-import {ActiveIssueWorkSheetWithIssues, ActiveWorkSheetIssue} from "./getIssues/_models";
+import {ProjectStage} from "./projectWorkSheet/prepareProjectStatsStage.service";
+import {ActiveIssueWorkSheetWithIssues} from "./getIssues/_models";
 import {GetPrintedIssuesList} from "./getIssues/getPrintedIssues";
 import {KindlyReminderConfigApp} from "../encore.service";
 import {Print} from "./issuesPrint/printIntWorkSheets";
 import {JiraIssueValidator} from "./issueValidation/issueAllInValidator";
+import {TransformationKindlyReminderValidatorRequest} from "../api_models/controller_models";
 
 
 export class IssueListForValidation {

@@ -2,7 +2,7 @@ import {GoogleSpreadsheetWorksheet} from "google-spreadsheet";
 import {UpdateWeekConditionIntoWeekOverview} from "../dashboard/updateWeekTotalReport";
 import {ActiveWorkSheetIssue, WeekWorkSheet} from "./_models";
 import {kindlyReminder_spreadSheetId, KindlyReminderConfigApp} from "../../encore.service";
-import {IssueAllInHunterGenerator} from "../issueAllInHunterGenerator";
+import {IssueAllInHunterGenerator} from "../issueAllInHunterGenerator.service";
 
 /**
  * Najde ID worksheetu podle aktuálního týdne.

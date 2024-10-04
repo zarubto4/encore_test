@@ -25,7 +25,6 @@ export interface TransformationKindlyReminderUniversalRequest {
 }
 
 export interface TransformationKindlyReminderValidatorRequest {
-    name: ('valid_week');
     value: number
 }
 

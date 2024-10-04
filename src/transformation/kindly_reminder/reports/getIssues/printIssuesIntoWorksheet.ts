@@ -1,7 +1,7 @@
 
 import {GetDashBoardAndConditions,} from "../dashboard/getDashboardAndConditions";
 import {GetPrintedIssuesList} from "./getPrintedIssues";
-import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage";
+import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage.service";
 import {UserStage} from "../userWorkSheet/prepareUserStatsStage";
 import {
     IssueLog,

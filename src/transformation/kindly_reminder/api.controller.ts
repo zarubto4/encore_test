@@ -1,5 +1,5 @@
 import { api } from "encore.dev/api";
-import {JiraBugWeekHunterChecker} from "./reports/issueAllInValidator";
+import {JiraBugWeekHunterChecker} from "./reports/issueAllInValidator.service";
 import {
     TransformationKindlyReminderUniversalRequest,
     TransformationKindlyReminderUniversalResponse,

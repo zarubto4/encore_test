@@ -6,7 +6,6 @@ import {
     kindlyReminder_spreadSheetId,
     KindlyReminderConfigApp
 } from "../../encore.service";
-import {ActiveWorkSheetIssue} from "../getIssues/_models";
 
 export class FindAndSynchronizeProjects {
 

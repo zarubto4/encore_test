@@ -1,5 +1,5 @@
 import {UserStage} from "../userWorkSheet/prepareUserStatsStage";
-import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage";
+import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage.service";
 import {GetPrintedIssuesList} from "../getIssues/getPrintedIssues";
 import {IssueUserStructure, Stats} from "./_models";
 import {ManagerUserWorkSheet} from "../userWorkSheet/_models";

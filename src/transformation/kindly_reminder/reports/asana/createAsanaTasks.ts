@@ -1,6 +1,6 @@
 import {Groupon_VPS} from "../userWorkSheet/prepareManagerStage";
 import moment, {Moment} from "moment/moment.js";
-import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage";
+import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage.service";
 import {GetIssueUserStatistics} from "../getIssues/getIssueStatistics";
 import {AsanaIssueContent} from "./asanaIssueContent";
 import {CreateTaskForIssuesOwner, CreateTaskForProjectOwner, CreateTaskForVP, GetListOfIssues} from "./_models";
