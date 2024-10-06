@@ -9,7 +9,8 @@ export default tseslint.config(
     ...tseslint.configs.stylistic,
     ...tseslint.configs.strict,
     {
-        files: ['/src/**/*.ts']
+        files: ['/src/**/*.ts'],
+        ignorePatterns: [/node_modules/],
     }
 
 );

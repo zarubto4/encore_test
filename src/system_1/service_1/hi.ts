@@ -1,5 +1,4 @@
-import {api, APIError, Header} from "encore.dev/api";
-
+import {api} from "encore.dev/api";
 
 /**
  * Basic Description

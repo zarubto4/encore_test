@@ -1,9 +1,5 @@
-import {api, APIError, ErrCode, Header} from "encore.dev/api";
-import {appMeta, currentRequest} from "encore.dev";
-import log from "encore.dev/log";
-import {my_service_three} from "~encore/clients";
+import {api} from "encore.dev/api";
 import { z } from "zod";
-
 
 
 // ---- Request ----------------------------------------------------
@@ -34,7 +30,7 @@ export interface DefaultResponse {
  */
 export const hallo1 = api({expose: true, method: "POST", path: "/hello"}, async (request: DefaultRequest): Promise<DefaultResponse> => {
         const parsing = validator.validate(request); // Valid incoming Request
-        return { message: "Hello world!"};
+        return { message: "Hello world!", ... parsing};
     }
 );
 
@@ -43,9 +39,7 @@ const validator = {
     validate: (request: DefaultRequest): z.infer<typeof DefaultValidRequest> => {
         const parsing = DefaultValidRequest.safeParse(request); // Valid incoming Request
         if (parsing.error) {
-            //console.log("Co je špatně?:", parsing.error);
-            console.log("Co je špatně? message:", parsing.error.errors);
-            //  throw new APIError(ErrCode.InvalidArgument, JSON.stringify(parsing.error.errors));
+            // throw new APIError(ErrCode.InvalidArgument, JSON.stringify(parsing.error.errors));
             return {
                 username: "string",
                 name: "string",

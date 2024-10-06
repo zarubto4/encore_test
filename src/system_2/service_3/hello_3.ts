@@ -1,7 +1,9 @@
-import { api, Header } from "encore.dev/api";
-import { appMeta, currentRequest } from "encore.dev";
-import log from "encore.dev/log";
+import { api } from "encore.dev/api";
 
+
+/**
+ * Hallo 3 test
+ */
 export const hello3 = api(
   { expose: true, method: "GET", path: "/hello3/:name" },
   async (params: DefaultRequest): Promise<DefaultResponse> => {

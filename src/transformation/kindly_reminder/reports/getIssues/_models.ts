@@ -11,9 +11,7 @@ import {ExtendedIssue} from "../../../../_libraries/3partyApis/jira/models/jira_
 
 export interface WriteIssuesWithAllConditionsContent {
     extendedTicket: ExtendedIssue;
-    ourIssues: {
-        [scriptName: string]: SearchCondition
-    };
+    ourIssues: Record<string, SearchCondition>; // key: scriptName
     tempoHours?: number;
     activeWorkSheetIssue: ActiveIssueWorkSheetWithIssues;
     projectWorkSheet: ProjectWorkSheet;
@@ -94,9 +92,8 @@ export class WeekIssueWorkSheetCellIndexes {
         responsibilityOwnerEmailCell: 'S',
         ticketOwnerEmailCell: 'R',
         ticketVPEmailCell: 'P',
-    }
-
-    latestIndexOfRow: number = 3;
+    };
+    latestIndexOfRow = 3;
 }
 
 
@@ -146,44 +143,31 @@ export interface ActiveWorkSheetIssue {
     latestIndexOfRow: number
 }
 
-export class IssueUSerLog {
-    [vpUserEmail: string]: {
-        issues: {
-            [scriptName: string]: {
+export type IssueUSerLog = Record<string, {
+        issues: Record<string, {
                 howToFixThat: string
                 issue: IssueLog[]
-            }
-        },
-        projects: {
-            [projectKey: string]: {
-                issues: {
-                    [scriptName: string]: {
+            }>,
+        projects: Record<string, {
+                issues: Record<string, {
                         howToFixThat: string
                         issue: IssueLog[]
-                    }
-                },
-                users: {
-                    [issueOwnerEmail: string]: {
+                    }>,
+                users: Record<string, {
                         name: string,
-                        issues: {
-                            [scriptName: string]: {
+                        issues: Record<string, {
                                 howToFixThat: string
                                 issue: IssueLog[]
-                            }
-                        },
+                            }>,
                         issues_number: number
-                    },
-                },
+                    }>,
                 project_owner_email?: string // Email
                 project_owner_name?: string // Email
                 issues_number: number
-            }
-        }
+            }>
         issues_number: number,
         vpName: string,
-    }
-
-}
+    }>;
 
 export interface UserVPStatistics extends ActiveIssueWorkSheetWithIssues {
     userLog: IssueUSerLog;
