@@ -1,8 +1,6 @@
 
 
-export interface IssueUserStructure {
-    [userEmail: string]: UserStructure
-}
+export type IssueUserStructure = Record<string, UserStructure>; // Key: userEmail
 
 export interface UserStructure {
     user: {
@@ -12,16 +10,14 @@ export interface UserStructure {
     issues: Stats
 }
 
-export interface ConvertedAndAgregatedHoursByIssue {
-    [issueId: string]: {
+export type ConvertedAndAgregatedHoursByIssue = Record<string, {
         loggedHoursInQ: number
-    }
-}
+    }>;
 export class Stats {
-    TODO: number = 0;
-    RECOMMENDED: number = 0;
-    DONE: number = 0;
-    SKIP: number = 0;
-    "Cap Labour": number = 0;
+    TODO = 0;
+    RECOMMENDED = 0;
+    DONE = 0;
+    SKIP = 0;
+    "Cap Labour" = 0;
 }
 

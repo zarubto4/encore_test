@@ -20,7 +20,6 @@ const kindlyReminder_jiraService_apiToken    = secret("kindlyReminder_jiraServic
 // ==== SERVICE CONFIG =================================================================================================
 
 
-
 export class KindlyReminderConfigApp {
 
     // Helpers - Jira
@@ -44,15 +43,15 @@ export class KindlyReminderConfigApp {
 
 }
 
-export const kindlyReminder_spreadSheetId: string          = '1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk';
-export const kindlyReminder_managersWorkSheetId: number    = 879128958;    // WorkDay
-export const kindlyReminder_projectWorkSheetId: number     = 226816260;    // Project
-export const kindlyReminder_userWorkSheetId: number        = 62957161;     // Users Stats
-export const kindlyReminder_dashboardWorkSheetId: number   = 303737385;    // Dashboard with Config
+export const kindlyReminder_spreadSheetId     = '1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk';
+export const kindlyReminder_managersWorkSheetId                     = 879128958;    // WorkDay
+export const kindlyReminder_projectWorkSheetId                      = 226816260;    // Project
+export const kindlyReminder_userWorkSheetId                          = 62957161;     // Users Stats
+export const kindlyReminder_dashboardWorkSheetId                    = 303737385;    // Dashboard with Config
 
-export const  kindlyReminder_asana_project_id: string               = '1207778959375434';              // Production
-export const  kindlyReminder_asana_project_section_id: string       = '1207778959375446';      // Production
-export const  kindlyReminder_asana_fallowers_to_remove: string[]    = ['1204853356727858'];      // Production
+export const  kindlyReminder_asana_project_id               = '1207778959375434';              // Production
+export const  kindlyReminder_asana_project_section_id       = '1207778959375446';      // Production
+export const  kindlyReminder_asana_fallowers_to_remove: string[]                = ['1204853356727858'];      // Production
 
 export const  kindlyReminder_hideThiesVps: string[] = [
     "Barbara Weisz",        // CSO
@@ -60,7 +59,29 @@ export const  kindlyReminder_hideThiesVps: string[] = [
     "Zuzana Vydrova",       // FF Director
     "Adam Lindsey",         // GO Director
     "Zdenek Linc",          // CMO
-]
+];
+
+export const kindlyReminder_hideThiesVpsConvertor: Record<string, string> = {
+    "Barbara Weisz" :  "non-PE (SLS)",        // CSO
+    "Jiri Ponrt" : "non-PE (FIN)",           // CFO
+    "Adam Lindsey" : "non-PE (GO)",          // GO Director
+    "Zdenek Linc" : "non-PE (MAR)",          // CMO
+}
+
+export const kindlyReminder_grouponVPs: string[] = [
+        "c_vrysanek@groupon.com", // "Vojtech Rysanek",      // CTO
+        "dredmond@groupon.com",   // "Darren Redmond",       // VP Engineering
+        "nranjanray@groupon.com", // "Nikash RanjanRay",     // VP Engineering
+        "c_jlongauer@groupon.com", // "Juraj Longauer",      // VP Engineering
+        "c_tsikola@groupon.com",  // "Tomas Sikola",         //  VP Transformation
+        "c_drybar@groupon.com",   // "David Rybar",          // Director IT
+        "c_mjerabek@groupon.com", // "Michal Jerabek",       // CPO
+        // "Barbara Weisz",       // CSO
+        // "Jiri Ponrt",          // CFO
+        "c_zvydrova@groupon.com", // "Zuzana Vydrova",       // FF Director
+        "alindsey@groupon.com",    // "Adam Lindsey",         // GO Director
+        "c_zlinc@groupon.com",     // "Zdenek Linc",          // CMO
+ ];
 
 // For IssueAllInHunterGenerator
 export const kindlyReminder_testProjectConditions = [] // ["QR"]; // ["QR", "GAPI"]; // <--- Change this if you want to apply script only for selected projects

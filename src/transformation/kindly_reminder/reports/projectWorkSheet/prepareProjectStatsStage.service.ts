@@ -14,12 +14,10 @@ export class ProjectStage {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
     private readonly configApp = new KindlyReminderConfigApp();
-    protected static weekSheetCopy :{
-        [weekNumber: string]: ProjectWorkSheet
-    } = {};
+    protected static weekSheetCopy: Record<string, ProjectWorkSheet> = {};
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    //constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
     public async loadProjects(activeWeek: number): Promise<ProjectWorkSheet> {

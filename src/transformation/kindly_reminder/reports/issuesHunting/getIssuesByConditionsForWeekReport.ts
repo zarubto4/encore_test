@@ -6,7 +6,7 @@ import {PrintIssuesIntoWorksheet} from "../getIssues/printIssuesIntoWorksheet";
 import {DashboardsConfigs, SearchCondition, SearchScripts} from "../dashboard/_models";
 import {ConvertedAndAgregatedHoursByIssue} from "../issuesPrint/_models";
 import {KindlyReminderConfigApp} from "../../encore.service";
-import {IssueProjectStructure, JQLProjectQueries, ProjectStructure} from "./_models";
+import {IssueProjectStructure, JQLProjectQueries, ProjectStructure, TEMPOLogsXResponse} from "./_models";
 import {ExtendedIssue} from "../../../../_libraries/3partyApis/jira/models/jira_extededIssue";
 import {WorkLog} from "../../../../_libraries/3partyApis/tempo/models/tempo_workLogsResponse";
 
@@ -18,55 +18,46 @@ export class GetIssuesByConditionsForWeekReport {
     private readonly doneStates: string[] = ["Done", "Won't do it", "Won’t do"];
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
-    public getProjectIssuesAndPrint(projectKey: string, activeWeekNumber: number): Promise<IssueProjectStructure>  {
-        return new Promise( async (resolve, reject) => {
+    public async getProjectIssuesAndPrint(projectKey: string, activeWeekNumber: number): Promise<ProjectStructure>  {
 
-            console.log("------------------------------------------------------------------");
-            console.log("GetIssuesByConditionsForWeekReport:getProjectIssuesAndPrint - start");
-            console.log("Project:", projectKey)
+        console.log("GetIssuesByConditionsForWeekReport:getProjectIssuesAndPrint - start");
+        console.log("Project:", projectKey)
 
-            // Report conditions
-            new GetDashBoardAndConditions()
-                .getSearchConditions()
-                .then(async (dashboardsConfigs) => {
+        // Report conditions
+        const dashboardsConfigs = await new GetDashBoardAndConditions().getSearchConditions()
 
-                    // Right Issue Worksheet
+        // Right Issue Worksheet
 
 
-                    const issueProjectStructure: IssueProjectStructure = {};
-                    const project = await this.configApp.jiraServices.project.getProject({projectIdOrKey:  projectKey});
+        const issueProjectStructure: IssueProjectStructure = {};
+        const project = await this.configApp.jiraServices.project.getProject({projectIdOrKey:  projectKey});
 
-                    if (project != null) {
+        if (project == null) {
+            return {
+                issues: {}
+            }
+        }
 
-                        await this.getProjectIssues(project, activeWeekNumber, dashboardsConfigs)
-                            .then((projectStructure: ProjectStructure) => {
-                                console.log("Project", project.name, "all issues done");
-                                issueProjectStructure[projectKey] = projectStructure;
-                                return projectStructure
-                            })
-                            .then((projectStructure) => {
-                                return new PrintIssuesIntoWorksheet()
-                                    .printIssuesIntoActiveWeekSheet(
-                                        projectStructure,
-                                        activeWeekNumber
-                                    );
-                            })
-                            .then(() => {
-                                resolve(issueProjectStructure);
-                            })
-                    }
+        const projectStructure = await this.getProjectIssues(project, activeWeekNumber, dashboardsConfigs)
+        console.log("Project", project.name, "all issues done");
+        issueProjectStructure[projectKey] = projectStructure;
 
-                })
-        });
+
+        await new PrintIssuesIntoWorksheet()
+            .printIssuesIntoActiveWeekSheet(
+                projectStructure,
+                activeWeekNumber
+            );
+
+        return(issueProjectStructure[projectKey]);
     }
 
 
     // Common Project Issues
-    public getProjectIssues(project: Project, activeWeekNumber: number, dashboardsConfigs: DashboardsConfigs): Promise<ProjectStructure>  {
-        return new Promise( async (resolve, reject) => {
+    public async getProjectIssues(project: Project, activeWeekNumber: number, dashboardsConfigs: DashboardsConfigs): Promise<ProjectStructure>  {
 
             const queries: JQLProjectQueries = new JQLProjectQueries(project.key);
             const projectStructure: ProjectStructure = {
@@ -122,7 +113,7 @@ export class GetIssuesByConditionsForWeekReport {
                 }
             }
 
-            //  Initiative without Quartals labels
+            //  Initiative without Quarts labels
             if (dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels]
                 && project.key == "QR"
                 && dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels].active_rule) {
@@ -191,7 +182,7 @@ export class GetIssuesByConditionsForWeekReport {
                 && project.key != "QR"
                 && project.key != "ADMIN"
                 && dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent].active_rule) {
-                const getTEMPO_logsX = await this.getTEMPOlogsX(project, activeWeekNumber);
+                const getTEMPO_logsX = await this.getTEMPOLogsX(project, activeWeekNumber);
                 for (const ticket of getTEMPO_logsX.issues) {
                     this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent], ticket);
                     projectStructure.issues[ticket.key].loggedHoursInQ += getTEMPO_logsX.convertorBetweenIdAndKey[ticket.id].loggedHoursInQ;
@@ -221,11 +212,7 @@ export class GetIssuesByConditionsForWeekReport {
 
             console.log("------------------------------------------------------------------");
             console.log("Save issues into SpreadSheets - Projects")
-            resolve(projectStructure);
-
-        });
-
-
+            return projectStructure;
     }
 
     // *** Add to Structure for Printing -------------------------------------------------------------------------------
@@ -288,7 +275,6 @@ export class GetIssuesByConditionsForWeekReport {
         });
     }
 
-
     private getSprintTicketsWithoutOwner(queries: JQLProjectQueries): Promise<Issue[]> {
         return this.configApp.jiraServices.issue.getAllIssues({
             jql: queries.findSprintTicketsWithoutOwner
@@ -332,7 +318,8 @@ export class GetIssuesByConditionsForWeekReport {
         });
     }
 
-    public getInitiativesWithoutQuarterLabels_validation(ticket: Issue): string {
+    public async getInitiativesWithoutQuarterLabels_validation(ticket: Issue): Promise<string> {
+
         if (ticket == null) {
             return "REMOVED";
         } else {
@@ -346,8 +333,7 @@ export class GetIssuesByConditionsForWeekReport {
                 || extendedTicket.labels.includes("24Q4")
                 || extendedTicket.labels.includes("25QQ")
             ) {
-                console.log("     contians Q3 label or newer");
-
+                console.log("     contains Q3 label or newer");
                 return "DONE";
             }
 
@@ -360,10 +346,10 @@ export class GetIssuesByConditionsForWeekReport {
                     extendedTicket.parent &&
                     extendedTicket.parent.issueKey == "QR-111" ) {
 
-                    console.log("      - We have KTLO Initaitive");
+                    console.log("      - We have KTLO Initiative");
 
                     if (extendedTicket.summary.includes("Permanent")) {
-                        this.configApp.jiraServices.issue.updateIssue({
+                        await this.configApp.jiraServices.issue.updateIssue({
                             issueIdOrKey: ticket.key,
                             returnIssue: true,
                             update: {
@@ -376,19 +362,21 @@ export class GetIssuesByConditionsForWeekReport {
                                     }
                                 ]
                             },
-                        }).then((resultIssue) => {
-                        })
+                        });
+
+                        return "DONE";
                     }
+
                 }
 
-                if(extendedTicket.parent && extendedTicket.parent.issueKey != "QR-111" ) {
-                    if( extendedTicket.quartalTags.includes("24Q2")
+                if (extendedTicket.parent && extendedTicket.parent.issueKey != "QR-111" ) {
+                    if ( extendedTicket.quartalTags.includes("24Q2")
                         && !extendedTicket.quartalTags.includes("24Q3")
                         && !extendedTicket.quartalTags.includes("spillover")
                         && extendedTicket.status == "In Progress") {
                         console.log("  QR label contains 24Q2 but it spillover and status is in progress ", ticket.key)
 
-                        this.configApp.jiraServices.issue.updateIssue({
+                       await this.configApp.jiraServices.issue.updateIssue({
                             issueIdOrKey: ticket.key,
                             returnIssue: true,
                             update: {
@@ -401,20 +389,15 @@ export class GetIssuesByConditionsForWeekReport {
                                     }
                                 ]
                             },
-                        }).then((resultIssue) => {
-                        })
+                        });
 
                         return "TODO";
                     }
                 }
 
-
-
                 return "DONE";
             } else {
                 console.log("  No labels for:", ticket.key)
-
-
                 return "TODO";
             }
         }
@@ -484,7 +467,7 @@ export class GetIssuesByConditionsForWeekReport {
             if (extendedTicket.fields['customfield_22184'] != null) {
                 if (extendedTicket.fields['customfield_22184']['content'] != null) {
 
-                    let sumContent: string = "";
+                    let sumContent = "";
                     for (const paragraph of extendedTicket.fields['customfield_22184']['content'] ) {
                         if (paragraph["type"] == "paragraph") {
                             for(const cnt of paragraph["content"] ) {
@@ -599,76 +582,64 @@ export class GetIssuesByConditionsForWeekReport {
     // Tempo -------------------------------------------------------------------------------------
 
 
-    private getTEMPOlogsX(project: Project, activeWeekNumber: number): Promise<{convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue, issues: Issue[]}>  {
-        return this.getTEMPOlogs(Number(project.id), project.key, activeWeekNumber)
-            .then(async (response) => {
-                for (let ticket of response.issues) {
-                    console.log("     Ticket: ", ticket.key, "we are interesting in number of child issues -------------");
-                    await this.configApp.jiraServices.issue.getAllChildIssues(ticket.key)
-                        .then(async (childIssues) => {
+    private async getTEMPOLogsX(project: Project, activeWeekNumber: number): Promise<TEMPOLogsXResponse> {
+        const response = await this.getTEMPOLogs(Number(project.id), project.key, activeWeekNumber);
+        for (const ticket of response.issues) {
+            console.log("     Ticket: ", ticket.key, "we are interesting in number of child issues -------------");
+            await this.configApp.jiraServices.issue.getAllChildIssues(ticket.key)
+                .then(async (childIssues) => {
 
 
-                            console.log("           : number of child issues:", childIssues.issues.length);
+                    console.log("           : number of child issues:", childIssues.issues.length);
 
-                            let totalSump: number = 0;
-                            for (let childIssue of childIssues.issues) {
-                                if (response.convertorBetweenIdAndKey[childIssue.id]) {
-                                    console.log("           : Child issue", childIssue.key, " exist in convertor with all hours:", response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ);
-                                    totalSump += response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ;
-                                } else {
-                                    console.log("           : Child issue", childIssue.key, " not Exist in Convertor");
-                                }
-                            }
-                            response.convertorBetweenIdAndKey[ticket.id].loggedHoursInQ += totalSump;
+                    let totalSump = 0;
+                    for (const childIssue of childIssues.issues) {
+                        if (response.convertorBetweenIdAndKey[childIssue.id]) {
+                            console.log("           : Child issue", childIssue.key, " exist in convertor with all hours:", response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ);
+                            totalSump += response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ;
+                        } else {
+                            console.log("           : Child issue", childIssue.key, " not Exist in Convertor");
+                        }
+                    }
+                    response.convertorBetweenIdAndKey[ticket.id].loggedHoursInQ += totalSump;
 
-                        });
-                }
-                return response;
-            });
+                });
+        }
+        return response;
     }
 
 
-    private getTEMPOlogs(projectID: number, projectKey: string, activeWeekNumber: number): Promise<{convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue, issues: Issue[], logs: WorkLog[]}> {
-        return this.configApp.tempoService.getUsersWorkLogs(
+    private async getTEMPOLogs(projectID: number, projectKey: string, activeWeekNumber: number): Promise<{convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue, issues: Issue[], logs: WorkLog[]}> {
+
+        const result = await this.configApp.tempoService.getUsersWorkLogs(
             {
                 projectId: projectID,
-                from: moment().quarter( moment().quarter() ).startOf('quarter').subtract( 1, 'month').format('YYYY-MM-DD'),
-                to: moment().quarter( moment().quarter() ).endOf('quarter').format('YYYY-MM-DD'),
+                from: moment().week(activeWeekNumber).startOf('quarter').subtract( 2, 'month').format('YYYY-MM-DD'),
+                to: moment().week(activeWeekNumber).endOf('quarter').format('YYYY-MM-DD'),
             }
-        )
-            .then((result) => {
+        );
 
-                let convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue = {};
+        const convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue = {};
 
-                result.forEach((log) => {
-                    if(log.issue) {
-                        if (!convertorBetweenIdAndKey[log.issue.id]) {
-                            convertorBetweenIdAndKey[log.issue.id] = {
-                                loggedHoursInQ: log.timeSpentSeconds ?? 0
-                            }
-                        } else {
-                            convertorBetweenIdAndKey[log.issue.id].loggedHoursInQ += ( log.timeSpentSeconds ?? 0);
-                        }
+        result.forEach((log) => {
+            if(log.issue) {
+                if (!convertorBetweenIdAndKey[log.issue.id]) {
+                    convertorBetweenIdAndKey[log.issue.id] = {
+                        loggedHoursInQ: log.timeSpentSeconds ?? 0
                     }
+                } else {
+                    convertorBetweenIdAndKey[log.issue.id].loggedHoursInQ += ( log.timeSpentSeconds ?? 0);
+                }
+            }
 
-                });
+        });
 
-                return this.configApp.jiraServices.issue.getUnparentedJiraTicketsLogsByTempo(projectKey, result)
-                    .then((resultIssues) => {
+        const resultIssues =  await this.configApp.jiraServices.issue.getUnparentedJiraTicketsLogsByTempo(projectKey, result)
+        return {
+            convertorBetweenIdAndKey: convertorBetweenIdAndKey,
+            issues: resultIssues,
+            logs: result
+        }
 
-                        resultIssues.forEach((issue) => {
-
-                        });
-
-
-
-                        return {
-                            convertorBetweenIdAndKey: convertorBetweenIdAndKey,
-                            issues: resultIssues,
-                            logs: result
-                        }
-                    });
-
-            });
     }
 }

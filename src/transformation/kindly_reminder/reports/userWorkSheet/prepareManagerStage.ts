@@ -1,37 +1,20 @@
 import {GoogleSpreadsheetRow} from "google-spreadsheet";
 import {ManagerStructure, ManagerUserWorkSheet} from "./_models";
 import {
+    kindlyReminder_grouponVPs,
     kindlyReminder_managersWorkSheetId,
     kindlyReminder_spreadSheetId,
     KindlyReminderConfigApp
 } from "../../encore.service";
 
-export class Groupon_VPS {
-    public vps: string[] = [
-        "c_vrysanek@groupon.com", // "Vojtech Rysanek",      // CTO
-        "dredmond@groupon.com",   // "Darren Redmond",       // VP Engineering
-        "nranjanray@groupon.com", // "Nikash RanjanRay",     // VP Engineering
-        "c_jlongauer@groupon.com", // "Juraj Longauer",      // VP Engineering
-        "c_tsikola@groupon.com",  // "Tomas Sikola",         //  VP Transformation
-        "c_drybar@groupon.com",   // "David Rybar",          // Director IT
-        "c_mjerabek@groupon.com", // "Michal Jerabek",       // CPO
-        // "Barbara Weisz",       // CSO
-        // "Jiri Ponrt",          // CFO
-        "c_zvydrova@groupon.com", // "Zuzana Vydrova",       // FF Director
-        "alindsey@groupon.com",    // "Adam Lindsey",         // GO Director
-        "c_zlinc@groupon.com",     // "Zdenek Linc",          // CMO
-    ]
-}
-
 export class ManagerStage {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
     private readonly configApp = new KindlyReminderConfigApp();
-    public vps: string[] = new Groupon_VPS().vps;
     protected static sheetCopy: ManagerUserWorkSheet;
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
     public async getManagers(): Promise<ManagerUserWorkSheet> {
@@ -40,7 +23,7 @@ export class ManagerStage {
             return ManagerStage.sheetCopy;
         } else {
 
-            const managerStructure: { [userName: string]: ManagerStructure } = {};
+            const managerStructure: Record<string, ManagerStructure> = {};
             const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_managersWorkSheetId)
 
             console.log("getManagers: get Worksheet done");
@@ -59,7 +42,7 @@ export class ManagerStage {
                 const workerUserNameCell = row.get("User Name");
                 const activeStatusCell = row.get("Active Status");
                 const lastDayCell = row.get("Last Day Of Work");
-                let workerName: string = workerNameCell.replace(' [C]', '').replace(' (On Leave)', '');
+                const workerName: string = workerNameCell.replace(' [C]', '').replace(' (On Leave)', '');
 
                 if (activeStatusCell != "Yes") {
                     continue;
@@ -81,7 +64,7 @@ export class ManagerStage {
                     if (managerStructure[workerName].lastDayInJob == null && lastDayCell) {
                         console.log("                 : user already Exist and this position ended. Manager is probably obsolete");
                     } else if (managerStructure[workerName].lastDayInJob != null && lastDayCell) {
-                        console.log("                 : user already Exist and this position is still open. So manager must be overrided");
+                        console.log("                 : user already Exist and this position is still open. So manager must be override");
                     }
                 }
 
@@ -98,7 +81,7 @@ export class ManagerStage {
                 this.getVPLevelManager(row, managerStructure[workerName], managerStructure);
             }
 
-            ManagerStage.sheetCopy = {...result, ...{managerStructure: managerStructure}}
+            ManagerStage.sheetCopy = {...result, ...{rows: rows, managerStructure: managerStructure}}
 
             return  ManagerStage.sheetCopy;
 
@@ -106,10 +89,10 @@ export class ManagerStage {
         }
     }
 
-    private getDirectManager(row: GoogleSpreadsheetRow, user: ManagerStructure, managerStructure: { [userName: string]: ManagerStructure }) {
+    private getDirectManager(row: GoogleSpreadsheetRow, user: ManagerStructure, managerStructure: Record<string, ManagerStructure>) {
 
         // Find Direct Manager
-        for (let i: number = 10; i > 1; i-- ) {
+        for (let i = 10; i > 1; i-- ) {
             let str = "Management Chain - Level ";
             if (i == 10) {
                 str = str + i
@@ -131,15 +114,15 @@ export class ManagerStage {
         }
     }
 
-    private getVPLevelManager(row: GoogleSpreadsheetRow, user: ManagerStructure, managerStructure: { [userName: string]: ManagerStructure }) {
+    private getVPLevelManager(row: GoogleSpreadsheetRow, user: ManagerStructure, managerStructure: Record<string, ManagerStructure> ) {
 
         // User is VP itself
-        if (this.vps.includes(user.workerName)) {
+        if (kindlyReminder_grouponVPs.includes(user.workerName)) {
             user.vicePresidentLevelManager = user;
             return;
         }
 
-        for (let i: number = 10; i > 1; i-- ) {
+        for (let i = 10; i > 1; i-- ) {
             let str = "Management Chain - Level ";
             if (i == 10) {
                 str = str + i
@@ -149,7 +132,7 @@ export class ManagerStage {
 
             const manager10Cell: string = row.get(str).replace(' [C]','').replace(' (On Leave)', '');
             if (manager10Cell) {
-                if (this.vps.includes(manager10Cell)) {
+                if (kindlyReminder_grouponVPs.includes(manager10Cell)) {
                     if (!managerStructure[manager10Cell]) {
                         managerStructure[manager10Cell] = {
                             workerName: manager10Cell,

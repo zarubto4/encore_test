@@ -1,15 +1,13 @@
 import {GetIssuesByConditionsForWeekReport} from "../issuesHunting/getIssuesByConditionsForWeekReport";
 import {Issue} from "jira.js/src/version3/models/issue";
 import {SearchScripts} from "../dashboard/_models";
-import {KindlyReminderConfigApp} from "../../encore.service";
 
 export class JiraIssueValidator {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
-    private readonly configApp = new KindlyReminderConfigApp();
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
     public validations(scriptName: string, ticket: Issue): Promise <string> {

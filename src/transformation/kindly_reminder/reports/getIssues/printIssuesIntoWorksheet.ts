@@ -10,20 +10,15 @@ import {
     WriteIssuesWithAllConditionsContent
 } from "./_models";
 import {EnuKPI, SearchScripts} from "../dashboard/_models";
-import {KindlyReminderConfigApp} from "../../encore.service";
 import {ProjectStructure} from "../issuesHunting/_models";
 import {ExtendedIssue} from "../../../../_libraries/3partyApis/jira/models/jira_extededIssue";
-
-
-
 
 export class PrintIssuesIntoWorksheet {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
-    private readonly configApp = new KindlyReminderConfigApp();
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
 
@@ -32,34 +27,26 @@ export class PrintIssuesIntoWorksheet {
     public async printIssuesIntoActiveWeekSheet(structure: ProjectStructure, activeWeekNumber: number) {
         console.log("PrintIssuesIntoWorksheet:printIssuesIntoActiveWeekSheet: init =========================================================================");
         console.log("PrintIssuesIntoWorksheet:printIssuesIntoActiveWeekSheet: week", activeWeekNumber);
-        new GetDashBoardAndConditions().getSearchConditions().then((dashboardConfig) => {
-            new ProjectStage().loadProjects(activeWeekNumber).then(async (projectWorkSheet) => {
-                    return new GetPrintedIssuesList().getIssueWorksheet( activeWeekNumber).then( async(activeWorkSheetIssue) => {
-                            return new UserStage().getActiveUserWorkSheet(activeWeekNumber).then(async (userWorkSheet) => {
+        const dashboardConfig = await new GetDashBoardAndConditions().getSearchConditions()
+        const projectWorkSheet = await new ProjectStage().loadProjects(activeWeekNumber)
+        const activeWorkSheetIssue = await  new GetPrintedIssuesList().getIssueWorksheet( activeWeekNumber)
+        const userWorkSheet = await new UserStage().getActiveUserWorkSheet(activeWeekNumber);
 
-                                    for (const issueKey of  Object.keys(structure.issues)) {
-                                        // console.log("Print: project", new ExtendedIssue(structure.issues[issueKey].jiraTicket).projectKey, "issueKey", issueKey);
-                                        this.writeIssueWithAllIssuesIntoSpreadSheets(
-                                            {
-                                                extendedTicket: new ExtendedIssue(structure.issues[issueKey].jiraTicket),
-                                                ourIssues: structure.issues[issueKey].ourIssues,
-                                                activeWorkSheetIssue: activeWorkSheetIssue,
-                                                projectWorkSheet: projectWorkSheet,
-                                                userWorkSheet: userWorkSheet,
-                                                tempoHours: structure.issues[issueKey].loggedHoursInQ,
-                                                dashboardConfig: dashboardConfig
-                                            }
-                                        );
-                                    }
-                                    await activeWorkSheetIssue.sheet.saveUpdatedCells(); // save all updates in one call
-                                    return;
-                                });
-
-                        });
-                });
-        })
-
-
+        for (const issueKey of  Object.keys(structure.issues)) {
+            // console.log("Print: project", new ExtendedIssue(structure.issues[issueKey].jiraTicket).projectKey, "issueKey", issueKey);
+            this.writeIssueWithAllIssuesIntoSpreadSheets(
+                {
+                    extendedTicket: new ExtendedIssue(structure.issues[issueKey].jiraTicket),
+                    ourIssues: structure.issues[issueKey].ourIssues,
+                    activeWorkSheetIssue: activeWorkSheetIssue,
+                    projectWorkSheet: projectWorkSheet,
+                    userWorkSheet: userWorkSheet,
+                    tempoHours: structure.issues[issueKey].loggedHoursInQ,
+                    dashboardConfig: dashboardConfig
+                }
+            );
+        }
+        await activeWorkSheetIssue.sheet.saveUpdatedCells(); // save all updates in one call
     }
 
     // Print Issues into Spreadsheet ------------------------------------------------------------------------------------------------------------------------
@@ -140,11 +127,11 @@ export class PrintIssuesIntoWorksheet {
         ticketTypeCell.value = content.extendedTicket.issueType;
         statusCell.value = content.extendedTicket.status;
 
-        // Valueas are set Only and Read only once. (Its not possible set and read!) // https://github.com/theoephraim/node-google-spreadsheet/issues/402
-        let projectOwnerTemporaryValue: string  = "";
-        let projectOwnerEmailTemporaryValue: string = "";
-        let vicePresidentOwnerTemporaryValue: string = "";
-        let ticketVPEmailCellTemporaryValue: string = "";
+        // Values are set Only and Read only once. (Its not possible set and read!) // https://github.com/theoephraim/node-google-spreadsheet/issues/402
+        let projectOwnerTemporaryValue  = "";
+        let projectOwnerEmailTemporaryValue = "";
+        let vicePresidentOwnerTemporaryValue = "";
+        let ticketVPEmailCellTemporaryValue = "";
 
         if (content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey]) {
             projectOwnerTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name ? content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name : "No owner";
@@ -159,7 +146,7 @@ export class PrintIssuesIntoWorksheet {
         issueCellHowToFixThat.value = content.ourIssue.how_to_fix_description;
         latestUpdateCell.value = content.extendedTicket.updated.toDateString();
         reportedCell.value     = content.extendedTicket.created.toDateString();
-        missingTempoFormula.value = '=if( NE(A' + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ',\"DONE\"),K' + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ', 0)';
+        missingTempoFormula.value = '=if( NE(A' + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ',"DONE"),K' + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ', 0)';
         scriptName.value  = content.ourIssue.script_name;
 
 
@@ -241,7 +228,7 @@ export class PrintIssuesIntoWorksheet {
             case "ProjectOwner": {
                 console.log("sortByPriorityOwnership: its ProjectOwner: what we have in ", ownership.projectOwner.nameString);
                 if (ownership.projectOwner.nameString != "No owner") {
-                    console.log("sortByPriorityOwnership: its ProjectOwner: set Responsibiliy owner");
+                    console.log("sortByPriorityOwnership: its ProjectOwner: set Responsibility owner");
                     ownership.responsibleOwner.nameCell.value = ownership.projectOwner.nameString;
                     ownership.responsibleOwner.emailCell.value = ownership.projectOwner.emailString
                     return;

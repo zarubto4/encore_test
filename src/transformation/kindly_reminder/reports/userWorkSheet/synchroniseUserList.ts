@@ -1,23 +1,18 @@
 import {UserStage} from "./prepareUserStatsStage";
 import moment from "moment/moment.js";
 import {User} from "jira.js/src/version3/models/user";
-import {ActiveUserWorkSheet} from "./_models";
 import {KindlyReminderConfigApp} from "../../encore.service";
-import {ActiveWorkSheetIssue} from "../getIssues/_models";
-
-
 
 export class SynchronizeUserWorkSheet {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
     private readonly configApp = new KindlyReminderConfigApp();
-    protected static weekSheetCopy: ActiveWorkSheetIssue | null = null;
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
-    public async  synchronize(): Promise<ActiveUserWorkSheet> {
+    public async  synchronize(): Promise<void> {
 
         console.log("SynchronizeUserWorkSheet:getActiveUserWorkSheet: init =============================================");
 
@@ -30,6 +25,7 @@ export class SynchronizeUserWorkSheet {
         console.log("SynchronizeUserWorkSheet:getActiveUserWorkSheet: total users in JIRA:", users.length);
 
         for (const user of users) {
+
             if (!user.emailAddress || !user.emailAddress.includes("@groupon.com")) {
                 continue;
             }
@@ -40,7 +36,10 @@ export class SynchronizeUserWorkSheet {
                 console.log("User:", user.displayName, user.emailAddress, user.active);
                 console.log("   - user is in worksheet properly - required to update");
                 result.userWorkSheet.users[user.emailAddress] = result.userWorkSheet.users[user.displayName]
+
+                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
                 delete result.userWorkSheet.users[user.displayName];
+
                 result.sheet.getCellByA1(result.userWorkSheet.cells.userCells.userEmailColum + result.userWorkSheet.users[user.emailAddress].row).value = user.emailAddress;
             }
         }
@@ -53,7 +52,7 @@ export class SynchronizeUserWorkSheet {
                     && result.userWorkSheet.users[userKey].manager.managerName
                 )) {
 
-                console.log("   - we are lookign for manager:", result.userWorkSheet.users[userKey].manager.managerName);
+                console.log("   - we are looking for manager:", result.userWorkSheet.users[userKey].manager.managerName);
                 const found: User[] = users.filter((us) => result.userWorkSheet.users[userKey].manager != null && us.displayName == result.userWorkSheet.users[userKey].manager.managerName);
 
                 if (found.length > 0) {
@@ -68,7 +67,5 @@ export class SynchronizeUserWorkSheet {
         }
 
         await result.sheet.saveUpdatedCells();
-
     }
-
 }

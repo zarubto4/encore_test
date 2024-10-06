@@ -1,5 +1,4 @@
 import {GoogleSpreadsheet, GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet} from "google-spreadsheet";
-import {string} from "zod";
 
 export class WeekProjectWorkSheetCell {
     cell: {
@@ -19,9 +18,8 @@ export class WeekProjectWorkSheetCell {
         projectOwnerLeaderEmailColum: 'E',
         projectOwnerLeaderNameColum: 'F',
     }
-
-    firstProjectRow: number = 9;
-    weekInYearRow: number = 4; // n-1
+    firstProjectRow = 9;
+    weekInYearRow = 4; // n-1
 }
 
 export interface WeekProjectWorkSheet {
@@ -32,21 +30,20 @@ export interface WeekProjectWorkSheet {
     latestIndexOfRow: number;
 }
 
-export interface Projects {
-    [projectKey: string]: {
+export type Projects = Record<string, {
         row: number,
         allow: boolean,
         projectOwnerName: string | null
         projectOwnerEmail: string | null
         projectOwnerManagerName: string | null
         projectOwnerManagerEmail: string | null
-    }
-}
+    }>;
 
 export interface FindRightWeekColumRequest {
     projectCells: WeekProjectWorkSheetCell;
     latestIndexOfRow: number;
 }
+
 export interface FindRightWeekColum {
     activeWeekColumReportedIssues: string;
     activeWeekColumFixedIssues: string;
@@ -60,19 +57,10 @@ export interface ProjectLog {
 }
 
 export interface ProjectsOverview {
-    byOwnerEmail: {
-        [ownerEmail: string]: {
-            [projectKey: string]: ProjectLog
-        }
-    }
-    byVicePresidentEmail: {
-        [ownerEmail: string]: {
-            [projectKey: string]: ProjectLog
-        }
-    }
-    byProject: {
-        [projectKey: string]: ProjectLog
-    }
+    byOwnerEmail: Record<string, Record<string, ProjectLog>>// key: ownerEmail, key2: projectKey
+    byVicePresidentEmail: Record<string, Record<string, ProjectLog>> // key: ownerEmail, key2: projectKey
+    byProject: Record<string, ProjectLog>
+
 }
 
 export interface AddProjectToMap {

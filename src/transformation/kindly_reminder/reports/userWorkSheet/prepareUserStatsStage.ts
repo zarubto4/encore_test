@@ -16,26 +16,19 @@ import {
 export class UserStage {
 
     // -- Private Values -----------------------------------------------------------------------------------------------
-    protected static weekSheetCopy :{
-        [weekNumber: string]: ActiveUserWorkSheet
-    } = {};
+    protected static weekSheetCopy: Record<string, ActiveUserWorkSheet> = {};
     private readonly configApp = new KindlyReminderConfigApp();
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
-    public getActiveUserWorkSheet(activeWeek: number): Promise<ActiveUserWorkSheet> {
+    public async getActiveUserWorkSheet(activeWeek: number): Promise<ActiveUserWorkSheet> {
         console.log("ActiveUserWorkSheet:getActiveUserWorkSheet: init =========================================================================");
 
         if (UserStage.weekSheetCopy[activeWeek + '']) {
-            return new Promise((resolve, reject): void => {
-                resolve(
-                    UserStage.weekSheetCopy[activeWeek + '']
-                );
-            });
+           return UserStage.weekSheetCopy[activeWeek + ''];
         } else {
-            return new Promise((resolve, reject): void => {
 
                 const userWorkSheet: WeekUserWorkSheet = {
                     activeWeekColumReportedIssues: null,
@@ -46,17 +39,12 @@ export class UserStage {
                 }
 
                 console.log("ActiveUserWorkSheet:getActiveUserWorkSheet: get user spreadsheet");
-                this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_userWorkSheetId)
-                    .then(async (result) => {
+                const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_userWorkSheetId);
                         console.log("ActiveUserWorkSheet:getActiveUserWorkSheet: get rows");
                         const rows = await result.sheet.getRows();
                         await result.sheet.loadCells('A1:BZ1500');
-                        return {
-                            ... result,
-                            rows: rows
-                        };
-                    })
-                    .then((result) => {
+
+
                         console.log("ActiveUserWorkSheet:getActiveUserWorkSheet: try to find first user line: weekInYearRow", userWorkSheet.cells.weekInYearRow);
 
                         for (let i = 5; i <  result.sheet.columnCount; i++) {
@@ -71,23 +59,12 @@ export class UserStage {
 
                         if (!userWorkSheet.activeWeekColumReportedIssues) {
                             if (!userWorkSheet.activeWeekColumReportedIssues) {
-                                reject("Missing active week colum in user Stats");
                                 throw Error("Missing active week colum in user Stats");
                             }
-                        } else {
-                            return result;
                         }
 
-                    })
-                    .then(async (result) => {
 
-                        console.log("ActiveUserWorkSheet:getActiveUserWorkSheet: going and scanning users into memory");
-
-                        if (result == undefined) {
-                            return;
-                        }
-
-                        for (const row of result.rows) {
+                        for (const row of rows) {
                             if (row.rowNumber < userWorkSheet.latestIndexOfRow) {
                                 continue;
                             }
@@ -110,7 +87,7 @@ export class UserStage {
 
                                 userWorkSheet.latestIndexOfRow  = row.rowNumber;
 
-                            } else if (userEmailCell && userNameCell ) {
+                            } else if (userNameCell) {
                                 userWorkSheet.users[userNameCell] = {
                                     row: row.rowNumber,
                                     userName: userNameCell,
@@ -133,67 +110,60 @@ export class UserStage {
                         UserStage.weekSheetCopy[activeWeek + ''] = {
                             ...result,
                             ...{
+                                rows: rows,
                                 userWorkSheet: userWorkSheet
                             }
                         };
 
-                        resolve(UserStage.weekSheetCopy[activeWeek + '']);
-                    });
+                        return(UserStage.weekSheetCopy[activeWeek + '']);
 
-            });
         }
     }
 
-    public addWeekStatisticUnderUser(email: string, stats: Stats, activeWeek: number): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            return this.getActiveUserWorkSheet(activeWeek).then((result) => {
+    public async  addWeekStatisticUnderUser(email: string, stats: Stats, activeWeek: number): Promise<void> {
+        const result = await this.getActiveUserWorkSheet(activeWeek);
 
-                const userWorkSheet: WeekUserWorkSheet = result.userWorkSheet;
-                const sheet: GoogleSpreadsheetWorksheet = result.sheet;
+        const userWorkSheet: WeekUserWorkSheet = result.userWorkSheet;
+        const sheet: GoogleSpreadsheetWorksheet = result.sheet;
 
-                if (userWorkSheet.activeWeekColumReportedIssues == null || userWorkSheet.activeWeekColumFixedIssues == null) {
-                    return reject("Missing activeWeekColumReportedIssues or activeWeekColumFixedIssues");
-                }
+        if (userWorkSheet.activeWeekColumReportedIssues == null || userWorkSheet.activeWeekColumFixedIssues == null) {
+            console.error("Missing activeWeekColumReportedIssues or activeWeekColumFixedIssues");
+            return
+        }
 
-                const activeWeekReportedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.users[email].row); // access cells using a zero-based index
-                const activeWeekFixedIssuesCell =  sheet.getCellByA1(userWorkSheet.activeWeekColumFixedIssues + userWorkSheet.users[email].row); // access cells using a zero-based index
+        const activeWeekReportedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.users[email].row); // access cells using a zero-based index
+        const activeWeekFixedIssuesCell =  sheet.getCellByA1(userWorkSheet.activeWeekColumFixedIssues + userWorkSheet.users[email].row); // access cells using a zero-based index
 
-                activeWeekReportedIssuesCell.value = stats.TODO + stats.RECOMMENDED + stats.DONE + stats.SKIP + stats["Cap Labour"];
-                activeWeekFixedIssuesCell.value = stats.TODO;
-
-                resolve();
-            });
-        });
+        activeWeekReportedIssuesCell.value = stats.TODO + stats.RECOMMENDED + stats.DONE + stats.SKIP + stats["Cap Labour"];
+        activeWeekFixedIssuesCell.value = stats.TODO;
     }
 
-    public addNewUser(userName: string, email: string, activeWeek: number): Promise<WeekUserWorkSheetUserContent> {
-        return new Promise( (resolve, reject) => {
-            return this.getActiveUserWorkSheet(activeWeek).then(async (result) => {
-                const userWorkSheet: WeekUserWorkSheet = result.userWorkSheet;
-                const sheet: GoogleSpreadsheetWorksheet = result.sheet;
+    public async addNewUser(userName: string, email: string, activeWeek: number): Promise<WeekUserWorkSheetUserContent> {
 
-                console.log("printUserStats: User", userName, "is not in list - WE have to create that on line: ", userWorkSheet.latestIndexOfRow)
-                console.log("printUserStats: User", userName, "emailColumn ", userWorkSheet.cells.userCells.userEmailColum +  userWorkSheet.latestIndexOfRow);
+        const result = await this.getActiveUserWorkSheet(activeWeek);
+        const userWorkSheet: WeekUserWorkSheet = result.userWorkSheet;
+        const sheet: GoogleSpreadsheetWorksheet = result.sheet;
 
-                const userEmailCell = sheet.getCellByA1( userWorkSheet.cells.userCells.userEmailColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
-                const userStatusCell = sheet.getCellByA1( userWorkSheet.cells.userCells.statusUserColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
-                const userNameCell = sheet.getCellByA1( userWorkSheet.cells.userCells.nameUserColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
+        console.log("printUserStats: User", userName, "is not in list - WE have to create that on line: ", userWorkSheet.latestIndexOfRow)
+        console.log("printUserStats: User", userName, "emailColumn ", userWorkSheet.cells.userCells.userEmailColum +  userWorkSheet.latestIndexOfRow);
 
-                userEmailCell.value = email;
-                userNameCell.value = userName;
-                userStatusCell.value = "active";
+        const userEmailCell = sheet.getCellByA1( userWorkSheet.cells.userCells.userEmailColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
+        const userStatusCell = sheet.getCellByA1( userWorkSheet.cells.userCells.statusUserColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
+        const userNameCell = sheet.getCellByA1( userWorkSheet.cells.userCells.nameUserColum +  userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
 
-                UserStage.weekSheetCopy[activeWeek + ''].userWorkSheet.users[email] = {
-                    userName: userName,
-                    manager: null,
-                    row: userWorkSheet.latestIndexOfRow++
-                }
+        userEmailCell.value = email;
+        userNameCell.value = userName;
+        userStatusCell.value = "active";
 
-                resolve(
-                    userWorkSheet.users[email]
-                );
-            });
-        });
+        UserStage.weekSheetCopy[activeWeek + ''].userWorkSheet.users[email] = {
+            userName: userName,
+            manager: null,
+            row: userWorkSheet.latestIndexOfRow++
+        }
+
+        return(userWorkSheet.users[email]);
+
+
     }
 
 }

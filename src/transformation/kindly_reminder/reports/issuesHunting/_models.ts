@@ -1,21 +1,21 @@
 import {SearchCondition} from "../dashboard/_models";
 import {Issue} from "jira.js/src/version3/models/issue";
 import {replaceKeys} from "../../../../_libraries/core/parsing_and_formating/stringInject";
+import {ConvertedAndAgregatedHoursByIssue} from "../issuesPrint/_models";
 
-export interface IssueProjectStructure {
-    [projectKey: string]: ProjectStructure
-}
+export type IssueProjectStructure = Record<string, ProjectStructure>; // key: projectKey
 
 export interface ProjectStructure {
-    issues: {
-        [issueKey: string]: {
-            ourIssues:  {
-                [scriptName: string]: SearchCondition
-            },
+    issues: Record<string, {
+            ourIssues:  Record<string, SearchCondition>, // key: scriptName
             loggedHoursInQ: number, // In seconds
             jiraTicket: Issue
-        }
-    }
+   }>
+}
+
+export interface TEMPOLogsXResponse {
+    convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue;
+    issues: Issue[]
 }
 
 export class JQLProjectQueriesAutomation {
@@ -38,10 +38,9 @@ export class JQLProjectQueriesAutomation {
 
     constructor(projectKey?: string) {
         if (projectKey != null) {
-            for(let field of Object.keys(this)) {
-                // @ts-ignore
-                let stringField = <string> this[field];
-                stringField = replaceKeys( stringField, {projectKey: projectKey});
+            for(const field of Object.keys(this)) {
+                // @ts-expect-error @ts-ignore
+                this[field] = replaceKeys( this[field], {projectKey: projectKey});
             }
         }
 
@@ -104,7 +103,7 @@ export class JQLProjectQueries {
 
     // Required fields -----------------------------------------------------------------------------------------------------------
 
-    // Labels required - initiative - Quartals
+    // Labels required - initiative - Quarters
     public findAllInitiativeWithoutLabels: string = 'project = "{projectKey}"' +
         ' AND type = Initiative' +
         ' AND status IN ("Parking lot", "To Do", "In Progress", Blocked)' +
@@ -164,24 +163,14 @@ export class JQLProjectQueries {
         ' AND originalEstimate is EMPTY' +
         ' AND created >= "2024-04-01"' +
         ' AND created <= "2024-06-29"' +
-        ' AND status IN (Blocked, Deploy, \"In Progress\", Triage, \"To Do\", Merge, \"Parking lot\", QA, Reopened)' +
+        ' AND status IN (Blocked, Deploy, "In Progress", Triage, "To Do", Merge, "Parking lot", QA, Reopened)' +
         ' ORDER BY created DESC';
-
-    public findNonEpicsWithEpicDesignation: string = 'type != Epic' +
-        ' AND "epic designation[dropdown]" IN (Feature, KTLO)' +
-        ' ORDER BY created DESC';
-
-    public findKTLOEpicsWithoutEpicDesignation: string = 'type = Epic' +
-        ' AND ( "epic designation[dropdown]" = Feature OR  "epic designation[dropdown]" is EMPTY)' +
-        ' AND issue in portfolioChildIssuesOf("QR-111") ' +
-        ' ORDER BY created DESC';
-
 
     constructor(projectKey?: string) {
         if (projectKey != null) {
-            for(let field of Object.keys(this)) {
-                // @ts-ignore
-                this[field]= replaceKeys(this[field], {projectKey: projectKey});
+            for(const field of Object.keys(this)) {
+                // @ts-expect-error @ts-ignore
+                this[field] = replaceKeys(this[field], {projectKey: projectKey});
             }
         }
 

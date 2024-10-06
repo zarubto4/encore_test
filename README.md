@@ -29,8 +29,10 @@ event-driven and utilize "Functions as a Service" (FaaS) and automatically scale
 - **Zero Groupon Dependencies**
   - This repository has no Groupon libraries that require special access or care. 
   - There is no external dependency for any proprietary system that the developer would have to deal with.
-- **Remove SOX from the repository and move SOX to Deployment**
-  - Moving SOX policy and deleting three repositories (Production, Developer and Secrets) for every microservice (10.000) github groupon repositories.
+- **Simplified SOX policy according US Policy"** **
+  - Core idea and Movement is Bringing IT back to the correct use of SOX policy and removing obstacles that were mistaken for SOX.
+  - Remove SOX from the repository and move SOX to Deployment with transparent and auditable records with pure Role base access control. 
+  - Moving SOX policy into and deleting three repositories (Production, Developer and Secrets) for every microservice (10.000) github groupon repositories.
 - **RoleBase All Engineering covering system for Permissions on Deployment and Secrets**
   - Moving SOX policy and deleting three repositories (Production, Developer and Secrets) to scalable up-to-date policy with GCP Secrets Management.
 - **Zero proprietary Computer settings**
@@ -94,7 +96,10 @@ event-driven and utilize "Functions as a Service" (FaaS) and automatically scale
    1) Plugins to Install 
       1) Grazie pro: [link](https://plugins.jetbrains.com/plugin/16136-grazie-pro)
       2) Database Tools and SQL for WebStorm [link](https://plugins.jetbrains.com/plugin/10925-database-tools-and-sql-for-webstorm)
-
+   2) Set Webstorm properly
+      1) To write clean and clear code, we use Eslit. We check your code before you save it and before you make a Marge request. To see what's wrong in the IDE, set up Eslint according to the project rules (not the IDE default). 
+      2) Read how to set Eslint version 9 and later Webstorm in [webstorm config](https://www.jetbrains.com/help/webstorm/eslint.html#ws_js_eslint_activate) or set up your IDE exactly as shown on next picture.
+      3) ![Webstorm Settings](./wiki/pictures/eslint_webstorm_set.png "Title")
 
 ## <font color="#00a828">Developing locally - Preparation Phase  (5 minutes step)</font>
 

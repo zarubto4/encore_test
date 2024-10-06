@@ -1,4 +1,4 @@
-import { api, APIError, ErrCode, Header } from "encore.dev/api";
+import { api } from "encore.dev/api";
 import { DefaultResponse } from "../service_1/hello";
 import { my_service_one } from "~encore/clients";
 

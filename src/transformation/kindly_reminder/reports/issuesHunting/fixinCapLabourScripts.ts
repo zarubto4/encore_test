@@ -14,7 +14,7 @@ export class GetFixableIssuesByAutomation {
     private readonly configApp = new KindlyReminderConfigApp();
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
     public getAndFixAllCapLabourIssues(activeIssueWeek: number): Promise<ProjectStructure>  {
@@ -57,8 +57,8 @@ export class GetFixableIssuesByAutomation {
                                         dashboardsConfigs.searchConditions[SearchScripts.ktloEpicsCheckLabel],
                                         ticket);
                                 } catch (Error) {
-                                    console.error("getAndFixAllCapLabourIssues: ktloEpicsCheckLabel - addToStructure erros:", ticket.key, JSON.stringify(dashboardsConfigs.searchConditions));
-                                    console.error("getAndFixAllCapLabourIssues: ktloEpicsCheckLabel - addToStructure erros:", ticket.key, "type", SearchScripts.ktloEpicsCheckLabel, "json:",
+                                    console.error("getAndFixAllCapLabourIssues: ktloEpicsCheckLabel - addToStructure errors:", ticket.key, JSON.stringify(dashboardsConfigs.searchConditions));
+                                    console.error("getAndFixAllCapLabourIssues: ktloEpicsCheckLabel - addToStructure errors:", ticket.key, "type", SearchScripts.ktloEpicsCheckLabel, "json:",
                                         (dashboardsConfigs.searchConditions[SearchScripts.ktloEpicsCheckLabel] ?
                                         JSON.stringify(dashboardsConfigs.searchConditions[SearchScripts.ktloEpicsCheckLabel]) : "Not available"));
 
@@ -134,8 +134,8 @@ export class GetFixableIssuesByAutomation {
 
                         if(dashboardsConfigs.mandatoryEpicDesignationFields.featureProjects.length > 0) {
 
-                            let projectsFeatureForJira: string = ""
-                            for( let i: number = 0; i < dashboardsConfigs.mandatoryEpicDesignationFields.featureProjects.length; i++ ) {
+                            let projectsFeatureForJira = ""
+                            for( let i = 0; i < dashboardsConfigs.mandatoryEpicDesignationFields.featureProjects.length; i++ ) {
                                 if((i + 1) < dashboardsConfigs.mandatoryEpicDesignationFields.featureProjects.length ) {
                                     projectsFeatureForJira = projectsFeatureForJira + dashboardsConfigs.mandatoryEpicDesignationFields.featureProjects[i] + ","
                                 } else {
@@ -186,8 +186,8 @@ export class GetFixableIssuesByAutomation {
 
                         if (dashboardsConfigs.mandatoryEpicDesignationFields.ktloProjects.length > 0) {
 
-                            let projectsKTLOForJira: string = ""
-                            for( let i: number = 0; i < dashboardsConfigs.mandatoryEpicDesignationFields.ktloProjects.length; i++ ) {
+                            let projectsKTLOForJira = ""
+                            for( let i = 0; i < dashboardsConfigs.mandatoryEpicDesignationFields.ktloProjects.length; i++ ) {
                                 if((i + 1) < dashboardsConfigs.mandatoryEpicDesignationFields.ktloProjects.length ) {
                                     projectsKTLOForJira = projectsKTLOForJira + dashboardsConfigs.mandatoryEpicDesignationFields.ktloProjects[i] + ","
                                 } else {
