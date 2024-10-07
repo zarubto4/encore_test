@@ -1,0 +1,16 @@
+{
+  "time": "2024-10-04T11:28:13.566Z",
+  "name": "mx-rbac-ui-service",
+  "level": "info",
+  "data": {
+    "message": "Sending request to RBAC-API",
+    "source": "backend",
+    "url": "http://rbac.staging.service/v2/categories?client_id=91e489c2caa8471d8550c7f7908ad94a_rbacui",
+    "method": "GET",
+    "headers": {
+      "requester_user_id": "e3645e22-3855-11ee-b9ff-da7ad8bad2b3",
+      "X-Request-ID": "5bd2ea6f-68f8-4632-94c4-3b473de1bdd8"
+    }
+  },
+  "version": "0"
+}
