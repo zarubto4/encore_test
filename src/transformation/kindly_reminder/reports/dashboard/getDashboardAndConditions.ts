@@ -51,6 +51,9 @@ export class GetDashBoardAndConditions {
             return  GetDashBoardAndConditions.dashboardsConfigs
         }
 
+        console.log("GetDashBoardAndConditions:getSearchConditions: kindlyReminder_spreadSheetId:", kindlyReminder_spreadSheetId);
+        console.log("GetDashBoardAndConditions:getSearchConditions: kindlyReminder_dashboardWorkSheetId:", kindlyReminder_dashboardWorkSheetId);
+
         const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_dashboardWorkSheetId);
 
         GetDashBoardAndConditions.dashboardsConfigs = {
@@ -170,7 +173,7 @@ export class GetDashBoardAndConditions {
                 project_owner_email:    project_owner_email,
             }
         }
-        console.log("GetDashBoardAndConditions: projectOverridesParser returning conditions", Object.keys(GetDashBoardAndConditions.dashboardsConfigs.projectOverride).length);
+        console.log("GetDashBoardAndConditions:projectOverridesParser: returning conditions", Object.keys(GetDashBoardAndConditions.dashboardsConfigs.projectOverride).length);
     }
 
     private scriptConditionStartParser(indexes: FindTableIndexesForScriptConditionsResult, sheet: GoogleSpreadsheetWorksheet) {
@@ -181,61 +184,74 @@ export class GetDashBoardAndConditions {
 
         for (let rowIndex = indexes.indexForSearchConditionsStart; rowIndex <= indexes.indexForSearchConditionsEnd; rowIndex++) {
 
-            const searchCondition: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex).stringValue;
+            const implementationStatus: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.implementationStatus + rowIndex).stringValue;
+            if(!implementationStatus) {
+                throw Error('Dashboard script configurator table with script: "implementationStatus" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.implementationStatus + rowIndex);
+            }
+
+            if (implementationStatus != "Implemented") {
+                continue;
+            }
 
             const script_name: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex).stringValue;
             if(!script_name) {
-                throw Error("script_name is missing");
+                throw Error('Dashboard script configurator table with script: "script_name" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
             const kpi_policy: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.kpiPolicyColumn + rowIndex).stringValue;
             if(!kpi_policy) {
-                throw Error("kpi_policy is missing");
+                throw Error('Dashboard script configurator table with script: "kpi_policy" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
             const policy_description: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.policyDescriptionColumn + rowIndex).stringValue;
             if(!policy_description) {
-                throw Error("policy_description is missing");
+                throw Error('Dashboard script configurator table with script: "policy_description" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
             const who_will_be_responsible_description: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.whoWillBeResponsibleDescriptionColumn + rowIndex).stringValue;
             if(!who_will_be_responsible_description) {
-                throw Error("who_will_be_responsible_description is missing");
+                throw Error('Dashboard script configurator table with script: "who_will_be_responsible_description" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
             const how_to_fix_description: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.howToFixDescriptionColumn + rowIndex).stringValue;
             if(!how_to_fix_description) {
-                throw Error("how_to_fix_description is missing");
+                throw Error('Dashboard script configurator table with script: "how_to_fix_description" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
             const jql_query: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.jqlQueryColumn + rowIndex).stringValue;
             if(!jql_query) {
-                throw Error("jql_query is missing");
+                throw Error('Dashboard script configurator table with script: "jql_query" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
+
             }
 
             const active_rule: boolean | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.activeRuleColumn + rowIndex).boolValue;
-            if(active_rule == undefined) {
-                throw Error("active_rule is missing");
+            if (active_rule == undefined) {
+                throw Error('Dashboard script configurator table with script: "active_rule" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
-            const priorityTicketOwnership: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.priorityTicketOwnershipColumn + rowIndex).stringValue;
+            let priorityTicketOwnership: string | undefined = sheet.getCellByA1(this.dashboardCondition.scriptCells.scriptsCells.priorityTicketOwnershipColumn + rowIndex).stringValue;
             if(!priorityTicketOwnership) {
-                throw Error("priorityTicketOwnershipColumn is missing");
+                throw Error('Dashboard script configurator table with script: "priorityTicketOwnershipColumn" is missing on cell: ' + this.dashboardCondition.scriptCells.scriptsCells.scriptNameColumn + rowIndex);
             }
 
-            const priorityTicketOwnershipArray = priorityTicketOwnership
+            console.log("GetDashBoardAndConditions:scriptConditionStartParser: priorityTicketOwnership", priorityTicketOwnership)
+
+            priorityTicketOwnership = priorityTicketOwnership
                 .replace(/\s/g, '')
                 .replace(',', ';')
-                .split(";")
 
-            if (priorityTicketOwnershipArray && priorityTicketOwnershipArray.length > 0) {
-                throw Error("priorityTicketOwnershipArray is missing");
+            console.log("GetDashBoardAndConditions:scriptConditionStartParser: priorityTicketOwnership after update", priorityTicketOwnership)
+            const priorityTicketOwnershipArray = priorityTicketOwnership.split(";")
+            console.log("GetDashBoardAndConditions:scriptConditionStartParser: priorityTicketOwnershipArray", priorityTicketOwnershipArray)
+
+            if (priorityTicketOwnershipArray == null || priorityTicketOwnershipArray.length == 0) {
+                throw Error("Dashboard script configurator table with script: priorityTicketOwnershipArray is missing on cell: " + this.dashboardCondition.scriptCells.scriptsCells.priorityTicketOwnershipColumn + rowIndex);
             }
 
-            if (searchCondition) {
+            if (script_name) {
                 GetDashBoardAndConditions
                     .dashboardsConfigs
-                    .searchConditions[searchCondition] = {
+                    .searchConditions[script_name] = {
                     script_name: script_name as SearchScripts,
                     kpi_policy: kpi_policy as EnuKPI ,
                     active_rule: active_rule,
@@ -280,6 +296,7 @@ export class GetDashBoardAndConditions {
         }
 
         if (indexForSearchConditionsStart == null || indexForSearchConditionsEnd == null ) {
+            console.log("indexForSearchConditionsStart or indexForSearchConditionsEnd is null\"")
             throw new Error("indexForSearchConditionsStart or indexForSearchConditionsEnd is null");
         }
 

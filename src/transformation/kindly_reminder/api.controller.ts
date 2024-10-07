@@ -12,14 +12,30 @@ import {IssueAllInHunterGenerator} from "./reports/issueAllInHunterGenerator.ser
 
 // Rung Generator of Kindly Reminder - Supporting every steps independently
 export const run_generator_script = api({ expose: true, method: "POST", path: "/transformation/kindly_reminder/generator" },
-  async (params: TransformationKindlyReminderUniversalRequest): Promise<TransformationKindlyReminderUniversalResponse> => {
+    async (params: TransformationKindlyReminderUniversalRequest): Promise<TransformationKindlyReminderUniversalResponse> => {
 
-      new IssueAllInHunterGenerator().runScript(params).then(() => {
-          // Dont Wait, dont do anything here
-      });
+        try {
 
-      return { status: "script_is_running" };
-  }
+            await new IssueAllInHunterGenerator().runScript(params)
+                .then(() => {
+                // Dont Wait, dont do anything here
+                }).catch((error) => {
+                    console.error("We have error!!!!");
+                    console.error("We have error: " + error.message);
+                });
+
+            return { status: "script_is_running" };
+
+        // @ts-expect-error @ts-ignore
+        } catch (error: Error) {
+            console.error("We have error!!!!");
+            console.log("We have error" + error.message);
+            return {status: error.message ?  error.message : "not defined Error"};
+        }
+
+
+
+    }
 );
 
 // Valid week from Kindly Reminder

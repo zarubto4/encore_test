@@ -16,7 +16,6 @@ export class PromiseHttp extends PromiseHttpAvailableRequests{
         )
 
         if (token) {
-            console.log('PromiseHttp: token:', token)
             this.private_headers['Authorization'] = 'Bearer ' + token;
         }
     }

@@ -31,6 +31,7 @@ export class UpdateWeekConditionIntoWeekOverview {
     // -- Constructor  -------------------------------------------------------------------------------------------------
     // constructor() {}
 
+
     // -- Public methods  -----------------------------------------------------------------------------------------------
     public async  updateWeekWithNewWorksheet(weekNumber: number): Promise<void> {
         console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: init ==============================");
@@ -44,10 +45,14 @@ export class UpdateWeekConditionIntoWeekOverview {
         console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: week Row index", indexes.weekRowIndex);
 
         const numberOfIssueCell = result.sheet.getCellByA1("E" + indexes.weekRowIndex);
+        console.log("test 1");
         const tempoHoursOutOfBPCell = result.sheet.getCellByA1("F" + indexes.weekRowIndex);
+        console.log("test 2");
         const notFixedIssuesCell = result.sheet.getCellByA1("G" + indexes.weekRowIndex);
+        console.log("test 3");
         const fixedRatioCell = result.sheet.getCellByA1("H" + indexes.weekRowIndex);
 
+        console.log("test 4");
         numberOfIssueCell.value = replaceKeys(this.numberOfIssuesFormula, {'week_number': '' + weekNumber})
         tempoHoursOutOfBPCell.value = replaceKeys(this.tempoHoursOutOfBPFormula, {'week_number': '' + weekNumber})
         notFixedIssuesCell.value = replaceKeys(this.notFixedIssuesFormula, {'week_number': '' + weekNumber})

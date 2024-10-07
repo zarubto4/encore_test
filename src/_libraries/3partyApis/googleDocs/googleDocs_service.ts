@@ -10,11 +10,11 @@ export class GoogleDocsService {
 
     constructor(auth: AuthenticationForGoogle) {
 
-        console.log("ConfigApp: init configuration");
+        console.log("GoogleDocsService: init configuration: clientEmail", auth.clientEmail);
 
         this.googleAccountAuth = new JWT({
             email: auth.clientEmail,
-            key: auth.privateKey,
+            key: auth.privateKey.replace(/\\n/g, '\n'),
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 

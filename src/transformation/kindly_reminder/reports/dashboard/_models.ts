@@ -1,4 +1,3 @@
-
 export enum EnuKPI {
     "Mandatory" = "Mandatory",
     "Optionally" = "Optionally",
@@ -66,6 +65,7 @@ export enum SearchScripts {
 
 export class SearchConditionsCellIndexes {
     scriptsCells: {
+        implementationStatus: string
         scriptNameColumn: string,
         kpiPolicyColumn: string,
         activeRuleColumn: string,
@@ -75,6 +75,7 @@ export class SearchConditionsCellIndexes {
         jqlQueryColumn: string,
         priorityTicketOwnershipColumn: string,
     } = {
+        implementationStatus: 'A',
         scriptNameColumn: 'E',
         kpiPolicyColumn: 'B',
         activeRuleColumn: 'D',

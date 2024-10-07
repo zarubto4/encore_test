@@ -1,5 +1,4 @@
 import moment from "moment";
-import {number, string} from "zod";
 import {printPrettyArray} from "./printPrettyArray";
 
 
@@ -7,7 +6,7 @@ import {printPrettyArray} from "./printPrettyArray";
  * How to Use it:
  *
  *
- * template: Hello {{name}}, it's {{time}} we have {{gift_name}} for you with nice {{design.color}}
+ * template: Hello {name}, it's {time} we have {gift_name} for you with nice {design.color}
  * values: {
  *     name: "Groupon",
  *     time: new Date()
@@ -22,40 +21,45 @@ import {printPrettyArray} from "./printPrettyArray";
 export type ReplaceKeyValue = Record<string, (string | number | Date | moment.Moment | string[] | any)>;
 
 
-export function replaceKeys(template: string, values: ReplaceKeyValue, surfixkey?: string): string {
+export function replaceKeys(template: string, values: ReplaceKeyValue, suffixKey?: string): string {
 
-    for (const key in Object.keys(values)) {
+    console.log("replaceKeys:: template", template)
+    console.log("replaceKeys:: values", values)
 
-        const replaceKey = surfixkey ? ('/{{' + surfixkey +'.' + key + '}}/g') : ('/{{' + key + '}}/g');
+    for (const key of Object.keys(values)) {
+
+        console.log("replaceKeys:: for: key", key, "type", typeof values[key]);
+        const replaceKey = suffixKey != null ? ('{' + suffixKey +'.' + key + '}') : ('{' + key + '}');
 
         if (values[key] instanceof Array) {
+            console.log("replaceKeys:: key is Array", replaceKey);
             const subString = printPrettyArray(values[key]);
+            console.log("replaceKeys:: key is Array: subString. Value:", subString);
             template = template.replaceAll( replaceKey, subString);
         }
-
-        if (values[key] instanceof number) {
+        else if (typeof values[key] ===  'number') {
             template = template.replaceAll(replaceKey, values[key] + '');
         }
-
-        if (values[key] instanceof string) {
+        else if (typeof values[key] === 'string') {
             template = template.replaceAll(replaceKey, values[key] + '');
         }
-
-        if (values[key] instanceof moment) {
+        else if (values[key] instanceof moment) {
             const mmn = values[key] as moment.Moment;
             template = template.replaceAll(replaceKey, mmn.format("YYYY-MM-DD HH:mm:ss"));
         }
-
-        if (values[key] instanceof Date) {
+        else if (values[key] instanceof Date) {
             const date = values[key] as Date;
             template = template.replaceAll(replaceKey, date.toISOString());
         }
-
-        if (typeof values[key] == 'object' && values[key] !== null) {
+        else if (typeof values[key] == 'object' && values[key] !== null) {
             template = replaceKeys(template, values[key], key);
+        }
+        else {
+            console.error("replaceKeys:: replaceKey", replaceKey, "value is not supported");
         }
     }
 
+    // console.error("replaceKeys:: final Result", template);
     return template;
 
 }
@@ -66,9 +70,9 @@ export function replaceKeys(template: string, values: ReplaceKeyValue, surfixkey
  *
  *
  * template: {
- *     "name": "Your name is {{full_name}},
+ *     "name": "Your name is {full_name},
  *     "address: {
- *         "full address": "Your address is {{street}}, {{city}}
+ *         "full address": "Your address is {{street}}, {city}
  *     }
  * }
  * values: {

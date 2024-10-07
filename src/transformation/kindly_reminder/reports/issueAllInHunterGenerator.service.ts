@@ -146,7 +146,7 @@ export class IssueAllInHunterGenerator {
             }
 
             case "fix_automated_issues": {
-                await new GetFixableIssuesByAutomation().getAndFixAllCapLabourIssues(script.week)
+                const print = await new GetFixableIssuesByAutomation().getAndFixAllCapLabourIssues(script.week)
                 break;
             }
         }
@@ -183,6 +183,7 @@ export class IssueAllInHunterGenerator {
 
         // Print And Fix all Fixable issues by Automation --------------------------------------------------------------
         const projectStructure =  await new GetFixableIssuesByAutomation().getAndFixAllCapLabourIssues(activeWeekNumber)
+        issueProjectStructure = Object.assign(issueProjectStructure, projectStructure)
         console.log("generate: projectStructure done:", projectStructure);
 
         // Print project Stats -----------------------------------------------------------------------------------------
