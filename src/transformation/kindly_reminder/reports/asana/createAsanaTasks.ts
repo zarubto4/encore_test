@@ -1,12 +1,11 @@
-import {Groupon_VPS} from "../userWorkSheet/prepareManagerStage";
 import moment, {Moment} from "moment/moment.js";
 import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage.service";
 import {GetIssueUserStatistics} from "../getIssues/getIssueStatistics";
 import {AsanaIssueContent} from "./asanaIssueContent";
 import {CreateTaskForIssuesOwner, CreateTaskForProjectOwner, CreateTaskForVP, GetListOfIssues} from "./_models";
 import {
-    kindlyReminder_asana_fallowers_to_remove,
-    kindlyReminder_asana_project_id, kindlyReminder_asana_project_section_id,
+    kindlyReminder_asana_followers_to_remove,
+    kindlyReminder_asana_project_id, kindlyReminder_asana_project_section_id, kindlyReminder_grouponVPs,
     kindlyReminder_spreadSheetId,
     KindlyReminderConfigApp
 } from "../../encore.service";
@@ -26,165 +25,161 @@ export class CreateAsanaTasks {
     private readonly configApp = new KindlyReminderConfigApp();
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
 
-    public generateAsanaTasks(content: GenerateAsanaContent): Promise<void> {
+    public async generateAsanaTasks(content: GenerateAsanaContent): Promise<void> {
         console.log("CreateAsanaTasks:generateAsanaTasks: init =========================================================");
-        return new Promise(async(resolve, reject) => {
 
-            const generatedIssues = await new GetIssueUserStatistics().getIssueUserStatistics(content.week_number);
+        const generatedIssues = await new GetIssueUserStatistics().getIssueUserStatistics(content.week_number);
 
-            const worksheet_link: string = "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId;
-            const asana_ticket = await this.createWeekReportTask({
-                week_number: content.week_number,
-                deadline: content.deadline,
-                worksheet_link: "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId,
-            });
+        const worksheet_link: string = "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId;
+        const asana_ticket = await this.createWeekReportTask({
+            week_number: content.week_number,
+            deadline: content.deadline,
+            worksheet_link: "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId,
+        });
 
-            if (asana_ticket == null) {
-                return reject("Missing Main Asana Ticket");
-            }
+        if (!asana_ticket || !asana_ticket.data) {
+            throw new Error("Missing Main Asana Ticket");
+        }
 
-            const projectWorkSheet = await new ProjectStage().loadProjects(content.week_number);
-            const responseIssueUserLog = new GetIssueUserStatistics().getIssueUserStatistics(content.week_number);
-            const asanaUsers = await  this.configApp.asanaService.users.getAsanaUser();
+        const projectWorkSheet = await new ProjectStage().loadProjects(content.week_number);
+        // new GetIssueUserStatistics().getIssueUserStatistics(content.week_number);
+        const asanaUsers = await  this.configApp.asanaService.users.getAsanaUser();
 
-            for (const vicePresidentEmail of new Groupon_VPS().vps) {
-                console.log("active VP:", vicePresidentEmail);
-            }
+        for (const vicePresidentEmail of kindlyReminder_grouponVPs) {
+            console.log("active VP:", vicePresidentEmail);
+        }
 
-            for (const key of Object.keys(generatedIssues.userLog)) {
-                console.log("logged VPs:", key);
-            }
+        for (const key of Object.keys(generatedIssues.userLog)) {
+            console.log("logged VPs:", key);
+        }
 
-            for (const vicePresidentEmail of new Groupon_VPS().vps) {
-                        console.log("print by VP:", vicePresidentEmail);
+        for (const vicePresidentEmail of kindlyReminder_grouponVPs) {
+            console.log("print by VP:", vicePresidentEmail);
 
-                        if (generatedIssues.userLog[vicePresidentEmail]) {
+            if (generatedIssues.userLog[vicePresidentEmail]) {
 
-                            console.log("vicePresidentEmail:", vicePresidentEmail);
+                console.log("vicePresidentEmail:", vicePresidentEmail);
 
-                            let issueCounter: number = generatedIssues.userLog[vicePresidentEmail].issues_number;
-                            if (issueCounter > 0) {
-                                console.log("        creating task for week ", content.week_number);
+                const issueCounter: number = generatedIssues.userLog[vicePresidentEmail].issues_number;
+                if (issueCounter > 0) {
+                    console.log("        creating task for week ", content.week_number);
 
-                                const task = await this.createTaskForVP({
-                                    owner_email: vicePresidentEmail,
-                                    owner_name: generatedIssues.userLog[vicePresidentEmail].vpName,
-                                    assign_gid: (asanaUsers.byMail[vicePresidentEmail]) ? asanaUsers.byMail[vicePresidentEmail].gid : null,
-                                    week_number: content.week_number,
-                                    deadline: content.deadline,
-                                    created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
-                                    deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
-                                    number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].issues_number,
-                                    worksheet_link: worksheet_link,
-                                    parent_ticket_id: asana_ticket.data.gid,
-                                    week_ticket_id: asana_ticket.data.gid,
-                                    vPs_issues: generatedIssues.userLog[vicePresidentEmail].issues
-                                });
+                    const task = await this.createTaskForVP({
+                        owner_email: vicePresidentEmail,
+                        owner_name: generatedIssues.userLog[vicePresidentEmail].vpName,
+                        assign_gid: (asanaUsers.byMail[vicePresidentEmail]) ? asanaUsers.byMail[vicePresidentEmail].gid : null,
+                        week_number: content.week_number,
+                        deadline: content.deadline,
+                        created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
+                        deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
+                        number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].issues_number,
+                        worksheet_link: worksheet_link,
+                        parent_ticket_id: asana_ticket.data.gid,
+                        week_ticket_id: asana_ticket.data.gid,
+                        vPs_issues: generatedIssues.userLog[vicePresidentEmail].issues
+                    });
 
-                                if (task) {
-                                    for (const prj of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects)) {
+                    if (task && task.data) {
+                        for (const prj of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects)) {
 
-                                        console.log("        responsible for project", prj);
-                                        console.log("               creating ticket for owner", projectWorkSheet.projectOwnerShipOverview.byProject[prj].owner_name);
-                                        console.log("               project owner", generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email);
+                            console.log("        responsible for project", prj);
+                            console.log("               creating ticket for owner", projectWorkSheet.projectOwnerShipOverview.byProject[prj].owner_name);
+                            console.log("               project owner", generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email);
 
-                                        if (generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number > 0) {
+                            if (generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number > 0) {
 
-                                            let assign_project_gid: string | null = null;
-                                            if (generatedIssues.userLog[vicePresidentEmail].projects[prj] &&
-                                                generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email &&
-                                                asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email]) {
-                                                assign_project_gid = asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email].gid;
-                                            } else {
-                                                assign_project_gid = (asanaUsers.byMail[vicePresidentEmail]) ? asanaUsers.byMail[vicePresidentEmail].gid : null;
+                                let assign_project_gid: string | null = null;
+                                if (generatedIssues.userLog[vicePresidentEmail].projects[prj] &&
+                                    generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email &&
+                                    asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email]) {
+                                    assign_project_gid = asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email].gid;
+                                } else {
+                                    assign_project_gid = (asanaUsers.byMail[vicePresidentEmail]) ? asanaUsers.byMail[vicePresidentEmail].gid : null;
+                                }
+
+                                const subTaskProjectIssue = await this.createTaskForProjectOwner(
+                                    {
+                                        owner_name: generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_name ?? "",
+                                        owner_email: generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email ?? "",
+                                        project_name: prj,
+                                        assign_gid: assign_project_gid,
+                                        week_number: content.week_number,
+                                        deadline: content.deadline,
+                                        created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
+                                        deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
+                                        number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number,
+                                        project_is_active: projectWorkSheet.allowedProjects.includes(prj),
+                                        worksheet_link: worksheet_link,
+                                        parent_ticket_id: task.data.gid,
+                                        week_ticket_id: asana_ticket.data.gid,
+                                        projectIssues: {
+                                            issues: generatedIssues.userLog[vicePresidentEmail].projects[prj].issues,
+                                            issues_number: generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number
+                                        }
+
+                                    }
+                                );
+
+                                // Wait - Asana has Requests per minute limit
+                                await new Promise(r => setTimeout(r, 1000));
+
+                                if (subTaskProjectIssue && subTaskProjectIssue.data) {
+                                    // Does it make sense?
+                                    const users: string[] = [];
+                                    for (const issueOwner of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects[prj].users)) {
+                                        if (issueOwner != generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email) {
+                                            users.push(issueOwner);
+                                        }
+                                    }
+                                    if (users.length > 0) {
+                                        for (const issueOwnerEmail of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects[prj].users)) {
+
+                                            let assign_user_gid: string | null = null;
+
+                                            if(asanaUsers.byMail[issueOwnerEmail]) {
+                                                assign_user_gid = asanaUsers.byMail[issueOwnerEmail].gid;
+                                            } else if(assign_project_gid) {
+                                                assign_user_gid = assign_project_gid;
                                             }
 
-                                            const subTaskProjectIssue = await this.createTaskForProjectOwner(
+                                            await this.createTaskForIssuesOwner(
                                                 {
-                                                    owner_name: generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_name ?? "",
-                                                    owner_email: generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email ?? "",
+                                                    owner_name: generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].name,
+                                                    owner_email: issueOwnerEmail,
                                                     project_name: prj,
-                                                    assign_gid: assign_project_gid,
+                                                    assign_gid: assign_user_gid,
                                                     week_number: content.week_number,
                                                     deadline: content.deadline,
                                                     created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
                                                     deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
-                                                    number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number,
-                                                    project_is_active: projectWorkSheet.allowedProjects.includes(prj),
+                                                    number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].issues_number,
                                                     worksheet_link: worksheet_link,
-                                                    parent_ticket_id: task.data.gid,
+                                                    parent_ticket_id: subTaskProjectIssue.data.gid,
                                                     week_ticket_id: asana_ticket.data.gid,
-                                                    projectIssues: {
-                                                        issues: generatedIssues.userLog[vicePresidentEmail].projects[prj].issues,
-                                                        issues_number: generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number
-                                                    }
-
+                                                    userIssues: generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail]
                                                 }
                                             );
-                                            await new Promise(r => setTimeout(r, 1000));
-
-                                            if (subTaskProjectIssue) {
-                                                // Does it make sence?
-                                                let users: string[] = [];
-                                                for (const issueOwner of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects[prj].users)) {
-                                                    if (issueOwner != generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email) {
-                                                        users.push(issueOwner);
-                                                    }
-                                                }
-                                                if (users.length > 0) {
-                                                    for (const issueOwnerEmail of Object.keys(generatedIssues.userLog[vicePresidentEmail].projects[prj].users)) {
-
-                                                        let assign_user_gid: string | null = null;
-
-                                                        if(asanaUsers.byMail[issueOwnerEmail]) {
-                                                            assign_user_gid = asanaUsers.byMail[issueOwnerEmail].gid;
-                                                        } else if(assign_project_gid) {
-                                                            assign_user_gid = assign_project_gid;
-                                                        }
-
-                                                        await this.createTaskForIssuesOwner(
-                                                            {
-                                                                owner_name: generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].name,
-                                                                owner_email: issueOwnerEmail,
-                                                                project_name: prj,
-                                                                assign_gid: assign_user_gid,
-                                                                week_number: content.week_number,
-                                                                deadline: content.deadline,
-                                                                created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
-                                                                deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
-                                                                number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].issues_number,
-                                                                worksheet_link: worksheet_link,
-                                                                parent_ticket_id: subTaskProjectIssue.data.gid,
-                                                                week_ticket_id: asana_ticket.data.gid,
-                                                                userIssues: generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail]
-                                                            }
-                                                        ).then(async (subTaskIssueInProjectIssue) => {
-                                                            await new Promise(r => setTimeout(r, 500));
-                                                            return null;
-                                                        });
-                                                    }
-                                                }
-                                            }
+                                            await new Promise(r => setTimeout(r, 500));
                                         }
                                     }
                                 }
-
-                            } else {
-                                console.log("       no collected issues for this VP ");
                             }
-                        } else {
-                            console.log("        VP is not responsible for This Project now ");
                         }
+                    }
 
-
+                } else {
+                    console.log("       no collected issues for this VP ");
+                }
+            } else {
+                console.log("        VP is not responsible for This Project now ");
+            }
         }
 
-            resolve();
-        });
+
     }
 
 
@@ -224,10 +219,11 @@ export class CreateAsanaTasks {
             assignee: content.assign_gid,
             due_on:  content.deadline.format("YYYY-MM-DD"),
             html_notes: replaceKeys(new AsanaIssueContent().vp_text, {
-                    ...content, ...{
-                        project_id: kindlyReminder_asana_project_id,
-                        list_of_issues: this.getListOfIssues(content.vPs_issues),
-                    }
+                    ...content,
+                ...{
+                    project_id: kindlyReminder_asana_project_id,
+                    list_of_issues: this.getListOfIssues(content.vPs_issues),
+                }
                 }
             ),
             custom_fields: {
@@ -247,7 +243,7 @@ export class CreateAsanaTasks {
         const ticket = await this.configApp.asanaService.tasks.createSubTask( content.parent_ticket_id, {
             name: "Week " + content.week_number + " -"
                 + " Project: [" + content.project_name + "]"
-                +   (content.project_is_active == false ? " is DEACTIVATED!," : "")
+                +   (!content.project_is_active ? " is DEACTIVATED!," : "")
                 + " owner: " +content.owner_name
                 + " - Opened Issues: "   + content.number_of_issues,
             due_on:  content.deadline.format("YYYY-MM-DD"),
@@ -257,7 +253,7 @@ export class CreateAsanaTasks {
                     list_of_issues: this.getListOfIssues(content.projectIssues.issues),
                 }})
         });
-        if (ticket) {
+        if (ticket && ticket.data) {
             await this.removeFollowers(ticket.data.gid);
             return ticket;
         } else {
@@ -283,7 +279,7 @@ export class CreateAsanaTasks {
                 }
             )
         });
-        if (ticket) {
+        if (ticket && ticket.data) {
             await this.removeFollowers(ticket.data.gid);
             return ticket;
         } else {
@@ -293,17 +289,12 @@ export class CreateAsanaTasks {
 
     // -- Helpers ------------------------------------------------------------------------------------------------------
 
-    private removeFollowers(taskId: string): Promise<void>  {
-        return new Promise((resolve, reject): void => {
-            this.configApp.asanaService.users.removeFollowers(taskId, kindlyReminder_asana_fallowers_to_remove)
-                .then(() => {
-                    resolve();
-                })
-        });
+    private async removeFollowers(taskId: string): Promise<void>  {
+        await this.configApp.asanaService.users.removeFollowers(taskId, kindlyReminder_asana_followers_to_remove);
     }
 
     private getListOfIssues(issues: GetListOfIssues): string {
-        let list_of_issues: string = "";
+        let list_of_issues = "";
 
         for (const scriptName of Object.keys(issues)) {
             list_of_issues = list_of_issues + "<strong>What is Required to Fix:</strong> " + issues[scriptName].howToFixThat;

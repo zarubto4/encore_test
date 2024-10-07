@@ -14,7 +14,7 @@ export class UserJira extends CommonJira {
     }
 
     public getUser(search: GetUser): Promise<User | null> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.jiraClient.users.getUser(search, (error, data) => {
 
                 if (data == undefined) {
@@ -29,6 +29,8 @@ export class UserJira extends CommonJira {
                 }
 
                 resolve(data);
+            }).then(() => {
+                // Callback Done
             });
         });
     }
@@ -39,7 +41,7 @@ export class UserJira extends CommonJira {
         this.setProperlySearchIfSomethingIsMissing(search);
 
         // Create Promise to unblock threads - and build a recursive structure that can retrieve all pages of results.
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.jiraClient.users.getAllUsers(search, (error, data) => {
 
                 if (data == undefined) {
@@ -66,7 +68,7 @@ export class UserJira extends CommonJira {
                 } else {
                     return resolve(data);
                 }
-            }).then(r => {
+            }).then(() => {
                 // Callback Done
             });
         });

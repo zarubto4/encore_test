@@ -1,12 +1,16 @@
 
 export interface AsanaTicketsListResult {
-    data: AsanaTicket[];
-    error?: any
+    data?: AsanaTicket[];
+    error?: {
+        message: string;
+    }
 }
 
 export interface AsanaTicketResult {
-    data: AsanaTicket;
-    error?: any
+    data?: AsanaTicket;
+    error?: {
+        message: string;
+    }
 }
 
 export interface AsanaTicket{
@@ -40,10 +44,10 @@ export interface AsanaTicket{
     hearted: false;
     permalink_url: string; // 'https://app.asana.com/0/1207755315742869/1207764922941465';
     assignee_status: string;
-    projects: any[];
-    followers: any[];
-    memberships: any[];
-    custom_fields: any[];
+    projects: object[];
+    followers: object[];
+    memberships: object[];
+    custom_fields: object[];
 }
 
 // -----------------------------------------------------------------------------------------------
@@ -51,22 +55,20 @@ export interface AsanaTicket{
 export class AsanaUsersResult {
     data: AsanaUsersResultUser[] = []
 
-    byMail: {
-        [email: string]: AsanaUsersResultUser
-    }  = {}
+    byMail: Record<string, AsanaUsersResultUser>  = {}
 
-    byName: {
-        [name: string]: AsanaUsersResultUser
-    } = {}
+    byName: Record<string, AsanaUsersResultUser> = {}
 
-    byId: {
-        [id: string]: AsanaUsersResultUser
-    } = {}
+    byId: Record<string, AsanaUsersResultUser> = {}
 
-    error?: any;
+    error?: {
+        message: string;
+    }
 
     constructor(error: string) {
-        this.error = error;
+        this.error = {
+            message:error
+        };
     }
 }
 export interface AsanaUsersResultUser {
@@ -82,23 +84,25 @@ export interface AsanaUsersResultUser {
 export class ProjectSectionResult {
     data: ProjectSection[] = [];
 
-    byName: {
-        [name: string]: ProjectSection
-    } = {};
+    byName: Record<string, ProjectSection> = {};
 
-    byId: {
-        [id: string]: ProjectSection
-    } = {};
+    byId: Record<string, ProjectSection> = {};
 
-    error?: any;
+    error?: {
+        message: string;
+    }
 
     constructor(error: string) {
-        this.error = error;
+        this.error = {
+            message:error
+        };
     }
 }
 export interface ProjectSection {
     gid?: string;
     name?: string;
     resource_type?: string;
-    error?: any;
+    error?: {
+        message: string;
+    }
 }

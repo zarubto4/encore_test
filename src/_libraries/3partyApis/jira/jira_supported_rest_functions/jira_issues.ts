@@ -38,6 +38,8 @@ export class IssuesJira extends CommonJira {
                     }).catch((error) => {
                         return reject(error);
                     });
+            }).then(() => {
+                // Callback Done
             });
         });
     }
@@ -46,7 +48,8 @@ export class IssuesJira extends CommonJira {
         return new Promise((resolve, reject): void => {
             this.jiraClient.issues.editIssue(parameters, (error) => {
                 if (error) {
-                    // @ts-ignore
+
+                    // @ts-expect-error @ts-ignore
                     console.log("updateIssue: error:", error.response['data']['errors']);
                     return reject(error);
                 } else {
@@ -55,14 +58,14 @@ export class IssuesJira extends CommonJira {
                             return resolve(ticket);
                         })
                 }
-            }).then(r => {
+            }).then(() => {
                 // Callback Done
             });
         });
     }
 
     public getIssues(search: GetIssue): Promise<Issue | null> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.jiraClient.issues.getIssue(search, (error, data) => {
 
                 if (data == undefined) {
@@ -76,6 +79,8 @@ export class IssuesJira extends CommonJira {
                 }
 
                 return resolve(data);
+            }).then(() => {
+                // Callback Done
             });
         });
     }
@@ -86,7 +91,7 @@ export class IssuesJira extends CommonJira {
         this.setProperlySearchIfSomethingIsMissing(search);
 
         // Create Promise to unblock threads - and build a recursive structure that can retrieve all pages of results.
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
             this.jiraClient.issues.getChangeLogs(search, (error, data) => {
 
@@ -105,7 +110,12 @@ export class IssuesJira extends CommonJira {
                 // else we are on latest page, return result
                 if (this.isThereMoreResults(data)) {
                     console.error("getIssuesChangeLogs: ticket:", search.issueIdOrKey, " - there is more then :", search.startAt );
-                    this.getIssuesChangeLogs(<GetChangeLogs>this.increaseSearchCondition(data, search))
+                    const searResult = this.increaseSearchCondition(data, search);
+                    this.getIssuesChangeLogs({
+                        issueIdOrKey: search.issueIdOrKey,
+                        startAt: searResult.startAt,
+                        maxResults: searResult.maxResults
+                          })
                         .then((result) => {
                             // Merge the results and return them
                             return resolve(data.values ? data.values.concat(result) : result);
@@ -114,14 +124,14 @@ export class IssuesJira extends CommonJira {
                 } else {
                     return  resolve(data.values ? data.values : []);
                 }
-            }).then(r => {
+            }).then(() => {
                 // Callback Done
             });
         });
     }
 
     public getIssueSchemaForProject(projectId: number): Promise<PageIssueTypeSchemeProjects | null> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.jiraClient.issueTypeSchemes.getIssueTypeSchemeForProjects({
                 projectId: [projectId]
             }, (error, data) => {
@@ -137,7 +147,7 @@ export class IssuesJira extends CommonJira {
                 }
 
                 return resolve(data);
-            }).then(r => {
+            }).then(() => {
                 // Callback Done
             });
         });
@@ -151,7 +161,7 @@ export class IssuesJira extends CommonJira {
         console.log("getAllIssues: jql:", search.jql)
 
         // Create Promise to unblock threads - and build a recursive structure that can retrieve all pages of results.
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
             this.jiraClient.issueSearch.searchForIssuesUsingJql(search, (error, data) => {
 
@@ -177,14 +187,14 @@ export class IssuesJira extends CommonJira {
                 } else {
                     return  resolve(data.issues ? data.issues : []);
                 }
-            }).then(r => {
+            }).then(() => {
                 // Callback Done
             });
         });
     }
 
     public getAllChildIssues(issueKey: string): Promise<ChildHierarchyIssueResponse> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
             const search: SearchForIssuesUsingJql = {
                 jql: replaceKeys('issue in portfolioChildIssuesOf("{issueKey}")', {'issueKey':  issueKey})
@@ -204,9 +214,9 @@ export class IssuesJira extends CommonJira {
     }
 
     public getUnparentedJiraTicketsLogsByTempo (projectKey: string, logs: WorkLog[]): Promise<Issue[]> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
-            let uniIssueIds: number[] = [];
+            const uniIssueIds: number[] = [];
             logs.forEach((log) => {
                 if (log.issue && !uniIssueIds.includes(log.issue.id)) {
                     uniIssueIds.push(log.issue.id);
@@ -229,12 +239,12 @@ export class IssuesJira extends CommonJira {
     }
 
     private getUnparentedJiraTicketsLogsByTempo_partialQuery (projectKey: string, uniIssueIds: number[]): Promise<Issue[]> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
 
             console.log('getUnparentedJiraTicketsLogsByTempo_partialQuery: projectKey', projectKey, "uniIssueIds size:", uniIssueIds.length);
 
-            let chunk: number[] = uniIssueIds.slice(0, 100);
+            const chunk: number[] = uniIssueIds.slice(0, 100);
             uniIssueIds = uniIssueIds.slice(100, uniIssueIds.length);
 
             this.getAllIssues({
@@ -287,40 +297,27 @@ export class IssuesJira extends CommonJira {
             if (ei.parent && ei.parent.issueKey == parentIssueKey) {
                 formatedResult.children.push({
                     parent: ei.issueKey,
-                    children: this.findChildrens(ei.issueKey, issues)
+                    children: this.findAllChildren(ei.issueKey, issues)
                 });
             }
         });
         return formatedResult;
     }
 
-    private findChildrens(parentIssueKey: string, issues: Issue[]): Jira_childHierarchyIssue[] {
-        const childrens: Jira_childHierarchyIssue[] = [];
+    private findAllChildren(parentIssueKey: string, issues: Issue[]): Jira_childHierarchyIssue[] {
+        const children: Jira_childHierarchyIssue[] = [];
         issues.forEach((i) => {
             const ei: ExtendedIssue = new ExtendedIssue(i);
             if (ei.parent && ei.parent.issueKey == parentIssueKey) {
-                childrens.push({
+                children.push({
                     parent: ei.issueKey,
-                    children: this.findChildrens(ei.issueKey, issues)
+                    children: this.findAllChildren(ei.issueKey, issues)
                 });
             }
         })
-        return childrens;
+        return children;
     }
 
     // Helpers ---------------------------------------------------------------------------------------------------------
 
-      public insertIntoTicketDescription(json: {}, injectionKeys: {}): any {
-        function owoifyObject (obj: {[key: string]: any }) {
-            for (const key in obj) {
-                if (typeof obj[key] === 'string') {
-                    obj[key] = replaceKeys(obj[key], injectionKeys);
-                } else if (typeof obj[key] === 'object' && obj[key]) {
-                    owoifyObject(obj[key])
-                }
-            }
-        }
-        owoifyObject(json);
-        return json;
-    }
 }

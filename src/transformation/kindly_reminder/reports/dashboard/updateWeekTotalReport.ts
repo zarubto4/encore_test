@@ -7,7 +7,7 @@ import {replaceKeys} from "../../../../_libraries/core/parsing_and_formating/str
 import {SpreadSheetWorkSheet} from "../../../../_libraries/3partyApis/googleDocs/models/config";
 
 /**
- * Určeno pro nalazení tabulky na úvodník worksheet, kde máme přehled vyřešených a nevyřešených issues.
+ * Designed to load a table on the worksheet editor, where we have an overview of resolved and unresolved issues.
  */
 export class UpdateWeekConditionIntoWeekOverview {
 
@@ -24,57 +24,48 @@ export class UpdateWeekConditionIntoWeekOverview {
         + '+ COUNTIF(\'Week {week_number}\'!A6:A2501,"REMOVED") '
         + '+ COUNTIF(\'Week {week_number}\'!A6:A2501, "SKIP") ';
 
-    private tempoHoursOutOfBPFormula: string = '=SUM(\'Week {week_number}\'!N6:N2501)';
-    private notFixedIssuesFormula: string    = '=COUNTIF(\'Week {week_number}\'!A6:A2501, "TODO")';
-    private fixedRatioFormula: string        = '=1-G{row_number}/(E{row_number}/100)/100';
+    private tempoHoursOutOfBPFormula = '=SUM(\'Week {week_number}\'!N6:N2501)';
+    private notFixedIssuesFormula    = '=COUNTIF(\'Week {week_number}\'!A6:A2501, "TODO")';
+    private fixedRatioFormula        = '=1-G{row_number}/(E{row_number}/100)/100';
 
     // -- Constructor  -------------------------------------------------------------------------------------------------
-    constructor() {}
+    // constructor() {}
 
     // -- Public methods  -----------------------------------------------------------------------------------------------
-    public updateWeekWithNewWorksheet(weekNumber: number): Promise<void> {
+    public async  updateWeekWithNewWorksheet(weekNumber: number): Promise<void> {
         console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: init ==============================");
-        return new Promise((resolve, reject): void => {
-            this.configApp.googleServices.spreadsheet
-                .getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_dashboardWorkSheetId)
-                .then(async (result) => {
-                    this.findTableIndexes(result, weekNumber)
-                        .then(async (indexes) => {
 
-                            console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: result", JSON.stringify(indexes));
-                            console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: week Row index", indexes.weekRowIndex);
+        const result = await this.configApp.googleServices.spreadsheet
+            .getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_dashboardWorkSheetId)
 
-                            const numberOfIssueCell = result.sheet.getCellByA1("E" + indexes.weekRowIndex);
-                            const tempoHoursOutOfBPCell = result.sheet.getCellByA1("F" + indexes.weekRowIndex);
-                            const notFixedIssuesCell = result.sheet.getCellByA1("G" + indexes.weekRowIndex);
-                            const fixedRatioCell = result.sheet.getCellByA1("H" + indexes.weekRowIndex);
+        const indexes = await  this.findTableIndexes(result, weekNumber);
 
-                            numberOfIssueCell.value = replaceKeys(this.numberOfIssuesFormula, {'week_number': '' + weekNumber})
-                            tempoHoursOutOfBPCell.value = replaceKeys(this.tempoHoursOutOfBPFormula, {'week_number': '' + weekNumber})
-                            notFixedIssuesCell.value = replaceKeys(this.notFixedIssuesFormula, {'week_number': '' + weekNumber})
-                            fixedRatioCell.value = replaceKeys(this.fixedRatioFormula, {'row_number': '' + indexes.weekRowIndex})
+        console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: result", JSON.stringify(indexes));
+        console.log("UpdateWeekConditionIntoWeekOverview:updateWeekWithNewWorksheet: week Row index", indexes.weekRowIndex);
 
-                            await result.sheet.saveUpdatedCells();
+        const numberOfIssueCell = result.sheet.getCellByA1("E" + indexes.weekRowIndex);
+        const tempoHoursOutOfBPCell = result.sheet.getCellByA1("F" + indexes.weekRowIndex);
+        const notFixedIssuesCell = result.sheet.getCellByA1("G" + indexes.weekRowIndex);
+        const fixedRatioCell = result.sheet.getCellByA1("H" + indexes.weekRowIndex);
 
-                            resolve();
-                        })
+        numberOfIssueCell.value = replaceKeys(this.numberOfIssuesFormula, {'week_number': '' + weekNumber})
+        tempoHoursOutOfBPCell.value = replaceKeys(this.tempoHoursOutOfBPFormula, {'week_number': '' + weekNumber})
+        notFixedIssuesCell.value = replaceKeys(this.notFixedIssuesFormula, {'week_number': '' + weekNumber})
+        fixedRatioCell.value = replaceKeys(this.fixedRatioFormula, {'row_number': '' + indexes.weekRowIndex})
 
-
-                });
-        });
+        await result.sheet.saveUpdatedCells();
     }
 
     // --- Helpers -----------------------------------------------------------------------------------------------------
-    private findTableIndexes(spreadSheet: SpreadSheetWorkSheet, weekNumber: number): Promise<{
+    private async findTableIndexes(spreadSheet: SpreadSheetWorkSheet, weekNumber: number): Promise<{
         weekRowIndex: number | null
     }> {
-        return new Promise(async (resolve, reject) => {
             console.log("UpdateWeekConditionIntoWeekOverview:findTableIndexes: loadCells");
             await spreadSheet.sheet.loadCells('A1:AZ30000'); // loads range of cells into local cache - DOES NOT RETURN THE CELLS
             const rows = await spreadSheet.sheet.getRows({offset: 0}); // can pass in { limit, offset }
 
-            let indexForSearchConditionsStart: number = 0; // Where we're starting to get Script conditions
-            let indexForSearchConditionsEnd: number = 0; // Where we're ending to get Script conditions
+            let indexForSearchConditionsStart = 0; // Where we're starting to get Script conditions
+            let indexForSearchConditionsEnd = 0; // Where we're ending to get Script conditions
 
             for (const row of rows) {
                 // this mark: "scriptStart" is in worksheet in white color as invisible flag for this script
@@ -94,7 +85,7 @@ export class UpdateWeekConditionIntoWeekOverview {
             // Find Right row by Week number in colum B
             for( let rowIndex: number = (indexForSearchConditionsStart + 2); rowIndex < indexForSearchConditionsEnd; rowIndex++ ) {
                 if (weekNumber == spreadSheet.sheet.getCellByA1("B" + rowIndex).numberValue) {
-                    return resolve (
+                    return (
                         {
                             weekRowIndex: rowIndex,
                         }
@@ -103,13 +94,12 @@ export class UpdateWeekConditionIntoWeekOverview {
             }
 
             // If not found - return null
-            return  resolve (
+            return (
                 {
                     weekRowIndex: null,
                 }
             );
 
-        });
     }
 
 

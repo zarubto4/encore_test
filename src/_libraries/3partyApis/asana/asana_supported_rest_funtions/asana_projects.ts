@@ -7,8 +7,8 @@ export class AsanaServiceProjects {
     constructor(protected request: PromiseHttp) {}
 
     public getProjectSections(project_gid: string) : Promise<ProjectSectionResult | null> {
-        return new Promise((resolve, reject): void => {
-            this.request.get<ProjectSectionResult>('1.0/projects/' + project_gid + '/sections', {},   200)
+        return new Promise((resolve): void => {
+            this.request.get<ProjectSectionResult>('1.0/projects/' + project_gid + '/sections', {}, 200)
                 .then((result) => {
                     if (result.error) {
                         console.log("getProjectSections error:", result.error);
@@ -23,7 +23,7 @@ export class AsanaServiceProjects {
                             new ProjectSectionResult("Error")
                         );
                     }
-                    let sectionResult: ProjectSectionResult = <ProjectSectionResult> result.data;
+                    const sectionResult: ProjectSectionResult = result.data as ProjectSectionResult;
                     sectionResult.byName = {};
                     sectionResult.byId = {};
 
@@ -42,18 +42,18 @@ export class AsanaServiceProjects {
 
     public createProjectSections(project_gid: string, name: string) : Promise<ProjectSection> {
 
-        let data = {
+        const data = {
             data: {
                 'name': name
             }
         };
 
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.request.post<{data: { gid: string, name: string}}>('1.0/projects/' + project_gid + '/sections', {},  data,  201)
                 .then( ( result) => {
                     if (result.error) {
                         console.log("createProjectSections error:", result.error);
-                        resolve(<ProjectSection>{"error": "error"});
+                        resolve(({"error": "error"} as ProjectSection));
                     } else {
                         if (result.data && result.data.data.gid) {
                             resolve({

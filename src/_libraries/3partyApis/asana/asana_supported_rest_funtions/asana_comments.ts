@@ -1,5 +1,5 @@
 import {PromiseHttp} from "../../../core/http_requests/promise_http_request";
-import {AsanaTicketResult, ProjectSection, ProjectSectionResult} from "../models/asana_resultsModels";
+import {AsanaTicketResult} from "../models/asana_resultsModels";
 import {CreateStory} from "../models/asana_requestsModels";
 
 
@@ -14,7 +14,11 @@ export class AsanaServiceComments {
                 .then((result) => {
                     if (result.error) {
                         console.log("createTask error:", result.error);
-                        return <AsanaTicketResult>{"error": "error"};
+                        return {
+                            error: {
+                                message: result.error && result.error.message ? result.error.message : "Undefined Error",
+                            }
+                        }
                     } else {
                         return result.data ? result.data : null;
                     }

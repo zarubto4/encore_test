@@ -11,7 +11,7 @@ export class ProjectJira extends CommonJira {
     }
 
     public getProject(search: GetProject): Promise<Project | null> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             this.jiraClient.projects.getProject(search, (error, data) => {
 
                 if (data == undefined) {
@@ -26,6 +26,8 @@ export class ProjectJira extends CommonJira {
                 }
 
                 resolve(data);
+            }).then( () => {
+                // Callback Done
             });
         });
     }
@@ -36,7 +38,7 @@ export class ProjectJira extends CommonJira {
         this.setProperlySearchIfSomethingIsMissing(search);
 
         // Create Promise to unblock threads - and build a recursive structure that can retrieve all pages of results.
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
             this.jiraClient.projects.searchProjects(search, (error, data) => {
 
@@ -63,7 +65,7 @@ export class ProjectJira extends CommonJira {
                     // console.log("getAllProjects - no more results");
                     return resolve(data.values);
                 }
-            }).then(r => {
+            }).then( () => {
                 // Callback Done
             });
         });

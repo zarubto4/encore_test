@@ -43,15 +43,15 @@ export class KindlyReminderConfigApp {
 
 }
 
-export const kindlyReminder_spreadSheetId     = '1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk';
-export const kindlyReminder_managersWorkSheetId                     = 879128958;    // WorkDay
-export const kindlyReminder_projectWorkSheetId                      = 226816260;    // Project
-export const kindlyReminder_userWorkSheetId                          = 62957161;     // Users Stats
-export const kindlyReminder_dashboardWorkSheetId                    = 303737385;    // Dashboard with Config
+export const kindlyReminder_spreadSheetId     = '1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk'; // Google spreadsheet ID
+export const kindlyReminder_managersWorkSheetId                     = 879128958;    // Google spreadsheet - worksheet ID - WorkDay
+export const kindlyReminder_projectWorkSheetId                      = 226816260;    // Google spreadsheet - worksheet ID - Project
+export const kindlyReminder_userWorkSheetId                          = 62957161;     // Google spreadsheet - worksheet ID - Users Stats
+export const kindlyReminder_dashboardWorkSheetId                    = 303737385;    // Google spreadsheet - worksheet ID - Dashboard with Config
 
-export const  kindlyReminder_asana_project_id               = '1207778959375434';              // Production
-export const  kindlyReminder_asana_project_section_id       = '1207778959375446';      // Production
-export const  kindlyReminder_asana_fallowers_to_remove: string[]                = ['1204853356727858'];      // Production
+export const  kindlyReminder_asana_project_id               = '1207778959375434';      // Asana Kindly Reminder Production
+export const  kindlyReminder_asana_project_section_id       = '1207778959375446';      // Project section in Asana project
+export const  kindlyReminder_asana_followers_to_remove: string[]                = ['1204853356727858'];     // User ids that we want to remove after ticket was created
 
 export const  kindlyReminder_hideThiesVps: string[] = [
     "Barbara Weisz",        // CSO

@@ -1,25 +1,17 @@
 import {PromiseHttp} from "../../../core/http_requests/promise_http_request";
-import {AuthenticationForAsana} from "../models/asana_configModels";
-import {
-    AsanaTicketResult,
-    AsanaTicketsListResult,
-    AsanaUsersResult,
-    ProjectSection,
-    ProjectSectionResult
-} from "../models/asana_resultsModels";
-import {CreateStory, CreateTask, UpdateTask} from "../models/asana_requestsModels";
+import {AsanaUsersResult,} from "../models/asana_resultsModels";
 
 export class AsanaServiceUsers{
 
     constructor(protected request: PromiseHttp) {}
 
     public getAsanaUser() : Promise<AsanaUsersResult> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
-            let request = {
+            const request = {
                 'opt_fields': "email,name"
             };
-            this.request.get<AsanaUsersResult>('1.0/workspaces/8437193015852/users', request,   200)
+            this.request.get<AsanaUsersResult>('1.0/workspaces/8437193015852/users', request, 200)
                 .then((result) => {
 
                     if (result.error) {
@@ -36,7 +28,7 @@ export class AsanaServiceUsers{
                     }
 
 
-                    let userResult: AsanaUsersResult = <AsanaUsersResult> result.data ;
+                    const userResult: AsanaUsersResult = result.data as AsanaUsersResult ;
                     userResult.byMail = {};
                     userResult.byName = {};
                     userResult.byId = {};
@@ -53,16 +45,15 @@ export class AsanaServiceUsers{
     }
 
     public removeFollowers(taskId: string, followers: string[]) : Promise<void> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
-            let request = {
-            };
-
-            let body = {
+            const request = {};
+            const body = {
                 'data': {
                     'followers': followers
                 }
             };
+
             this.request.post<AsanaUsersResult>('1.0/tasks/' + taskId + '/removeFollowers', request,  body,   200)
                 .then((result) => {
                     if (result.error) {

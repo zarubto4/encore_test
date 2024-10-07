@@ -10,7 +10,12 @@ export default tseslint.config(
     ...tseslint.configs.strict,
     {
         files: ['/src/**/*.ts'],
-        ignorePatterns: [/node_modules/],
+        ignores: [
+            'encore.gen',
+            '.encore'
+        ],
+        ignorePatterns: [
+            '**/*.js'
+        ]
     }
-
 );

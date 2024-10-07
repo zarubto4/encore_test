@@ -14,12 +14,10 @@ export interface CreateTaskForVP {
     worksheet_link: string,
     parent_ticket_id: string,
     week_ticket_id: string,
-    vPs_issues: {
-        [scriptName: string]: {
+    vPs_issues: Record<string, {
             howToFixThat: string
             issue: IssueLog[]
-        }
-    }
+        }>
 }
 
 export interface CreateTaskForProjectOwner {
@@ -31,7 +29,7 @@ export interface CreateTaskForProjectOwner {
     number_of_issues: string;
     project_name: string;
     assign_gid: string | null;
-    projectIssues: { issues_number: number; issues: { [p: string]: { howToFixThat: string; issue: IssueLog[] } } };
+    projectIssues: { issues_number: number; issues: Record<string, { howToFixThat: string; issue: IssueLog[] }> };
     week_ticket_id: string;
     worksheet_link: string;
     parent_ticket_id: string;
@@ -53,19 +51,15 @@ export interface CreateTaskForIssuesOwner {
     parent_ticket_id: string,
     week_ticket_id: string,
     userIssues: {
-        issues: {
-            [scriptName: string]: {
+        issues: Record<string, {
                 howToFixThat: string
                 issue: IssueLog[]
-            }
-        },
+            }>,
         issues_number: number
     }
 }
 
-export interface GetListOfIssues {
-    [scriptName: string]: {
+export type GetListOfIssues = Record<string, {
         howToFixThat: string
         issue: IssueLog[]
-    }
-}
+    }>;

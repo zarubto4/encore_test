@@ -9,7 +9,7 @@
     "test": "vitest",
     "gen": " encore gen client test-app-fwsi --output=./client_export/client.ts --env=local",
     "gen_open_api": "encore gen client --lang=openapi --output=./client_export/openapi.json --env=local",
-    "lint": "npx eslint .",
+    "lint": "npx eslint . --ignore-pattern 'encore.gen' --ignore-pattern '.encore'",
     "validate": "npm-run-all --parallel test lint",
     "precommit": "npm validate",
     "prepush": "npm validate"

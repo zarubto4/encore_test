@@ -1,7 +1,6 @@
 import {AuthenticationForGoogle} from "./models/config";
 import {JWT} from "google-auth-library";
 import {GoogleSpreadSheetService} from "./googleDocs_supportedDocs/googleDocs_spreadSheet";
-import {AsanaServiceTasks} from "../asana/asana_supported_rest_funtions/asana_tasks";
 
 export class GoogleDocsService {
 

@@ -1,6 +1,5 @@
 
 
-
 export class Tempo_wokLogsRequest {
     authorIds?: number;
     projectId?: number;
@@ -10,6 +9,10 @@ export class Tempo_wokLogsRequest {
     from?: string;
     to?: string;
     week?: number; // Only for operations
+}
+
+export interface Tempo_wokLogsRequest2 {
+    to: string;
 }
 
 export class WokLogsRequestByIssue {

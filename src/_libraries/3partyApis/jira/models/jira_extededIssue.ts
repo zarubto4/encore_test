@@ -2,6 +2,8 @@ import {Issue} from "jira.js/src/version3/models/issue";
 import {User} from "jira.js/src/version3/models/user";
 import {UserDetails} from "jira.js/src/version3/models/userDetails";
 import {Fields} from "jira.js/src/version3/models/fields";
+import {replaceKeys} from "../../../core/parsing_and_formating/stringInject";
+import {printPrettyArray} from "../../../core/parsing_and_formating/printPrettyArray";
 
 export class ExtendedIssue {
 
@@ -45,11 +47,11 @@ export class ExtendedIssue {
 
 
     get summaryAsLink(): string { // Issue Name
-        return '=hyperlink(\"https://groupondev.atlassian.net/browse/' + this.issue.key + '";"' + this.summary + '")';
+        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   this.summary});
     }
 
     get issueKeyAsLink(): string { // QR-211
-        return '=hyperlink(\"https://groupondev.atlassian.net/browse/' + this.issue.key + '";"' + this.issueKey + '")';
+        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   this.issueKey});
     }
 
     get status(): string {
@@ -88,16 +90,7 @@ export class ExtendedIssue {
         if (this.labels.includes("25Q3")) { labels.push("25Q3") }
         if (this.labels.includes("25Q4")) { labels.push("25Q4") }
 
-        let str = "";
-        for(var label of labels) {
-            str = str + label +", "
-        }
-
-        if(str.length > 4) {
-            str = str.substring(0, str.length - 2);  // remove latest ", "
-        }
-
-        return str;
+        return printPrettyArray(labels);
     }
 
     get parent(): ExtendedIssue | null{
@@ -111,7 +104,7 @@ export class ExtendedIssue {
     get parentKeyAsLink(): string | null {
         if (this.parent) {
             const parent = this.parent;
-            return '=hyperlink(\"https://groupondev.atlassian.net/browse/' + parent.issueKey + '";"' + parent.issueKey + '")';
+            return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   parent.issueKey});
         } else {
             return null;
         }

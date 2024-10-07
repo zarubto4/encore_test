@@ -1,13 +1,19 @@
-import {PromiseHeaders, PromiseRequest, PromiseResponse} from "../models/promiseHttp_models";
+import {
+    PromiseHeaders,
+    PromiseQuery,
+    PromiseRequest,
+    PromiseResponse
+} from "../models/promiseHttp_models";
 import https from "https";
 import http from "node:http";
-
+import {boolean, number} from "zod";
+import {printPrettyArray} from "../../parsing_and_formating/printPrettyArray";
 
 export class PromiseHttpAvailableRequests {
 
     constructor(protected readonly private_headers: PromiseHeaders, protected readonly basicUrl: string) {}
 
-    public get<T>(url: string, query: {}, expectedHttpNumber: number = 200): Promise<PromiseResponse<T>> {
+    public get<T>(url: string, query: PromiseQuery, expectedHttpNumber = 200): Promise<PromiseResponse<T>> {
         return this.request({
             url: this.basicUrl + url,
             type: 'GET',
@@ -17,7 +23,7 @@ export class PromiseHttpAvailableRequests {
         });
     }
 
-    public post<T>(url: string, query: {}, body: {} = {}, expectedHttpNumber: number = 201): Promise<PromiseResponse<T>> {
+    public post<T>(url: string, query: PromiseQuery = {}, body: object = {}, expectedHttpNumber = 201): Promise<PromiseResponse<T>> {
         return this.request(
             {
                 url: this.basicUrl + url,
@@ -29,7 +35,7 @@ export class PromiseHttpAvailableRequests {
         );
     }
 
-    public put<T>(url: string, query: {}, body: {} = {}, expectedHttpNumber: number = 201): Promise<PromiseResponse<T>> {
+    public put<T>(url: string, query: PromiseQuery = {}, body: object = {}, expectedHttpNumber = 201): Promise<PromiseResponse<T>> {
         return this.request(
             {
                 url: this.basicUrl + url,
@@ -41,7 +47,7 @@ export class PromiseHttpAvailableRequests {
         );
     }
 
-    public remove<T>(url: string, expectedHttpNumber: number = 200): Promise<PromiseResponse<T>> {
+    public remove<T>(url: string, expectedHttpNumber = 200): Promise<PromiseResponse<T>> {
         return this.request<T>(
             {
                 url: this.basicUrl + url,
@@ -53,23 +59,48 @@ export class PromiseHttpAvailableRequests {
         );
     }
 
+    private stringifyQuery(obj: PromiseQuery): Record<string, string> {
+        const result: Record<string, string> = {};
+
+        for (const key of Object.keys(obj)) {
+
+            if (Array.isArray(obj[key])) {
+                result[key] = printPrettyArray(obj[key]);
+            }
+
+            if (typeof obj[key] == 'string') {
+                result[key] = obj[key]
+            }
+
+            if (obj[key] instanceof boolean) {
+                result[key] = obj[key] ? 'true' : 'false';
+            }
+
+            if (obj[key] instanceof number) {
+                result[key] = obj[key] + '';
+            }
+        }
+
+        return result;
+    }
+
 
     private request<T>(request: PromiseRequest): Promise<PromiseResponse<T>> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
 
-            if (request.query && new URLSearchParams(request.query).toString().length > 0) {
-                request.url = request.url + "?" + new URLSearchParams(request.query).toString();
+            if (request.query && this.stringifyQuery(request.query).toString().length > 0) {
+                request.url = request.url + "?" + new URLSearchParams(this.stringifyQuery(request.query)).toString();
             }
 
             try {
-                let rqst = null;
+                let requestType;
                 if (request.url.includes("https:")) {
-                    rqst = https;
+                    requestType = https;
                 } else {
-                    rqst = http;
+                    requestType = http;
                 }
 
-                const req = rqst.request(
+                const req = requestType.request(
                     request.url,
                     {
                         method: request.type,
@@ -92,7 +123,8 @@ export class PromiseHttpAvailableRequests {
                                 function isJson(str: string) {
                                     try {
                                         JSON.parse(str);
-                                    } catch (e) {
+                                    } catch (error) {
+                                        console.log("parsing Error: ", error)
                                         return false;
                                     }
                                     return true;
@@ -142,7 +174,7 @@ export class PromiseHttpAvailableRequests {
                 req.end();
 
             } catch (error) {
-                console.error("Chyba requestu: ", error);
+                console.error("Request Error: ", error);
             }
         });
     }

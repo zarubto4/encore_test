@@ -18,9 +18,7 @@ export interface ManagerUserWorkSheet {
     doc: GoogleSpreadsheet;
     sheet: GoogleSpreadsheetWorksheet;
     rows: GoogleSpreadsheetRow[];
-    managerStructure: {
-        [userName: string]: ManagerStructure
-    }
+    managerStructure: Record<string, ManagerStructure> // key: userName
 }
 
 // - User stage --------------------------------------------------------------------------------------------------------
@@ -44,8 +42,8 @@ export class WeekUserWorkSheetCellIndexes {
         managerEmailColum: 'D',
     }
 
-    weekInYearRow: number = 4; // n-1
-    firstUserRow: number = 9;
+    weekInYearRow = 4; // n-1
+    firstUserRow = 9;
 }
 
 export interface WeekUserWorkSheetUserContent {
@@ -60,9 +58,7 @@ export interface WeekUserWorkSheet {
     activeWeekColumReportedIssues: string | null;
     activeWeekColumFixedIssues: string | null;
     cells: WeekUserWorkSheetCellIndexes
-    users: {
-        [userEmail: string]: WeekUserWorkSheetUserContent
-    }
+    users: Record<string, WeekUserWorkSheetUserContent> //key: userEmail
     latestIndexOfRow: number;
 }
 
@@ -76,9 +72,6 @@ export interface ActiveUserWorkSheet {
 
 export interface FillUserWorkSheet {
     cells: WeekUserWorkSheetCellIndexes;
-    users: {
-        [userEmail: string]: WeekUserWorkSheetUserContent
-    };
+    users: Record<string, WeekUserWorkSheetUserContent>;
     latestIndexOfRow: number;
-
 }

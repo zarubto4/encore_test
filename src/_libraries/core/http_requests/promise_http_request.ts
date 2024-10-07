@@ -3,7 +3,7 @@ import {PromiseHttpAvailableRequests} from "./requests/promise_http_availableReq
 
 export class PromiseHttp extends PromiseHttpAvailableRequests{
 
-    public constructor(basicUrl: string, token: string | null, headers: {} = {}) {
+    public constructor(basicUrl: string, token: string | null, headers: Record<string, string | string[]> = {}) {
         super(
             {
                 ... {

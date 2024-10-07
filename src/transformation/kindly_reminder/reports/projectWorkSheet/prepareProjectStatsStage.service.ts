@@ -27,7 +27,6 @@ export class ProjectStage {
             return ProjectStage.weekSheetCopy[activeWeek + ''];
         } else {
 
-
             const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_projectWorkSheetId) ;
             const rows = await result.sheet.getRows();
             await result.sheet.loadCells('A1:BZ30000');
@@ -60,26 +59,22 @@ export class ProjectStage {
         }
     }
 
-    public addWeekStatisticUnderProject(projectKey: string, stats: Stats, activeWeek: number): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            return this.loadProjects(activeWeek).then((result) => {
+    public async  addWeekStatisticUnderProject(projectKey: string, stats: Stats, activeWeek: number): Promise<void> {
+        const result = await this.loadProjects(activeWeek);
 
-                const userWorkSheet: WeekProjectWorkSheet = result.projectWorkSheet;
-                const sheet: GoogleSpreadsheetWorksheet = result.sheet;
+        const userWorkSheet: WeekProjectWorkSheet = result.projectWorkSheet;
+        const sheet: GoogleSpreadsheetWorksheet = result.sheet;
 
-                if (userWorkSheet.activeWeekColumReportedIssues == null || userWorkSheet.activeWeekColumFixedIssues == null) {
-                    return reject("Missing active week colum in project Stats");
-                }
+        if (userWorkSheet.activeWeekColumReportedIssues == null || userWorkSheet.activeWeekColumFixedIssues == null) {
+            throw new Error("Missing active week colum in project Stats");
+        }
 
-                const activeWeekReportedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
-                const activeWeekFixedIssuesCell =  sheet.getCellByA1(userWorkSheet.activeWeekColumFixedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
+        const activeWeekReportedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
+        const activeWeekFixedIssuesCell =  sheet.getCellByA1(userWorkSheet.activeWeekColumFixedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
 
-                activeWeekReportedIssuesCell.value = stats.TODO + stats.RECOMMENDED + stats.DONE + stats.SKIP + stats["Cap Labour"];
-                activeWeekFixedIssuesCell.value = stats.TODO;
+        activeWeekReportedIssuesCell.value = stats.TODO + stats.RECOMMENDED + stats.DONE + stats.SKIP + stats["Cap Labour"];
+        activeWeekFixedIssuesCell.value = stats.TODO;
 
-                resolve();
-            });
-        });
     }
 
     // --- Helpers -----------------------------------------------------------------------------------------------------
@@ -121,7 +116,7 @@ export class ProjectStage {
     }
 
     private filterOnlyActiveProjects(projects: Projects): string[] {
-        let projectsKeys: string[] = [];
+        const projectsKeys: string[] = [];
         for (const key of Object.keys(projects)) {
             const proj = projects[key];
             if (proj.allow) {
@@ -134,9 +129,9 @@ export class ProjectStage {
     private getProjectsFromSheet(rows: GoogleSpreadsheetRow[], sheet: SpreadSheetWorkSheet): { projects: Projects, latestActiveRow: number } {
 
         const projects: Projects = {};
-        let latestActiveRow: number = 0;
+        let latestActiveRow = 0;
 
-        // Načtu si všechny projekty z tabulky
+        // Get all projects from table
         for (const row of rows) {
 
             const projectKey = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber).stringValue;

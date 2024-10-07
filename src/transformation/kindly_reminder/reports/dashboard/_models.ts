@@ -7,10 +7,14 @@ export enum EnuKPI {
     "Cap Labour" = "Cap Labour",
 }
 
-// -- Search Dasbboard - Script conditions -----
-export interface SearchConditions {
-    [scriptName: string]: SearchCondition
+// -- Search Dashboard - Script conditions -----
+export type SearchConditions = Record<string, SearchCondition>;
+
+export interface FindTableIndexesForScriptConditionsResult {
+    indexForSearchConditionsStart: number,
+    indexForSearchConditionsEnd: number
 }
+
 
 export interface SearchCondition {
     script_name: SearchScripts; // epicWithoutOwner
@@ -20,7 +24,7 @@ export interface SearchCondition {
     who_will_be_responsible_description: string; // description
     how_to_fix_description: string // description
     jql_query: string;
-    priorityTicketOwnership: ('ProjectOwner'|'TicketCreator'|'TicketOwner'|'VP' | any)[]
+    priorityTicketOwnership: ('ProjectOwner'|'TicketCreator'|'TicketOwner'|'VP' | string)[]
 }
 
 // Can be found here https://docs.google.com/spreadsheets/d/1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk/edit?gid=303737385#gid=303737385
@@ -97,14 +101,12 @@ export class MandatoryEpicDesignationFieldsCellIndexes {
 }
 
 // -- QR project overrides  -----
-export interface QRProjectOverride {
-    [ticket: string]: {
+export type QRProjectOverride = Record<string, {
         vp_name: string;
         vp_email: string;
         project_owner_name: string;
         project_owner_email: string;
-    }
-}
+    }>;
 
 export class DashBoardQRProjectOverridesCellIndexes {
     overridesCells: {

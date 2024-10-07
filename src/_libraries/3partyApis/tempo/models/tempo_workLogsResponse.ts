@@ -29,8 +29,6 @@ export class WorkLog {
         accountId: string
     };
 
-    public constructor() {}
-
     get timeSpent(): number | null {
         return this.timeSpentSeconds ? this.timeSpentSeconds / 60 / 60 : null;
     }

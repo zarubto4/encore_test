@@ -3,7 +3,6 @@ import {Tempo_wokLogsRequest} from "./models/tempo_wokLogsRequest";
 import {PromiseHttp} from "../../core/http_requests/promise_http_request";
 import {AuthenticationForTempo} from "./models/tempo_config";
 
-
 export class TempoService {
 
     private readonly apiUrl = 'https://api.tempo.io/4';
@@ -15,7 +14,7 @@ export class TempoService {
     }
 
     public count(logs: WorkLog[]): number {
-        let no: number = 0;
+        let no = 0;
 
         if (logs.length == 0) {
             return 0;
@@ -28,7 +27,7 @@ export class TempoService {
     }
 
     public getWorkLogsByIssue(issueId: string, request: Tempo_wokLogsRequest, pageForPagination = 0) : Promise<WorkLog[]> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             console.log("getWorkLogsByIssue: issueId", issueId, "pageForPagination", pageForPagination );
 
             request.offset = pageForPagination;
@@ -50,7 +49,9 @@ export class TempoService {
                                 .then((subResult) => {
                                     try {
                                         // Merge the results and return them
-                                        resolve([]);
+                                        resolve(
+                                            [ ...new Set(result.data?.results.concat(subResult)) ]
+                                        );
                                     } catch (error) {
                                         console.log("getWorkLogsByIssue: error:", error)
                                         resolve([]);
@@ -66,7 +67,7 @@ export class TempoService {
     }
 
     public getWorkLogsByIssueList(issueIds: string[], request: Tempo_wokLogsRequest, pageForPagination = 0) : Promise<{workLogs: WorkLog[], request:Tempo_wokLogsRequest}> {
-        return new Promise((resolve, reject): void => {
+        return new Promise((resolve): void => {
             console.log("getWorkLogsByIssue: issueIds", issueIds, request.week ?  ("week: " + request.week) : "" , "pageForPagination", pageForPagination );
 
 
@@ -97,14 +98,15 @@ export class TempoService {
                             this.getWorkLogsByIssueList(issueIds, request, pageForPagination + this.pagingSize)
                                 .then((subResult) => {
                                     try {
-                                        // Merge the results and return them
                                         resolve({
-                                            workLogs:[], request: request
-                                        });
+                                            request: request,
+                                            workLogs: [ ...new Set(result.data?.results.concat(subResult.workLogs))]
+                                         });
                                     } catch (error) {
                                         console.log("getWorkLogsByIssueList: error:", error)
                                         resolve({
-                                            workLogs:[], request: request
+                                            workLogs:[],
+                                            request: request
                                         });
                                     }
 
@@ -123,8 +125,8 @@ export class TempoService {
         });
     }
 
-    public getUsersWorkLogs (request: Tempo_wokLogsRequest, pageForPagination: number = 0, tried: number = 0): Promise<WorkLog[]> {
-        return new Promise((resolve, reject): void => {
+    public getUsersWorkLogs (request: Tempo_wokLogsRequest, pageForPagination = 0, tried = 0): Promise<WorkLog[]> {
+        return new Promise((resolve): void => {
 
             request.offset = pageForPagination;
             request.limit = this.pagingSize;
