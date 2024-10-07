@@ -1,3 +1,7 @@
+# TODO
+- Pre commit Eslint
+- Pre commit Prettier
+
 
 
 # Groupon Serverless Core Project 
@@ -8,6 +12,7 @@ and databases, are managed by a cloud provider. The developer writes the applica
 and the cloud provider handles server provisioning, scaling, and maintenance. This allows developers to focus 
 solely on coding and business logic without worrying about infrastructure management. Serverless apps are often 
 event-driven and utilize "Functions as a Service" (FaaS) and automatically scale based on demand.
+
 
 ## (A.1) Why Serverless is Better than Microservices:
 
