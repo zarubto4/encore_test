@@ -1,4 +1,4 @@
-import moment, {Moment} from "moment/moment.js";
+
 import {ProjectStage} from "../projectWorkSheet/prepareProjectStatsStage.service";
 import {GetIssueUserStatistics} from "../getIssues/getIssueStatistics";
 import {AsanaIssueContent} from "./asanaIssueContent";
@@ -11,6 +11,7 @@ import {
 } from "../../encore.service";
 import {replaceKeys} from "../../../../_libraries/core/parsing_and_formating/stringInject";
 import {AsanaTicketResult} from "../../../../_libraries/3partyApis/asana/models/asana_resultsModels";
+import moment, {Moment} from "moment";
 
 export interface GenerateAsanaContent {
     week_number: number;
