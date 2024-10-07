@@ -150,7 +150,11 @@ export class TempoService {
                         }, 2000);
 
                     } else {
+
                         if (result.data && result.data.metadata.next != null ) {
+
+                            console.log("TempoService::next:", result.data.metadata.next );
+
                             this.getUsersWorkLogs(request, pageForPagination + this.pagingSize)
                                 .then((subResult) => {
                                     // Merge the results and return them

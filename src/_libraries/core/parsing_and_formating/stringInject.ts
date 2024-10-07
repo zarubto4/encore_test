@@ -31,7 +31,7 @@ export function replaceKeys(template: string, values: ReplaceKeyValue, suffixKey
         console.log("replaceKeys:: for: key", key, "type", typeof values[key]);
         const replaceKey = suffixKey != null ? ('{' + suffixKey +'.' + key + '}') : ('{' + key + '}');
 
-        if (values[key] instanceof Array) {
+        if (Array.isArray(values[key]) ) { // ?values[key] instanceof Array
             console.log("replaceKeys:: key is Array", replaceKey);
             const subString = printPrettyArray(values[key]);
             console.log("replaceKeys:: key is Array: subString. Value:", subString);

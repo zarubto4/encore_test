@@ -61,26 +61,22 @@ export class PromiseHttpAvailableRequests {
 
     private stringifyQuery(obj: PromiseQuery): Record<string, string> {
         const result: Record<string, string> = {};
-
+        // console.log("stringifyQuery - original ", obj);
         for (const key of Object.keys(obj)) {
-
+            // console.log("stringifyQuery - key ", key, typeof obj[key]);
             if (Array.isArray(obj[key])) {
                 result[key] = printPrettyArray(obj[key]);
-            }
-
-            if (typeof obj[key] == 'string') {
-                result[key] = obj[key]
-            }
-
-            if (obj[key] instanceof boolean) {
+            } else if (typeof obj[key] === 'string') {
+                result[key] = obj[key];
+            } else if (typeof obj[key] === 'boolean') {
                 result[key] = obj[key] ? 'true' : 'false';
-            }
-
-            if (obj[key] instanceof number) {
+            } else if (typeof obj[key] === 'number') {
                 result[key] = obj[key] + '';
+            } else {
+                console.log("stringifyQuery - unsupported key: " + key);
             }
         }
-
+        // console.log("stringifyQuery - result ", result);
         return result;
     }
 

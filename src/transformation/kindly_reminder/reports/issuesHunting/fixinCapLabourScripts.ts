@@ -2,11 +2,9 @@ import {Issue} from "jira.js/src/version3/models/issue";
 import {GetDashBoardAndConditions} from "../dashboard/getDashboardAndConditions";
 import {PrintIssuesIntoWorksheet} from "../getIssues/printIssuesIntoWorksheet";
 import {EnuKPI, SearchCondition, SearchScripts} from "../dashboard/_models";
-import {replaceKeys} from "../../../../_libraries/core/parsing_and_formating/stringInject";
 import {JQLProjectQueriesAutomation, ProjectStructure} from "./_models";
 import {KindlyReminderConfigApp} from "../../encore.service";
-
-
+import {replaceKeys} from "../../../../_libraries/core/parsing_and_formating/stringInject";
 
 export class GetFixableIssuesByAutomation {
 
@@ -91,7 +89,7 @@ export class GetFixableIssuesByAutomation {
             }
         }
 
-        /*
+
                 // No Epics with label Epic Designation
                 if (dashboardsConfigs.searchConditions[SearchScripts.nonEpicsWithEpicDesignation]  &&  dashboardsConfigs.searchConditions[SearchScripts.nonEpicsWithEpicDesignation].active_rule) {
 
@@ -250,7 +248,7 @@ export class GetFixableIssuesByAutomation {
                     }
                 }
 
-        */
+
 
         console.log("getAndFixAllCapLabourIssues:getAndFixAllCapLabourIssues: time to print all issues");
         await new PrintIssuesIntoWorksheet()
@@ -281,4 +279,5 @@ export class GetFixableIssuesByAutomation {
             projectStructure.issues[ticket.key].ourIssues[ourIssue.script_name] = ourIssue;
         }
     }
+
 }

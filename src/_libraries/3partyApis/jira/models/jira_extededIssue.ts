@@ -47,11 +47,11 @@ export class ExtendedIssue {
 
 
     get summaryAsLink(): string { // Issue Name
-        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   this.summary});
+        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{issue_key}";"{issue_key}")', { issue_key:   this.summary});
     }
 
     get issueKeyAsLink(): string { // QR-211
-        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   this.issueKey});
+        return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{issue_key}";"{issue_key}")', { issue_key:   this.issueKey});
     }
 
     get status(): string {
@@ -104,7 +104,7 @@ export class ExtendedIssue {
     get parentKeyAsLink(): string | null {
         if (this.parent) {
             const parent = this.parent;
-            return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{{issue_key}}";"{{issue_key}}"', { issue_key:   parent.issueKey});
+            return replaceKeys('=hyperlink("https://groupondev.atlassian.net/browse/{issue_key}";"{issue_key}")', { issue_key:   parent.issueKey});
         } else {
             return null;
         }

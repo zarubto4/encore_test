@@ -5,7 +5,7 @@ export class Tempo_wokLogsRequest {
     projectId?: number;
     issueId?: string;
     offset?: number = 0;
-    limit?: number = 200;
+    limit?: number = 1000;
     from?: string;
     to?: string;
     week?: number; // Only for operations
