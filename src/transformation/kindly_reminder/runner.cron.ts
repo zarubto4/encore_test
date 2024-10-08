@@ -11,7 +11,7 @@ export const cronValidWeek = api({ expose: false }, async (): Promise<void> => {
 
 new CronJob("transformation-kindlyReminder-weeklyChecker", {
   title: "Check Latest Week",
-  every: "15m",
+  every: "5m",
   endpoint: cronValidWeek,
 });
 

@@ -104,7 +104,7 @@ export class JiraBugWeekHunterChecker {
 
         await new GetPrintedIssuesList().updateIssueWorksheetHeader(activeWeekNumber).then(async (spreadSheet) => {
             spreadSheet.getCellByA1("C1").value = moment().format('YYYY-MM-DD HH:mm') + " CET";
-            spreadSheet.getCellByA1("H1").value = moment().format('YYYY-MM-DD HH:mm') + " CET";
+            spreadSheet.getCellByA1("H1").value = moment().add(5, "minutes").format('HH:mm:ss') + " CET";
             spreadSheet.saveUpdatedCells();
         });
 
