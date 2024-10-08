@@ -11,13 +11,13 @@ export const cronValidWeek = api({ expose: false }, async (): Promise<void> => {
 
 new CronJob("transformation-kindlyReminder-weeklyChecker", {
   title: "Check Latest Week",
-  every: "4h",
+  every: "15m",
   endpoint: cronValidWeek,
 });
 
 // --- Close Asana task from last week ---------------------------------------------------------------------------------
 
-export const closeAsanaTaskFromLastWEek = api({ expose: false }, async (): Promise<void> => {
+export const closeAsanaTaskFromLastWeek = api({ expose: false }, async (): Promise<void> => {
   await transformation_kindly_reminder.run_generator_script({
     name: "close_asana_tickets",
     value: moment().week() - 1,
@@ -26,6 +26,22 @@ export const closeAsanaTaskFromLastWEek = api({ expose: false }, async (): Promi
 
 new CronJob("transformation-kindlyReminder-closeAsanaPreviousWeek", {
   title: "Close all non closed asana Tickets from Kindly Reminder",
-  schedule: "0 9 * * 1",
-  endpoint: closeAsanaTaskFromLastWEek,
+  schedule: "0 4 * * 1",
+  endpoint: closeAsanaTaskFromLastWeek,
+});
+
+
+// --- Generate next week -----------------------------------------------------------------------------------------------
+
+export const generateNextWeekOfIssues = api({ expose: false }, async (): Promise<void> => {
+  await transformation_kindly_reminder.run_generator_script({
+    name: "run_whole_script",
+    value: moment().week(),
+  });
+});
+
+new CronJob("transformation-kindlyReminder-generateNextWeekOfIssues", {
+  title: "Generate next week of issues in Kindly Reminder",
+  schedule: "0 8 * * 1",
+  endpoint: generateNextWeekOfIssues,
 });

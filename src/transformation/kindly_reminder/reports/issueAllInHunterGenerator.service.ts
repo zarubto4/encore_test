@@ -189,15 +189,13 @@ export class IssueAllInHunterGenerator {
     console.log("generate: printProjectStats done:", printUserResult);
 
     // Create Asana Tasks ------------------------------------------------------------------------------------
-    const createAsanaTaskResult = await new CreateAsanaTasks().generateAsanaTasks({
+   /* const createAsanaTaskResult = await new CreateAsanaTasks().generateAsanaTasks({
       week_number: activeWeekNumber,
       created: moment().week(activeWeekNumber).startOf("week").subtract(1, "day"),
       deadline: moment().week(activeWeekNumber).startOf("week").subtract(1, "day").add(5, "day"),
     });
     console.log("generate: createAsanaTaskResult done:", createAsanaTaskResult);
+    */
 
-    //   Close Prev week Tasks ----------------------------------------------------------------------------------
-    const closeAsanaTaskResult = await new CloseAsanaTicketsFromLastWeek().closeWeek(activeWeekNumber - 1);
-    console.log("generate: closeAsanaTaskResult done:", closeAsanaTaskResult);
   }
 }

@@ -1,6 +1,5 @@
 import { Header, Gateway, APIError } from "encore.dev/api";
 import { authHandler } from "encore.dev/auth";
-import log from "encore.dev/log";
 import { currentRequest } from "encore.dev";
 
 // AuthParams specifies the incoming request information
