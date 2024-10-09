@@ -1,0 +1,32 @@
+---
+# Environment Information
+cloudProvider: gcp
+deployEnv: staging
+region: us-central1
+vpc: stable
+
+
+# namespace: groupon-admin-staging
+
+
+# Scaling
+minReplicas: 1
+maxReplicas: 2
+
+envVars:
+  NEXT_PUBLIC_ENV: staging
+  JTIER_RUN_CONFIG: '.meta/deployment/cloud/secrets/cloud/staging-us-central1.yml'
+  LOG_TO_STDOUT: 'true'
+
+
+# If you need to configure the size of your application specifically in different environments,
+# you can override the common and default values here
+#
+# Resource Requests
+# cpus:
+#   main:
+#     request: 1000m
+# memory:
+#   main:
+#     request: 500Mi
+#     limit: 500Mi

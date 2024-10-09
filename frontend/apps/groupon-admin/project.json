@@ -1,0 +1,26 @@
+{
+  "name": "groupon-admin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/groupon-admin",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project groupon-admin --web",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{outputs.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/groupon-admin"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "groupon-admin:build",
+        "dev": false
+      }
+    }
+  }
+}

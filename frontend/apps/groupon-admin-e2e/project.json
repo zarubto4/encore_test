@@ -1,0 +1,9 @@
+{
+  "name": "groupon-admin-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/groupon-admin-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["groupon-admin"],
+  "// targets": "to see all targets run: nx show project groupon-admin-e2e --web",
+  "targets": {}
+}

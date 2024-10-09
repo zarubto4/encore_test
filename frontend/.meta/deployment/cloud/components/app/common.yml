@@ -1,0 +1,30 @@
+---
+# Environment Information
+serviceId: groupon-admin
+component: app
+instance: default
+appImage: docker-conveyor.groupondev.com/itier-next/groupon-admin
+
+# Scaling
+minReplicas: 1
+maxReplicas: 15
+hpaTargetUtilization: 50
+
+envVars:
+  NEXT_TELEMETRY_DISABLED: 1
+  PORT: 8080
+
+# Logging/Metrics
+logConfig:
+  sourceType: 'groupon-admin-service'
+  isJsonFormat: true
+  configs:
+    app:
+      dir: "/var/groupon/logs"
+      file: "logfile.log"
+      isJsonFormat: true
+
+httpPort: 8080
+# httpsPort: 8443
+exposedPorts:
+  admin-port: 8081
