@@ -5,19 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b0f03f1-4911-4b08-9860-01fefd388a34" name="Changes" comment="Update Cron for KR">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/test-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test-app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_export/client.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_export/openapi.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client_export/test.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/encore.app" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.deploy_bot.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.gitmodules" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/.npmrc" beforeDir="false" />
@@ -30,82 +17,6 @@
       <change beforePath="$PROJECT_DIR$/frontend/libs/users-client/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/libs/users-client/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/localdev.sh" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/tsconfig.base.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/asana_service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_comments.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_projects.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_tasks.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_users.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/models/asana_configModels.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/models/asana_requestsModels.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/asana/models/asana_resultsModels.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/googleDocs/googleDocs_service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/googleDocs/googleDocs_supportedDocs/googleDocs_spreadSheet.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/googleDocs/models/config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/enums/jira_enums.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/jira_service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_issue_comments.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_issues.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_project.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_user.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/models/jira_childHierarchyIssue.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/models/jira_config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/models/jira_extededIssue.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/jira/utils/jira_commonUtils.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/tempo/models/tempo_config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/tempo/models/tempo_wokLogsRequest.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/tempo/models/tempo_workLogsResponse.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/3partyApis/tempo/tempo_service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/auth/auth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/http_requests/models/promiseHttp_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/http_requests/promise_http_request.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/http_requests/requests/promise_http_availableRequests.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/parsing_and_formating/printPrettyArray.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_libraries/core/parsing_and_formating/stringInject.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_1/encore.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_1/hello.test.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_1/hello.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_1/hi.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_2/encore.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_1/service_2/hello2.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_2/service_3/encore.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system_2/service_3/hello_3.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/api.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/api_models/controller_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/encore.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/asana/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/asana/asanaIssueContent.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/asana/asanaLastWeekCloser.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/asana/createAsanaTasks.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/dashboard/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/dashboard/getDashboardAndConditions.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/dashboard/updateWeekTotalReport.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/getIssues/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/getIssues/getIssueStatistics.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/getIssues/getPrintedIssues.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/getIssues/prepareIssuesSheetStage.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/getIssues/printIssuesIntoWorksheet.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issueAllInHunterGenerator.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issueAllInValidator.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issueValidation/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issueValidation/issueAllInValidator.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issuesHunting/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issuesHunting/fixinCapLabourScripts.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issuesHunting/getIssuesByConditionsForWeekReport.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issuesPrint/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/issuesPrint/printIntWorkSheets.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/projectWorkSheet/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/projectWorkSheet/findAndSynchronizeProjects.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/projectWorkSheet/prepareProjectStatsStage.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/userWorkSheet/_models.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/userWorkSheet/prepareManagerStage.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/userWorkSheet/prepareUserStatsStage.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/reports/userWorkSheet/synchroniseUserList.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformation/kindly_reminder/runner.cron.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wiki/file_examples/log.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wiki/pictures/eslint_webstorm_set.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wiki/pictures/prettier_webstorm_set.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +24,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/frontend" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -193,7 +104,7 @@
       <workItem from="1726945014976" duration="1242000" />
       <workItem from="1727976713216" duration="3068000" />
       <workItem from="1728418469365" duration="9000" />
-      <workItem from="1728418801683" duration="4952000" />
+      <workItem from="1728418801683" duration="5667000" />
     </task>
     <task id="LOCAL-00001" summary="Update Cron for KR">
       <option name="closed" value="true" />
