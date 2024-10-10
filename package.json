@@ -1,0 +1,16 @@
+{
+  "name": "groupon-common-project",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Groupon All-in-one Fullstack Framework",
+  "license": "Private Groupon property",
+  "scripts": {
+    "lint": "npx eslint . --ignore-pattern 'encore.gen' --ignore-pattern '.encore'",
+    "validate": "npm-run-all --parallel test lint",
+    "precommit": "npm validate",
+    "prepush": "npm validate"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "optionalDependencies": {}
+}

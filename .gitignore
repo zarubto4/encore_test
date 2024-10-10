@@ -1,3 +1,8 @@
+
+# Common =================================================
+.idea
+
+# Backend ================================================
 /backend/.idea
 /backend/.encore
 /backend/encore.gen.go
@@ -7,7 +12,7 @@
 /backend/package-lock.json
 /backend/src/**/*.js
 
-
+# Frontend ================================================
 /frontend/.idea
 /frontend/.nx/installation
 /frontend/.nx/cache

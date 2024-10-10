@@ -5,18 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b0f03f1-4911-4b08-9860-01fefd388a34" name="Changes" comment="Update Cron for KR">
-      <change beforePath="$PROJECT_DIR$/frontend/.deploy_bot.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.gitmodules" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.npmrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/Jenkinsfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/apps/groupon-admin-e2e/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/apps/groupon-admin-e2e/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/apps/groupon-admin/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/apps/groupon-admin/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/libs/test-lib/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/libs/test-lib/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/libs/users-client/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/libs/users-client/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/localdev.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.base.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/test-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/wiki/file_examples/log.json" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/file_examples/log.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/wiki/pictures/eslint_webstorm_set.png" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/pictures/eslint_webstorm_set.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/wiki/pictures/prettier_webstorm_set.png" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/pictures/prettier_webstorm_set.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +40,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/tomaszaruba/git_groupon_repositories/encore_test",
+    "last_opened_file_path": "/Users/tomaszaruba/Documents/groupon/encore_test",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -52,18 +48,37 @@
     "nodejs_interpreter_path": "/Users/tomaszaruba/.nvm/versions/node/v20.8.0/bin/node",
     "nodejs_package_manager_path": "npm",
     "npm.lint.executor": "Run",
+    "npm.prepush.executor": "Run",
     "npm.run.executor": "Run",
     "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "/Users/tomaszaruba/git_groupon_repositories/encore_test/backend/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/tomaszaruba/Documents/groupon/encore_test/backend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="npm.run">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.prepush">
     <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
         <script value="lint" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="prepush" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prepush" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -79,8 +94,14 @@
       <envs />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="npm.lint" />
+      <item itemvalue="npm.prepush" />
+      <item itemvalue="npm.run" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.prepush" />
         <item itemvalue="npm.run" />
         <item itemvalue="npm.lint" />
       </list>
@@ -119,11 +140,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="additionalRoots">
-      <list>
-        <option value="$PROJECT_DIR$/backend/encore.gen" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -138,6 +154,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update Cron for KR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Cron for KR" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

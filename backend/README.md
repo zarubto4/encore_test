@@ -105,7 +105,7 @@ event-driven and utilize "Functions as a Service" (FaaS) and automatically scale
    2) Set Webstorm properly
       1) To write clean and clear code, we use Eslit. We check your code before you save it and before you make a Marge request. To see what's wrong in the IDE, set up Eslint according to the project rules (not the IDE default). 
       2) Read how to set Eslint version 9 and later Webstorm in [webstorm config](https://www.jetbrains.com/help/webstorm/eslint.html#ws_js_eslint_activate) or set up your IDE exactly as shown on next picture.
-      3) ![Webstorm Settings](./wiki/pictures/eslint_webstorm_set.png "Title")
+      3) ![Webstorm Settings](../wiki/pictures/eslint_webstorm_set.png "Title")
 
 ## <font color="#00a828">Developing locally - Preparation Phase  (5 minutes step)</font>
 
