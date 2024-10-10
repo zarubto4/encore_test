@@ -35,9 +35,16 @@ export const run_generator_script = api({ expose: true, method: "POST", path: "/
 
 // Valid week from Kindly Reminder
 export const run_validator_script = api({ expose: true, method: "POST", path: "/transformation/kindly_reminder/validator" }, async (params: TransformationKindlyReminderValidatorRequest): Promise<TransformationKindlyReminderUniversalResponse> => {
-  new JiraBugWeekHunterChecker().runScript(params).then(() => {
-    // Dont Wait, dont do anything here
-  });
+  log.info("api::run_validator_script");
+  new JiraBugWeekHunterChecker()
+    .runScript(params)
+    .then(() => {
+      // Dont Wait, dont do anything here
+    })
+    .catch((error) => {
+      console.error("We have error!!!!");
+      console.error("We have error: " + error.message);
+    });
 
   return { status: "script_is_running" };
 });
