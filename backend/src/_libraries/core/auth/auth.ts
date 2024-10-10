@@ -1,6 +1,5 @@
 import { Header, Gateway, APIError } from "encore.dev/api";
 import { authHandler } from "encore.dev/auth";
-import { currentRequest } from "encore.dev";
 
 // AuthParams specifies the incoming request information
 // the auth handler is interested in. In this case it only
@@ -21,15 +20,13 @@ interface AuthDataGroupon {
 export const auth = authHandler<AuthParams, AuthDataGroupon>(async (params) => {
   console.log("authHandler - params", params);
 
-  console.log("authHandler - currentRequest:", currentRequest());
-
   if (params.authorization != "test") {
     throw APIError.unauthenticated("bad credentials. My description ");
   }
 
   return {
     userID: "my-user-id",
-    my_session_mandatory_id: "aaa", // log.with({ advanceValue: "Yes!" }),
+    my_session_mandatory_id: "aaa",
   };
 });
 

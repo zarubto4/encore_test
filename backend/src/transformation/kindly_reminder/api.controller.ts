@@ -2,16 +2,13 @@ import { api } from "encore.dev/api";
 import { JiraBugWeekHunterChecker } from "./reports/issueAllInValidator.service";
 import { TransformationKindlyReminderUniversalRequest, TransformationKindlyReminderUniversalResponse, TransformationKindlyReminderValidatorRequest } from "./api_models/controller_models";
 import { IssueAllInHunterGenerator } from "./reports/issueAllInHunterGenerator.service";
-import log  from "encore.dev/log";
-import { currentRequest } from "encore.dev";
-import { getAuthData } from "~encore/internal/auth/auth";
+import log from "encore.dev/log";
 
 //  API ----------------------------------------------------------------------------------------------------------------
 
 // Rung Generator of Kindly Reminder - Supporting every steps independently
 export const run_generator_script = api({ expose: true, method: "POST", path: "/transformation/kindly_reminder/generator" }, async (params: TransformationKindlyReminderUniversalRequest): Promise<TransformationKindlyReminderUniversalResponse> => {
   try {
-
     log.info("Run generator script");
     new IssueAllInHunterGenerator()
       .runScript(params)
