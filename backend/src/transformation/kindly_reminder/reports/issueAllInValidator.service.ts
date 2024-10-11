@@ -7,7 +7,7 @@ import { Print } from "./issuesPrint/printIntWorkSheets";
 import { JiraIssueValidator } from "./issueValidation/issueAllInValidator";
 import { TransformationKindlyReminderValidatorRequest } from "../api_models/controller_models";
 import { IssueFilterResponse, IssueListForValidation, IssueListForValidationScriptContent } from "./issueValidation/_models";
-import log from "../../../../../../../../../../opt/homebrew/Cellar/encore/1.41.7/libexec/runtimes/js/encore.dev/log/mod";
+import log from "encore.dev/log";
 
 export class JiraBugWeekHunterChecker {
   // -- Private Values -----------------------------------------------------------------------------------------------

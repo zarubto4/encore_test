@@ -41,7 +41,7 @@ export class IssueAllInHunterGenerator {
                     await new GetIssuesByConditionsForWeekReport()
                         .getProjectIssuesAndPrint(projectKey,  <number> script.value['week'])
                         .then((printResult) => {
-                            console.log("Result - Request script done:", script.name);
+                             log.trace("Result - Request script done:", script.name);
                         });
                 }
                 break;
@@ -77,8 +77,8 @@ export class IssueAllInHunterGenerator {
 
       case "read_dashboard": {
         const dashboardsConfigs = await new GetDashBoardAndConditions().getSearchConditions();
-        console.log("Result - Request script done mandatoryEpicDesignationFields:\n", JSON.stringify(dashboardsConfigs.mandatoryEpicDesignationFields, null, 2));
-        console.log("Result - Request script done projectOverride:\n", JSON.stringify(dashboardsConfigs.projectOverride, null, 2));
+        log.trace("Result - Request script done mandatoryEpicDesignationFields:\n" + JSON.stringify(dashboardsConfigs.mandatoryEpicDesignationFields, null, 2));
+        log.trace("Result - Request script done projectOverride:\n" + JSON.stringify(dashboardsConfigs.projectOverride, null, 2));
         break;
       }
 
@@ -90,12 +90,12 @@ export class IssueAllInHunterGenerator {
       case "get_issue_user_statistics": {
         const result = await new GetIssueUserStatistics().getIssueUserStatistics(script.week);
         for (const key of Object.keys(result.userLog)) {
-          console.log("logged VPs:", key);
+          log.trace("logged VPs:", key);
           for (const issueScriptNameKEy of Object.keys(result.userLog[key].issues)) {
-            console.log("  scriptName:", issueScriptNameKEy);
+            log.trace("  scriptName:", issueScriptNameKEy);
           }
           for (const projectKey of Object.keys(result.userLog[key].projects)) {
-            console.log("  project:", projectKey);
+            log.trace("  project:", projectKey);
           }
         }
         break;
@@ -149,10 +149,10 @@ export class IssueAllInHunterGenerator {
   }
 
   private async generate(activeWeekNumber: number): Promise<void> {
-    console.log("generate: init");
+    log.trace("generate: init");
 
     // Get Projects ------------------------------------------------------------------------------------------------
-    console.log("generate: ProjectStage.prepareProjects");
+    log.trace("generate: ProjectStage.prepareProjects");
     const projectWorkSheet = await new ProjectStage().loadProjects(activeWeekNumber);
     if (kindlyReminder_testProjectConditions.length > 0) {
       projectWorkSheet.allowedProjects = kindlyReminder_testProjectConditions; // Override list of allowed projects from Worksheet (For developer purpose)
@@ -160,14 +160,14 @@ export class IssueAllInHunterGenerator {
 
     // Get or Create active Worksheet for issues -------------------------------------------------------------------
     const activeWeekResult = await new GetPrintedIssuesList().getIssueWorksheet(activeWeekNumber);
-    console.log("generate: activeWeekResult", activeWeekResult);
+    log.trace("generate: activeWeekResult" + activeWeekResult);
 
     // Get User worksheet with users and update managers -----------------------------------------------------------
     const userWorkSheetResult = await new UserStage().getActiveUserWorkSheet(activeWeekNumber);
-    console.log("generate: userWorkSheetResult", userWorkSheetResult);
+    log.trace("generate: userWorkSheetResult", userWorkSheetResult);
 
     // Get issues from Project -------------------------------------------------------------------------------------
-    console.log("generate: time to get Issues from Projects:", projectWorkSheet.allowedProjects);
+    log.trace("generate: time to get Issues from Projects:" + projectWorkSheet.allowedProjects);
     let issueProjectStructure: IssueProjectStructure = {};
     for (const projectKey of projectWorkSheet.allowedProjects) {
       // Find and print all issues by search conditions
@@ -178,24 +178,23 @@ export class IssueAllInHunterGenerator {
     // Print And Fix all Fixable issues by Automation --------------------------------------------------------------
     const projectStructure = await new GetFixableIssuesByAutomation().getAndFixAllCapLabourIssues(activeWeekNumber);
     issueProjectStructure = Object.assign(issueProjectStructure, projectStructure);
-    console.log("generate: projectStructure done:", projectStructure);
+    log.trace("generate: projectStructure done:" + projectStructure);
 
     // Print project Stats -----------------------------------------------------------------------------------------
     const printProjectResult = await new Print().printProjectStats(activeWeekNumber);
-    console.log("generate: printProjectStats done:", printProjectResult);
+    log.trace("generate: printProjectStats done:" + printProjectResult);
 
     // Print user Stats --------------------------------------------------------------------------------------------
     const printUserResult = await new Print().printUserStats(activeWeekNumber);
-    console.log("generate: printProjectStats done:", printUserResult);
+    log.trace("generate: printProjectStats done:" + printUserResult);
 
     // Create Asana Tasks ------------------------------------------------------------------------------------
-   /* const createAsanaTaskResult = await new CreateAsanaTasks().generateAsanaTasks({
+    /* const createAsanaTaskResult = await new CreateAsanaTasks().generateAsanaTasks({
       week_number: activeWeekNumber,
       created: moment().week(activeWeekNumber).startOf("week").subtract(1, "day"),
       deadline: moment().week(activeWeekNumber).startOf("week").subtract(1, "day").add(5, "day"),
     });
-    console.log("generate: createAsanaTaskResult done:", createAsanaTaskResult);
+     log.trace("generate: createAsanaTaskResult done:" + createAsanaTaskResult);
     */
-
   }
 }
