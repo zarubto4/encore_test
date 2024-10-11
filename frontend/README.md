@@ -1,20 +1,32 @@
-# Groupon Admin
-We are using PNPM as package manager!
+# <font color="#e8a913">Frontend</font>
 
-Start with installing dependencies:
+## <font color="#e8a913">Project Documentation Overview</font>
 
-`pnpm i`
+We are using Ant.Design library for UI components. 
+You can find more information on [Ant.Design](https://ant.design/components/overview/). 
+Do not create custom styles, always try to use Ant. Design components for page layout. 
+For styling we are using TailwindCSS, you can find more information on [TailwindCSS](https://tailwindcss.com/docs).
+(<font color="#ff0000">TODO Documentation</font>)
 
-## Running the app
-This service connects to other backend services, so for this to work, you need have HB proxy installed and ARQ access to any service (for example mx-notification-service), that communicates with users service. More information can be found on [Confluence](https://groupondev.atlassian.net/wiki/spaces/JTIER/pages/37735732357/Running+Locally) and you will also need [Cloud elevator](https://groupondev.atlassian.net/wiki/spaces/IS/pages/80352510009/Installing+Cloud-elevator+and+Port+Forwarding).
+---
+## <font color="#e8a913">Developing locally - Preparation Phase  (5 minutes step)</font>
 
-First you need to authenticate with cloud-elevator
+1) Everything from [Parent Readme](../README.md)
+2) We are using PNPM as package manager! Start with installing dependencies. But Before it, you need [installed](https://pnpm.io/installation) pnpm like via HomeBrew `brew install pnpm`
+    - `pnpm i`
 
-`kubectl cloud-elevator auth` or `kubectl cloud-elevator auth browser` to authenticate in a browser.
+## <font color="#e8a913">Running the app - Connected to Legacy* Groupon Backend Services</font>
+This service connects to other backend services, so for this to work,
+you need: 
+1) Do everything from Developing locally -[Preparation Phase](../README.md)
+   1) That communicates with users service. More information can be found on [Confluence](https://groupondev.atlassian.net/wiki/spaces/JTIER/pages/37735732357/Running+Locally) 
+   and you will also need [Cloud elevator](https://groupondev.atlassian.net/wiki/spaces/IS/pages/80352510009/Installing+Cloud-elevator+and+Port+Forwarding).
 
-Then with sudo you can start the proxy
+2) First you need to authenticate with cloud-elevator
+   1) `kubectl cloud-elevator auth browser` to authenticate in a browser.
 
-`sudo hb-local-proxy --context gcp-stable-us-central1 --namespace mx-notification-service-staging`
+3) Then with sudo you can start the proxy
+   1) `sudo hb-local-proxy --context gcp-stable-us-central1 --namespace mx-notification-service-staging`
 
 Or you can just run shell script:
 
@@ -22,37 +34,39 @@ Or you can just run shell script:
 
 If you get `error: current-context is not set`, you need to remove your kube config `mv ~/.kube/config ~/.kube/config.old` and generate new one using `kubectl cloud-elevator auth`
 
-## Local development
+
+## <font color="#e8a913">Local development + Connection to Server Less</font>
 
 It will start local development server
+```bash
+pnpm run dev
+```
 
-`pnpm run dev`
+## <font color="#e8a913">Testing</font> 
+Unit tests && E2E tests
+```bash
+pnpm run test && pnpm run e2e
+```
 
-We are using Ant.Design library for UI components. You can find more information on [Ant.Design](https://ant.design/components/overview/). Do not create custom styles, always try to use Ant.Design components for page layout. For styling we are using TailwindCSS, you can find more information on [TailwindCSS](https://tailwindcss.com/docs).
-
-### Linting
-We are using ESLint for linting
-
-`pnpm run lint`
-
-### Formatting
-We are using Prettier for formatting
-
-`pnpm run format`
-
-## Running tests
-Unit tests
-
-`pnpm run test`
-
-E2E tests
-
-`pnpm run e2e`
-
-## Building the app
+## <font color="#e8a913">Building the app</font>
 It is always good to check if the app is building correctly before committing
+```bash
+pnpm run build
+```
 
-`pnpm run build`
+**Running the app**
+```bash
+pnpm run start
+```
 
-### Running the app
-`pnpm run start`
+## <font color="#e8a913">Others</font>
+
+**Linting - Decoration**
+```bash
+pnpm run lint
+```
+
+**Formatting**
+```bash
+pnpm run format
+```

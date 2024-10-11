@@ -96,11 +96,10 @@ export class JiraBugWeekHunterChecker {
     log.trace("JiraBugWeekHunterChecker:validate: call update");
     await activeIssueWeekNumber.sheet.saveUpdatedCells();
 
-    await new GetPrintedIssuesList().updateIssueWorksheetHeader(activeWeekNumber).then(async (spreadSheet) => {
-      spreadSheet.getCellByA1("C1").value = moment().format("YYYY-MM-DD HH:mm") + " CET";
-      spreadSheet.getCellByA1("H1").value = moment().add(5, "minutes").format("HH:mm:ss") + " CET";
-      spreadSheet.saveUpdatedCells();
-    });
+    const spreadSheet = await new GetPrintedIssuesList().updateIssueWorksheetHeader(activeWeekNumber);
+    spreadSheet.getCellByA1("C1").value = moment().format("YYYY-MM-DD HH:mm") + " CET";
+    spreadSheet.getCellByA1("H1").value = moment().add(5, "minutes").format("HH:mm:ss") + " CET";
+    await spreadSheet.saveUpdatedCells();
 
     await new Print().printProjectStats(activeWeekNumber);
     await new Print().printUserStats(activeWeekNumber);

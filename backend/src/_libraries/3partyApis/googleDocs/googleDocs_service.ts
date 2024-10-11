@@ -1,30 +1,24 @@
-import {AuthenticationForGoogle} from "./models/config";
-import {JWT} from "google-auth-library";
-import {GoogleSpreadSheetService} from "./googleDocs_supportedDocs/googleDocs_spreadSheet";
+import { AuthenticationForGoogle } from "./models/config";
+import { JWT } from "google-auth-library";
+import { GoogleSpreadSheetService } from "./googleDocs_supportedDocs/googleDocs_spreadSheet";
 
 export class GoogleDocsService {
+  // Helpers - Jira
+  private readonly googleAccountAuth: JWT;
+  private readonly _spreadSheetGoogle: GoogleSpreadSheetService;
 
-    // Helpers - Jira
-    private readonly googleAccountAuth: JWT;
-    private readonly _spreadSheetGoogle: GoogleSpreadSheetService;
+  constructor(auth: AuthenticationForGoogle) {
+    this.googleAccountAuth = new JWT({
+      email: auth.clientEmail,
+      key: auth.privateKey.replace(/\\n/g, "\n"),
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
 
-    constructor(auth: AuthenticationForGoogle) {
+    // Google Docs Init Services
+    this._spreadSheetGoogle = new GoogleSpreadSheetService(this.googleAccountAuth);
+  }
 
-        console.log("GoogleDocsService: init configuration: clientEmail", auth.clientEmail);
-
-        this.googleAccountAuth = new JWT({
-            email: auth.clientEmail,
-            key: auth.privateKey.replace(/\\n/g, '\n'),
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-        });
-
-        // Google Docs Init Services
-        this._spreadSheetGoogle = new GoogleSpreadSheetService(this.googleAccountAuth)
-
-    }
-
-    get spreadsheet(): GoogleSpreadSheetService {
-        return this._spreadSheetGoogle;
-    }
-
+  get spreadsheet(): GoogleSpreadSheetService {
+    return this._spreadSheetGoogle;
+  }
 }
