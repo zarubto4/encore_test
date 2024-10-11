@@ -29,10 +29,15 @@ export class JiraBugWeekHunterChecker {
     // const userWorkSheet = await new UserStage().getActiveUserWorkSheet(activeWeekNumber);
     // const projectsWorkSheet = await new ProjectStage().loadProjects(activeWeekNumber);
     const activeIssueWeekNumber = await new GetPrintedIssuesList().getIssueWorksheet(activeWeekNumber);
+
+    log.debug("JiraBugWeekHunterChecker:validate: activeIssueWeekNumber done");
     const filteredContent = this.filter(activeIssueWeekNumber); // Get filtered Content
+
+    log.debug("JiraBugWeekHunterChecker:validate: filteredContent done");
     const issues = await this.configApp.jiraServices.issue.getAllIssues({ jql: filteredContent.jql });
 
-    log.trace("Number of results: " + issues.length);
+    log.debug("JiraBugWeekHunterChecker:validate: issues done");
+    log.debug("Number of results: " + issues.length);
 
     // This is for case, when someone move ticket into another project (and jira return different ticket (key), then we ask
     for (const issue of issues) {
