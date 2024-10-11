@@ -1,0 +1,22 @@
+{
+  "grpn-request-middleware": {
+    "handlers": {
+      "akamai-bot-detection": {
+        "response": [
+          {
+            "url": "/botland",
+            "status": 200,
+            "action": "redirect"
+          }
+        ]
+      },
+      "geolocation": {
+        "response": [
+          {
+            "handler": "geolocation"
+          }
+        ]
+      }
+    }
+  }
+}
