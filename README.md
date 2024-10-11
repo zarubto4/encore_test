@@ -128,7 +128,5 @@ In a monorepo, the above scenario simply can’t happen.
    - `brew tap groupon/engineering git@github.groupondev.com:engineering/homebrew-groupon.git`
    - `brew update`
    - `brew install hb-local-proxy`
-   4) `sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x`
-   5) `sudo hb-service install` 
    
 ---

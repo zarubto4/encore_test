@@ -3,18 +3,8 @@ import { JiraBugWeekHunterChecker } from "./reports/issueAllInValidator.service"
 import { TransformationKindlyReminderUniversalRequest, TransformationKindlyReminderUniversalResponse, TransformationKindlyReminderValidatorRequest } from "./api_models/controller_models";
 import { IssueAllInHunterGenerator } from "./reports/issueAllInHunterGenerator.service";
 import log from "encore.dev/log";
-import { DefaultResponse } from "../../system_1/service_1/hi";
-import { DefaultRequest } from "../../system_1/service_1/hello";
 
 //  API ----------------------------------------------------------------------------------------------------------------
-
-/**
- * Hallo 3 test asdsa
- */
-export const hello3 = api({ expose: true, method: "GET", path: "/dasdasdasdasdas/:name" }, async (params: DefaultRequest): Promise<DefaultResponse> => {
-  const msg = `Hello ${params.name}! From service 3`;
-  return { message: msg };
-});
 
 /**
  * Rung Generator of Kindly Reminder - Supporting every steps independently
