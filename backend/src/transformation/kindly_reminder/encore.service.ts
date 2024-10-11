@@ -4,11 +4,9 @@ import { GoogleDocsService } from "../../_libraries/3partyApis/googleDocs/google
 import { AsanaService } from "../../_libraries/3partyApis/asana/asana_service";
 import { TempoService } from "../../_libraries/3partyApis/tempo/tempo_service";
 import { secret } from "encore.dev/config";
-import log from "encore.dev/log";
 
 // ==== SERVICE ========================================================================================================
-export const service = new Service("transformation_kindly_reminder");
-log.info("Running service " + service.name);
+new Service("transformation_kindly_reminder");
 
 // ==== SERVICE secrets =================================================================================================
 
