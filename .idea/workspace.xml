@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b0f03f1-4911-4b08-9860-01fefd388a34" name="Changes" comment="Update Cron for KR">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/localdev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/test-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/client_export/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/libs/api-source/client.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/client_export/openapi.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/client_export/test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/apps/groupon-admin/specs/index.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/apps/groupon-admin/specs/index.spec.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,9 +50,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_interpreter_path": "/Users/tomaszaruba/.nvm/versions/node/v20.8.0/bin/node",
     "nodejs_package_manager_path": "npm",
+    "npm.gen.executor": "Run",
     "npm.lint.executor": "Run",
     "npm.prepush.executor": "Run",
     "npm.run.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/prettier",
     "settings.editor.selected.configurable": "settings.nodejs",
     "ts.external.directory.path": "/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
@@ -53,10 +65,21 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/libs/api-source" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.prepush">
+  <component name="RunManager" selected="npm.gen">
+    <configuration name="gen" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/backend/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="gen" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -88,12 +111,14 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="npm.gen" />
       <item itemvalue="npm.lint" />
       <item itemvalue="npm.prepush" />
       <item itemvalue="npm.run" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.gen" />
         <item itemvalue="npm.prepush" />
         <item itemvalue="npm.run" />
         <item itemvalue="npm.lint" />

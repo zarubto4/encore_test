@@ -1,7 +1,7 @@
 # TODO
 - Pre commit Eslint (<font color="#ff0000">TODO Documentation</font>)
 - Pre commit Prettier (<font color="#ff0000">TODO Documentation</font>)
-
+- Frontend instaluje .next do parent složky
 
 
 # Groupon Serverless Core Project with mono repo Frontend
@@ -123,7 +123,12 @@ In a monorepo, the above scenario simply can’t happen.
     1) In terminal you can check it by <font color="#fd8000">$ npm -v</font>
 2) Install npm (version 10.5.0)
     1) In terminal you can check it by <font color="#fd8000">$ node -v</font>
-3) Install HomeBridge
+3) Local HB Proxy Setup
+   (Once-off action) Install hb-local-proxy cli tool:
+   - `brew tap groupon/engineering git@github.groupondev.com:engineering/homebrew-groupon.git`
+   - `brew update`
+   - `brew install hb-local-proxy`
    4) `sudo npm install -g --unsafe-perm homebridge homebridge-config-ui-x`
    5) `sudo hb-service install` 
+   
 ---

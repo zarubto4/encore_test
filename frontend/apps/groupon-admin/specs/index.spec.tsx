@@ -5,7 +5,7 @@ import Index from '../src/pages';
 
 describe('Index', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Index userId={'123456'} username={'c_tzaruba@groupon.com'} />);
+    const { baseElement } = render(<Index userId={''} username={''} />);
     expect(baseElement).toBeTruthy();
   });
 });

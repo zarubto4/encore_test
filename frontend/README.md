@@ -22,15 +22,11 @@ you need:
    1) That communicates with users service. More information can be found on [Confluence](https://groupondev.atlassian.net/wiki/spaces/JTIER/pages/37735732357/Running+Locally) 
    and you will also need [Cloud elevator](https://groupondev.atlassian.net/wiki/spaces/IS/pages/80352510009/Installing+Cloud-elevator+and+Port+Forwarding).
 
-2) First you need to authenticate with cloud-elevator
-   1) `kubectl cloud-elevator auth browser` to authenticate in a browser.
-
-3) Then with sudo you can start the proxy
-   1) `sudo hb-local-proxy --context gcp-stable-us-central1 --namespace mx-notification-service-staging`
-
-Or you can just run shell script:
-
-`./localdev.sh`
+Run shell script:
+```bash
+kubectl cloud-elevator auth browser
+sudo hb-local-proxy --context gcp-stable-us-central1 --namespace groupon-admin-staging
+```
 
 If you get `error: current-context is not set`, you need to remove your kube config `mv ~/.kube/config ~/.kube/config.old` and generate new one using `kubectl cloud-elevator auth`
 

@@ -39,7 +39,9 @@ encore test
 ## <font color="#00a828">Generate Source for Frontend</font>
 
 ```bash
-npm gen
+encore gen client test-app-fwsi --output=../frontend/libs/api-source/client.ts --env=local
+encore gen client --lang=openapi --output=./client_export/openapi.json --env=local
+encore gen client --lang=openapi --output=../open-api/openapi.json --env=local
 ```
 
 ## <font color="#00a828">Others</font>
