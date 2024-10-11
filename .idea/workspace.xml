@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b0f03f1-4911-4b08-9860-01fefd388a34" name="Changes" comment="Update Cron for KR">
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/test-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test-app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/wiki/file_examples/log.json" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/file_examples/log.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/wiki/pictures/eslint_webstorm_set.png" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/pictures/eslint_webstorm_set.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/wiki/pictures/prettier_webstorm_set.png" beforeDir="false" afterPath="$PROJECT_DIR$/wiki/pictures/prettier_webstorm_set.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +44,7 @@
     "npm.prepush.executor": "Run",
     "npm.run.executor": "Run",
     "settings.editor.selected.configurable": "settings.nodejs",
-    "ts.external.directory.path": "/Users/tomaszaruba/Documents/groupon/encore_test/backend/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
