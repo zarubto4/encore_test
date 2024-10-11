@@ -1,4 +1,4 @@
-import { RbacApiClient } from '@vpcs/rbac-client';
+import { RbacApiClient } from 'libs/rbac-client/src';
 import { PermissionStrategy, UserPermissionStrategy } from '@/lib/Permission';
 
 const CACHE_EXPIRATION = 1 * 60 * 1000; // 1 minutes

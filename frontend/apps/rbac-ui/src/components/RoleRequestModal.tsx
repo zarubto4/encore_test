@@ -1,14 +1,14 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Modal, Form, Button, message, Input, Checkbox } from 'antd';
 
-import { ScopeType } from '@vpcs/rbac-client';
+import { ScopeType } from 'libs/rbac-client/src';
 import { handleError } from '@/utils';
 import SelectRoles from '@/components/SelectRoles';
 import RoleCard from '@/components/RoleCard';
 import SelectScopeType from '@/components/SelectScopeType';
 import { USER_REGION_SELECT } from '@/constants';
 
-import type { RolesResponse } from '@vpcs/rbac-client';
+import type { RolesResponse } from 'libs/rbac-client/src';
 import type { AssignResultType } from '@/types';
 
 type RoleRequestModalProps = {

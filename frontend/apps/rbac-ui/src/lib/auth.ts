@@ -1,4 +1,4 @@
-import { AccountSuccessResponse } from '@vpcs/users-client';
+import { AccountSuccessResponse } from 'libs/users-client/src';
 import { SignJWT, jwtVerify } from 'jose';
 
 const SECRET_KEY = process.env.JWT_SECRET || 'asDhvG4g15UvssdFTYg1f651f5f-feYInbffd479';

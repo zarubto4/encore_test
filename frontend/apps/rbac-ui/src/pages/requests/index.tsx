@@ -13,7 +13,7 @@ import RequestApproveRejectModal from '@/components/RequestApproveRejectModal';
 import { useAccount } from '@/contexts/AccountContext';
 import { withPermissions, getServerSideProps } from '@/hoc/withPermissions';
 import { usePermission } from '@/contexts/PermissionContext';
-import { RoleRequestStatus } from '@vpcs/rbac-client';
+import { RoleRequestStatus } from 'libs/rbac-client/src';
 import { ROLE_REQ_STATUS_COLOR, ROLE_REQ_STATUS_DISPLAY } from '@/constants';
 import SelectRequestStatus from '@/components/SelectRequestStatus';
 import RoleRequestModal from '@/components/RoleRequestModal';

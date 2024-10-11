@@ -1,7 +1,0 @@
-{
-  "grpn-next-logging": {
-    "endpoint": "/api/vpcs/metrics",
-    "environment": { "_macro": ["env", "NEXT_PUBLIC_ENVIRONMENT"] },
-    "level": null
-  }
-}

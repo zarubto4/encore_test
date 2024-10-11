@@ -1,6 +1,6 @@
 import { Card, Typography } from 'antd';
 import RoleTitle from '@/components/typography/RoleTitle';
-import type { RolesResponse } from '@vpcs/rbac-client';
+import type { RolesResponse } from 'libs/rbac-client/src';
 import type { RoleWithUser } from '@/types';
 
 const { Text } = Typography;

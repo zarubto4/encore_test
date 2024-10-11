@@ -1,4 +1,4 @@
-import UsersApiClient from '@vpcs/users-client';
+import UsersApiClient from 'libs/users-client/src';
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {

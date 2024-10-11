@@ -1,5 +1,5 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import UsersApiClient from '@vpcs/users-client';
+import UsersApiClient from 'libs/users-client/src';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const scopeType = req.query.scopeType as string;

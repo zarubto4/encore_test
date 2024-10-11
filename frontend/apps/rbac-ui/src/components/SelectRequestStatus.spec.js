@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SelectRequestStatus from '@/components/SelectRequestStatus';
-import { RoleRequestStatus } from '@vpcs/rbac-client';
+import { RoleRequestStatus } from 'libs/rbac-client/src';
 import useIsLargeScreen from '@/hooks/useIsLargeScreen';
 
 jest.mock('@/hooks/useIsLargeScreen');

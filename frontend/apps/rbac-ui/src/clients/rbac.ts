@@ -1,8 +1,6 @@
-import { RbacApiClient } from '@vpcs/rbac-client';
+import { RbacApiClient } from 'libs/rbac-client/src';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { crit, info } from '@/lib/Logger/server';
 import { RBAC_USER_ID_HEADER } from '@/constants';
-import { handleError } from '@/utils';
 
 export type RbacApiClientHandler = (
   req: NextApiRequest,
@@ -20,9 +18,9 @@ export function withRbacApiClient(handler: RbacApiClientHandler) {
       return;
     }
     try {
-      await handler(req, res, new RbacApiClient({ xRequestId,userId, logger: info }));
+      await handler(req, res, new RbacApiClient({ xRequestId,userId }));
     } catch (error) {
-      crit({ req, res, error: handleError(error) });
+      console.error(error);
     }
   };
 }

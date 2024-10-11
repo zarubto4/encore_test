@@ -5,7 +5,7 @@ import { NextApiResponse } from 'next';
 import { RBAC_TOKEN_COOKIE } from '@/constants';
 import { IncomingMessage, ServerResponse } from 'http';
 
-export { handleError } from '@vpcs/stdlib';
+export { handleError } from 'libs/stdlib/src';
 
 export const setCookie = (res: NextApiResponse | ServerResponse<IncomingMessage>, value: string, options: Partial<CookieSerializeOptions> = {}) => {
   const defaultOptions: CookieSerializeOptions = {

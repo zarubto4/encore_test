@@ -33,7 +33,7 @@ import SelectUser from '@/components/SelectUser';
 
 import { AuditLogWithUser, UserEnum } from '@/types';
 import { LOG_TYPE_OPTIONS, USER_REGION_SELECT } from '@/constants';
-import { UserRegionType } from '@vpcs/users-client';
+import { UserRegionType } from 'libs/users-client/src';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;

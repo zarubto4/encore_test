@@ -1,6 +1,6 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import { Api, SecurityData, PaginatedRolesResponse, RolesCreateRequest } from '@vpcs/rbac-client';
-import UsersApiClient from '@vpcs/users-client';
+import { Api, SecurityData, PaginatedRolesResponse, RolesCreateRequest } from 'libs/rbac-client/src';
+import UsersApiClient from 'libs/users-client/src';
 
 const fetchAllRolePages = async (api: Api<SecurityData>, query: Partial<{ [key: string]: string | string[] }>) => {
   let page = 1;

@@ -9,7 +9,7 @@ import SelectUser from '@/components/SelectUser';
 import useFetchUserByEmails from '@/hooks/useFetchUserByEmails';
 import RolesTableUser from '@/components/RolesTableUser';
 import { USER_REGION_SELECT } from '@/constants';
-import { UserRegionType } from '@vpcs/users-client';
+import { UserRegionType } from 'libs/users-client/src';
 
 const Page: NextPage = () => {
   const { hasPermission } = usePermission();

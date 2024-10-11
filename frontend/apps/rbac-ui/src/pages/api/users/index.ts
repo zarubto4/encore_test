@@ -1,5 +1,4 @@
-import { UserRegionType } from '@vpcs/users-client';
-import { crit } from '@/lib/Logger/server';
+import { UserRegionType } from 'libs/users-client/src';
 import { handleError } from '@/utils';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { resolveUserByEmailForRegion } from '@/lib/user';
@@ -27,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json(user);
   } catch (error: unknown) {
     console.error(error);
-    return crit({ req, res, error: handleError(error) });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }
 
@@ -37,9 +36,9 @@ function methodNotAllowed(res: NextApiResponse, method: string) {
 }
 
 function badRequest(res: NextApiResponse, message: string) {
-  return crit({ res, error: message, status: 400 });
+  return res.status(400).json({ message });
 }
 
 function notFound(res: NextApiResponse, message: string) {
-  return crit({ res, error: message, status: 404 });
+  return res.status(404).json({ message });
 }

@@ -1,7 +1,7 @@
 import { Radio, Select, SelectProps } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { RoleRequestStatus } from '@vpcs/rbac-client';
+import { RoleRequestStatus } from 'libs/rbac-client/src';
 import { ROLE_REQ_STATUS_DISPLAY } from '@/constants';
 import useIsLargeScreen from '@/hooks/useIsLargeScreen';
 

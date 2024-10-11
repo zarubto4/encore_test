@@ -8,7 +8,7 @@ import SelectUser from '@/components/SelectUser';
 import RoleCard from '@/components/RoleCard';
 import { USER_REGION_SELECT } from '@/constants';
 
-import type { RolesResponse } from '@vpcs/rbac-client';
+import type { RolesResponse } from 'libs/rbac-client/src';
 import { AssignResultType } from '@/types';
 
 type AddRoleOwnerModalProps = {

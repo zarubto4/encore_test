@@ -2,7 +2,7 @@ import { Spin } from 'antd';
 import useFetchUser from '@/hooks/useFetchUser';
 import { Tooltip } from 'antd';
 
-import type { UserType } from '@vpcs/users-client';
+import type { UserType } from 'libs/users-client/src';
 
 type UserProps = {
   userId: string;

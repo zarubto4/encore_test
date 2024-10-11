@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { addKeyToData, handleError } from '@/utils';
 import type { AuditLogWithUser, Pagination } from '@/types';
-import { UserRegionType } from '@vpcs/users-client';
+import { UserRegionType } from 'libs/users-client/src';
 
 type FetchAuditLogParams = {
   page?: number;

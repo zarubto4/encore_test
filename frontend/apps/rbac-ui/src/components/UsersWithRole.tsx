@@ -11,7 +11,7 @@ import { UserRolesCreateResponseWithUser } from '@/types';
 import RevokeRoleModal from '@/components/RevokeRoleModal';
 import { LOG_TYPE_OPTIONS } from '@/constants';
 
-import type { RolesResponse } from '@vpcs/rbac-client';
+import type { RolesResponse } from 'libs/rbac-client/src';
 
 type UsersWithRoleProps = {
   role: RolesResponse;

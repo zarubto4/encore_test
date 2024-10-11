@@ -3,7 +3,7 @@ import { Modal, Typography, Form, Button, message, Input, Checkbox } from 'antd'
 import { green, red } from '@ant-design/colors';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
-import { ScopeType } from '@vpcs/rbac-client';
+import { ScopeType } from 'libs/rbac-client/src';
 import { handleError } from '@/utils';
 import { isValidEmail } from '@/utils';
 import SelectRoles from '@/components/SelectRoles';
@@ -12,7 +12,7 @@ import SelectUser from '@/components/SelectUser';
 import SelectScopeType from '@/components/SelectScopeType';
 import { USER_REGION_SELECT } from '@/constants';
 
-import type { RolesResponse } from '@vpcs/rbac-client';
+import type { RolesResponse } from 'libs/rbac-client/src';
 import type { AssignResultType } from '@/types';
 
 type AssignRolesModalProps = {

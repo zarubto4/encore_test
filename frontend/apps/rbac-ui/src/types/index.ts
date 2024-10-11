@@ -1,5 +1,5 @@
 import type { GetProp, TableProps } from 'antd';
-import type { UserRegionType, UserType } from '@vpcs/users-client';
+import type { UserRegionType, UserType } from 'libs/users-client/src';
 import type {
   RolesResponse,
   RolesOwnersResponse,
@@ -10,7 +10,7 @@ import type {
   RoleIdResponse,
   ScopeTypeCreateResponse,
   AuditResponse,
-} from '@vpcs/rbac-client';
+} from 'libs/rbac-client/src';
 
 export type RoleWithUser = RoleIdResponse & { createdByUser: UserType };
 export type RoleOwnerWithUser = RolesOwnersResponse & { ownerUser: UserType };

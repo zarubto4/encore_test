@@ -1,10 +1,9 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import UsersApiClient, { UserRegionType, UserType } from '@vpcs/users-client';
+import UsersApiClient, { UserRegionType, UserType } from 'libs/users-client/src';
 import { NextApiRequestQuery } from 'next/dist/server/api-utils';
-import { crit } from '@/lib/Logger/server';
 import { resolveMyUserIdForRegion } from '@/lib/user';
 
-import type { PaginatedUserRoleRequestsResponse, PaginatedRolesResponse, Api, ScopeType } from '@vpcs/rbac-client';
+import type { PaginatedUserRoleRequestsResponse, PaginatedRolesResponse, Api, ScopeType } from 'libs/rbac-client/src';
 
 type RoleRequestWithUsers = {
   roleId: string;
@@ -104,7 +103,7 @@ const handler: RbacApiClientHandler = async (req, res, rbac) => {
     };
 
     if (!roleId || !scopeType || !regions) {
-      return crit({ req, res, error: 'roleId, scopeType, and regions are required', status: 400 });
+      return res.status(400).json({ message: 'roleId, scopeType, and regions are required' });
     }
 
     const requestsPerRegion = await Promise.all(

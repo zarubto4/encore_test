@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Modal, Form, Button, message, Card, Typography } from 'antd';
 
-import { ScopeType } from '@vpcs/rbac-client';
+import { ScopeType } from 'libs/rbac-client/src';
 import { handleError } from '@/utils';
 import RoleTitle from '@/components/typography/RoleTitle';
 import type { UserRolesCreateResponseWithUser } from '@/types';

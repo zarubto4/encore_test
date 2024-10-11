@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { handleError } from '@/utils';
-import type { AccountSuccessResponse, UserRegionType } from '@vpcs/users-client';
+import type { AccountSuccessResponse, UserRegionType } from 'libs/users-client/src';
 
 const useFetchUser = (emails: string[] | undefined, region: UserRegionType) => {
   const [data, setData] = useState<AccountSuccessResponse[]>([]);

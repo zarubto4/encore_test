@@ -4,7 +4,7 @@ import { Typography, Alert, Button } from 'antd';
 import { useRouter } from 'next/router';
 import useFetchUsersRoles from '@/hooks/useFetchUsersRoles';
 import ResponsiveTable from '@/components/ResponsiveTable';
-import { AccountSuccessResponse } from '@vpcs/users-client';
+import { AccountSuccessResponse } from 'libs/users-client/src';
 import RevokeRoleModal from '@/components/RevokeRoleModal';
 import type { UserRolesCreateResponseWithUser } from '@/types';
 

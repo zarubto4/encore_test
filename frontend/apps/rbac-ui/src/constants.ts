@@ -1,4 +1,4 @@
-import { USER_REGION, UserRegionType } from '@vpcs/users-client';
+import { USER_REGION, UserRegionType } from 'libs/users-client/src';
 
 export const RBAC_TOKEN_COOKIE = 'rbac-auth';
 export const LOGGER_APP_NAME = 'mx-rbac-ui-service';

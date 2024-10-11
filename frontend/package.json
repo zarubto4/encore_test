@@ -7,7 +7,7 @@
     "dev": "nx dev rbac-ui",
     "start": "nx serve rbac-ui",
     "build": "nx build rbac-ui",
-    "generate-rbac-client": "npx swagger-typescript-api -p libs/vpcs/core/rbac-client/swagger.yml -o libs/vpcs/core/rbac-client/src/lib/ -n rbac-client.ts",
+    "generate-rbac-client": "npx swagger-typescript-api -p libs/rbac-client/swagger.yml -o libs/rbac-client/src/lib/ -n rbac-client.ts",
     "format": "prettier --ignore-path .prettierignore --write --plugin-search-dir=. .",
     "test": "jest",
     "lint": "nx lint rbac-ui"

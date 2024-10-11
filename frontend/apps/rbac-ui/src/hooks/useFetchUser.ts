@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { handleError } from '@/utils';
-import type { UserType } from '@vpcs/users-client';
+import type { UserType } from 'libs/users-client/src';
 
 type UseFetchUserParams = {
   userId: string | undefined | null;

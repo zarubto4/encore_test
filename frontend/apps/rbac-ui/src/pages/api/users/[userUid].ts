@@ -1,15 +1,14 @@
-import UsersApiClient, { USER_REGION } from '@vpcs/users-client';
-import { crit } from '@/lib/Logger/server';
+import UsersApiClient, { USER_REGION } from 'libs/users-client/src';
 import { handleError } from '@/utils';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { AccountSuccessResponse } from '@vpcs/users-client';
+import type { AccountSuccessResponse } from 'libs/users-client/src';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { userUid } = req.query;
   const { show } = req.query;
   if (!userUid) {
-    return crit({ req, res, error: 'userUid is required', status: 400 });
+    return res.status(400).json({ message: 'userUid is required' });
   }
 
   const userUidString = userUid as string;
@@ -21,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (resolvedUser.length === 0) {
       resolvedUser = await userApiClient.getUserById(userUidString, USER_REGION.EMEA);
       if (resolvedUser.length === 0) {
-        return crit({ req, res, error: `User with ID ${userUidString} not found in any region`, status: 404 });
+        return res.status(404).json({ message: `User with ID ${userUidString} not found in any region` });
       }
     }
 
@@ -37,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: user.email,
     });
   } catch (error: unknown) {
-    return crit({ req, res, error: handleError(error) });
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 }

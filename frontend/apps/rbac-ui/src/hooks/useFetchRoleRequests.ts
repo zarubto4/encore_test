@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { handleError, addKeyToData } from '@/utils';
 import type { OwnerRoleRequest, Pagination } from '@/types';
-import { RoleRequestStatus } from '@vpcs/rbac-client';
+import { RoleRequestStatus } from 'libs/rbac-client/src';
 
 type RoleRequestParams = {
   requesterId?: string;
