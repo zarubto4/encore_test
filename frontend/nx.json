@@ -1,7 +1,4 @@
 {
-  "installation": {
-    "version": "19.4.2"
-  },
   "plugins": [
     {
       "plugin": "@nx/next/plugin",
@@ -23,12 +20,6 @@
       "options": {
         "targetName": "lint"
       }
-    },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      }
     }
   ],
   "generators": {
@@ -37,9 +28,18 @@
         "style": "tailwind",
         "linter": "eslint"
       }
-    },
-    "@nx/react": {
-      "library": {}
+    }
+  },
+  "targetDefaults": {
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    }
+  },
+  "release": {
+    "version": {
+      "preVersionCommand": "pnpm dlx nx run-many -t build"
     }
   }
 }

@@ -1,11 +1,44 @@
-import { parseError } from './utils';
+import { handleError } from 'libs/stdlib/src';
+import { Cache } from './cache';
 
+// Constants
+const SYSTEM_USER_ID = '00000000-0000-0000-0000-000000000000';
+const SYSTEM_USER_PAYLOAD = {
+  id: SYSTEM_USER_ID,
+  createdAt: '',
+  brand: null,
+  domain: 'internal.na',
+  email: 'rbac@groupon.com',
+  emailVerifiedAt: null,
+  firstName: 'System',
+  isEmailVerified: true,
+  isRegistered: true,
+  lastName: 'User',
+  locale: 'en',
+  registeredAt: '',
+  updatedAt: '',
+};
+
+// Types
 type ErrorBody = {
   subject: string;
   errorCode: string;
 };
 
 type UID = string;
+
+export const USER_REGION = {
+  NA: 'NA' as const,
+  EMEA: 'EMEA' as const,
+};
+
+const HBRegion = {
+  [USER_REGION.NA]: process.env['NEXT_PRIVATE_USERS_NA_REGION'] ?? 'us-central1',
+  [USER_REGION.EMEA]: process.env['NEXT_PRIVATE_USERS_EMEA_REGION'] ?? 'us-west-2',
+};
+
+export type HBRegionEnum = (typeof HBRegion)[keyof typeof HBRegion];
+export type UserRegionType = keyof typeof HBRegion;
 
 export type UserType = {
   firstName: string | null;
@@ -44,59 +77,71 @@ export type AccountSuccessResponse = {
 
 export type AccountResponse = AccountSuccessResponse | ErrorResponse;
 
-type CacheEntry<T> = {
-  data: T;
-  expiresAt: number;
+type ResolveUidsType = {
+  userId: string;
+  region?: UserRegionType;
 };
 
-// Global cache and expiration time
-const cache: Map<string, CacheEntry<any>> = new Map();
-const expireTime = 24 * 60 * 60 * 1000; // 24 hours
-
 class ApiClient {
-  private baseURL: string = process.env['NEXT_PRIVATE_USERS_API_URL'] || '';
+  private baseUrl: string;
+  private HBRegion: HBRegionEnum;
+  private readonly API_KEY_NA: string | undefined;
+  private readonly API_KEY_EMEA: string | undefined;
+  private xRequestId?: string;
 
-  constructor(baseURL?: string) {
-    if (baseURL) {
-      this.baseURL = baseURL;
+  constructor({ region = USER_REGION.NA, xRequestId }: { region?: UserRegionType; xRequestId?: string } = {}) {
+    this.baseUrl = process.env['NEXT_PRIVATE_USERS_API_URL'] || 'http://users-service.staging.service/users/v1';
+    this.HBRegion = HBRegion[region];
+    this.API_KEY_NA = process.env['NEXT_PRIVATE_USERS_NA_API_KEY'];
+    this.API_KEY_EMEA = process.env['NEXT_PRIVATE_USERS_EMEA_API_KEY'];
+
+    if (!this.API_KEY_NA || !this.API_KEY_EMEA) {
+      throw new Error('API keys for NA and EMEA regions are required');
     }
+
+    this.xRequestId = xRequestId;
   }
 
-  private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const apiKey = process.env['NEXT_PRIVATE_USERS_API_KEY'];
-    if (!apiKey) {
-      throw new Error('NEXT_PRIVATE_USERS_API_KEY is required');
+  private async request<T>(endpoint: string, options?: RequestInit, region: HBRegionEnum = this.HBRegion): Promise<T> {
+    const apiKey = region === HBRegion[USER_REGION.EMEA] ? this.API_KEY_EMEA : this.API_KEY_NA;
+    const headers: Record<string, string> = {
+      'x-api-key': apiKey ?? '',
+      'X-HB-Region': region,
+    };
+
+    if (this.xRequestId) {
+      headers['X-Request-ID'] = this.xRequestId;
     }
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      headers: {
-        'x-api-key': apiKey,
-      },
-      ...options,
-    });
+
+    const response = await fetch(`${this.baseUrl}${endpoint}`, { headers: headers as HeadersInit, ...options });
 
     if (!response.ok) {
       throw (await response.json()) as ErrorResponse;
     }
+
     return response.json() as T;
   }
 
-  private static getCachedResponse<T>(key: string): T | null {
-    const cacheEntry = cache.get(key);
-    if (cacheEntry && cacheEntry.expiresAt > Date.now()) {
-      return cacheEntry.data;
+  public setRegion(region: UserRegionType) {
+    if (!(region in USER_REGION)) {
+      throw new Error(`Invalid region: ${region}`);
     }
-    cache.delete(key);
-    return null;
+    this.HBRegion = HBRegion[region];
   }
 
-  private static setCachedResponse<T>(key: string, data: T, expire: number = expireTime): void {
-    const expiresAt = Date.now() + expire;
-    cache.set(key, { data, expiresAt });
+  public getRegion(): UserRegionType {
+    const regionKey = (Object.keys(HBRegion) as Array<UserRegionType>).find((key) => HBRegion[key] === this.HBRegion);
+    if (!regionKey) {
+      throw new Error(`Unable to determine region for HBRegion value: ${this.HBRegion}`);
+    }
+    return regionKey;
   }
 
-  public async validateToken(token: string): Promise<TokenValidationResponse> {
-    const cacheKey = `validateToken-${token}`;
-    const cachedResponse = ApiClient.getCachedResponse<TokenValidationResponse>(cacheKey);
+  public async validateToken(token: string, region: UserRegionType = USER_REGION.NA): Promise<TokenValidationResponse> {
+    const _region = HBRegion[region];
+    const cacheKey = `validateToken-${token}-${_region}`;
+    const cachedResponse = Cache.get<TokenValidationResponse>(cacheKey);
+
     if (cachedResponse) {
       return cachedResponse;
     }
@@ -105,11 +150,13 @@ class ApiClient {
       const formData = new FormData();
       formData.append('token', token);
 
-      const response = await this.request<TokenValidationResponse>('/token/validation', {
-        method: 'POST',
-        body: formData,
-      });
-      ApiClient.setCachedResponse(cacheKey, response);
+      const response = await this.request<TokenValidationResponse>(
+        '/token/validation',
+        { method: 'POST', body: formData },
+        _region,
+      );
+
+      Cache.set(cacheKey, response);
       return response;
     } catch (error) {
       console.error('Error validating token:', error);
@@ -117,91 +164,92 @@ class ApiClient {
     }
   }
 
-  public async getUserById(userId: string): Promise<AccountResponse[]> {
-    const cacheKey = `getUserById-${userId}`;
-    const cachedResponse = ApiClient.getCachedResponse<AccountResponse[]>(cacheKey);
+  public async getUserById(userId: string, region: UserRegionType = USER_REGION.NA): Promise<AccountResponse[]> {
+    if (userId === SYSTEM_USER_ID) {
+      return [SYSTEM_USER_PAYLOAD];
+    }
+
+    const _region = HBRegion[region];
+    const cacheKey = `getUserById-${userId}-${region}`;
+    const cachedResponse = Cache.get<AccountResponse[]>(cacheKey);
+
     if (cachedResponse) {
       console.info(`Returning cached response for userId:#${userId}`);
       return cachedResponse;
     }
 
     try {
-      const response = await this.request<AccountResponse[]>(`/accounts?id=${userId}`, {
-        method: 'GET',
-      });
-      ApiClient.setCachedResponse(cacheKey, response);
+      const response = await this.request<AccountResponse[]>(`/accounts?id=${userId}`, { method: 'GET' }, _region);
+      Cache.set(cacheKey, response);
       return response;
     } catch (error) {
-      ApiClient.setCachedResponse(cacheKey, [], 30 * 1000); // 30 seconds
+      Cache.set(cacheKey, [], 30 * 1000); // Cache empty response for 30 seconds
       console.error(`Error getting user by id:#${userId}`, error);
       throw error;
     }
   }
 
-  public resolveUsersUids = async (userIds: string[]): Promise<Record<UID, UserType>> => {
-    // Remove duplicates
-    const uniqueUserIds = Array.from(new Set(userIds));
+  public async resolveUsersUids(list: ResolveUidsType[]): Promise<Record<UID, UserType>> {
+    const uniqueUsers = Array.from(
+      new Map(list.map((item) => [`${item.userId}_${item.region ?? USER_REGION.NA}`, item])).values(),
+    );
 
-    // Create promises to fetch user data
-    const usersPromises = uniqueUserIds.map(async (userId) => {
-      try {
-        const [user] = (await this.getUserById(userId)) as AccountSuccessResponse[];
-        if (!user) throw new Error(`User with ID ${userId} not found`);
+    const usersResolved = await Promise.all(
+      uniqueUsers.map(async ({ userId, region }) => {
+        try {
+          const [user] = (await this.getUserById(userId, region)) as AccountSuccessResponse[];
+          if (!user) throw new Error(`User with ID ${userId} in region ${region} not found`);
 
-        return {
-          [userId]: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-          },
-        };
-      } catch (error) {
-        return {
-          [userId]: {
-            firstName: null,
-            lastName: null,
-            email: null,
-            error: parseError(error),
-          },
-        };
-      }
-    });
+          return { [userId]: { firstName: user.firstName, lastName: user.lastName, email: user.email } };
+        } catch (error) {
+          return { [userId]: { firstName: null, lastName: null, email: null, error: handleError(error) } };
+        }
+      }),
+    );
 
-    // Resolve all promises
-    const usersResolved = await Promise.all(usersPromises);
-
-    // Combine results into a single object
-    const users: Record<UID, UserType> = usersResolved.reduce((acc, user) => {
+    return usersResolved.reduce((acc, user) => {
       const key = Object.keys(user)[0];
       acc[key] = user[key];
       return acc;
     }, {} as Record<UID, UserType>);
+  }
 
-    return users;
-  };
+  public async getUserFromEmail(
+    email: string,
+    domain = 'internal.na',
+    region: UserRegionType = 'NA',
+  ): Promise<AccountSuccessResponse | null> {
+    if (!(region in HBRegion)) {
+      throw new Error(`Invalid region: ${region}`);
+    }
 
-  public getUserFromEmail = async (email: string, domain = 'internal.na'): Promise<AccountSuccessResponse | null> => {
-    const cacheKey = `getUserById-${email}`;
-    const cachedResponse = ApiClient.getCachedResponse<AccountSuccessResponse>(cacheKey);
+    const _region = HBRegion[region];
+    const cacheKey = `getUserFromEmail-${email}-${domain}-${_region}`;
+    const cachedResponse = Cache.get<AccountSuccessResponse>(cacheKey);
+
     if (cachedResponse) {
-      console.info(`Returning cached response for email:${email}`);
+      console.info(`Returning cached response for email:#${email}`);
       return cachedResponse;
     }
 
     try {
-      const [user] = (await this.request<AccountResponse[]>(`/accounts?email=${email}&domain=${domain}`, {
-        method: 'GET',
-      })) as AccountSuccessResponse[];
+      const [user] = (await this.request<AccountResponse[]>(
+        `/accounts?email=${email}&domain=${domain}`,
+        { method: 'GET' },
+        _region,
+      )) as AccountSuccessResponse[];
+
       if (!user) {
         return null;
       }
-      ApiClient.setCachedResponse(cacheKey, user);
+
+      Cache.set(cacheKey, user);
       return user;
     } catch (error) {
       console.error(`Error getting user by email:${email} in domain ${domain}`, error);
       throw error;
     }
-  };
+  }
 }
 
 export default ApiClient;

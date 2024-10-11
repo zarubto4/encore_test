@@ -22,6 +22,6 @@
 /frontend/build
 /frontend/.next
 /frontend/out
-/frontend/apps/groupon-admin/.env.local
+/frontend/apps/groupon_admin/.env.local
 .nx
 .next

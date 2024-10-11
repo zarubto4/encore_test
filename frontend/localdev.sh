@@ -1,2 +1,6 @@
 kubectl cloud-elevator auth browser
-sudo hb-local-proxy --context gcp-stable-us-central1 --namespace groupon-admin-staging
+# staging
+#sudo hb-local-proxy --context gcp-stable-us-central1 --namespace rbac-ui-staging-sox
+
+# prod 
+sudo hb-local-proxy --context gcp-production-us-central1 --namespace rbac-ui-production-sox
