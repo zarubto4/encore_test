@@ -4,9 +4,30 @@ import { GoogleDocsService } from "../../../libs/3partyApis/googleDocs/googleDoc
 import { AsanaService } from "../../../libs/3partyApis/asana/asana_service";
 import { TempoService } from "../../../libs/3partyApis/tempo/tempo_service";
 import { secret } from "encore.dev/config";
+import { GrouponServiceProvider } from "../../../libs/core/service_management/models/models";
 
 // ==== SERVICE ========================================================================================================
-new Service("transformation_kindly_reminder");
+
+export const service = new Service("transformationService_kindlyReminder");
+new GrouponServiceProvider(service, {
+  name: "Kindly Reminder",
+  description: "Eye of Souron",
+  contacts: {
+    serviceOwnerEmail: "c_tzaruba@groupon.com",
+    techLeadEmail: "c_tzaruba@groupon.com",
+    productOwnerEmail: "c_tzaruba@groupon.com",
+  },
+  team: {
+    email: "transformation@groupon.com",
+    opsgenie: null,
+    googleChatSpaceUrl: "www.google.com",
+  },
+  jiraProject: {
+    projectName: "TPMO",
+    epicBugBucketName: "TMPO-33",
+  },
+  documentation: [],
+});
 
 // ==== SERVICE secrets =================================================================================================
 
@@ -16,6 +37,8 @@ const kindlyReminder_googleService_privateKey = secret("kindlyReminder_googleSer
 const kindlyReminder_googleService_clientEmail = secret("kindlyReminder_googleService_clientEmail");
 const kindlyReminder_jiraService_email = secret("kindlyReminder_jiraService_email");
 const kindlyReminder_jiraService_apiToken = secret("kindlyReminder_jiraService_apiToken");
+
+// ==== Available Emitted Topics =======================================================================================
 
 // ==== SERVICE CONFIG =================================================================================================
 
@@ -67,18 +90,20 @@ export const kindlyReminder_hideThiesVpsConvertor: Record<string, string> = {
 
 export const kindlyReminder_grouponVPs: string[] = [
   "c_vrysanek@groupon.com", // "Vojtech Rysanek",      // CTO
-  "dredmond@groupon.com", // "Darren Redmond",       // VP Engineering
+  "dredmond@groupon.com", // "Darren Redmond",         // VP Engineering
   "nranjanray@groupon.com", // "Nikash RanjanRay",     // VP Engineering
   "c_jlongauer@groupon.com", // "Juraj Longauer",      // VP Engineering
-  "c_tsikola@groupon.com", // "Tomas Sikola",         //  VP Transformation
-  "c_drybar@groupon.com", // "David Rybar",          // Director IT
+  "c_tsikola@groupon.com", // "Tomas Sikola",          //  VP Transformation
+  "c_drybar@groupon.com", // "David Rybar",            // Director IT
   "c_mjerabek@groupon.com", // "Michal Jerabek",       // CPO
   // "Barbara Weisz",       // CSO
   // "Jiri Ponrt",          // CFO
   "c_zvydrova@groupon.com", // "Zuzana Vydrova",       // FF Director
-  "alindsey@groupon.com", // "Adam Lindsey",         // GO Director
-  "c_zlinc@groupon.com", // "Zdenek Linc",          // CMO
+  "alindsey@groupon.com", // "Adam Lindsey",           // GO Director
+  "c_zlinc@groupon.com", // "Zdenek Linc",             // CMO
 ];
 
 // For IssueAllInHunterGenerator
 export const kindlyReminder_testProjectConditions = []; // ["QR"]; // ["QR", "GAPI"]; // <--- Change this if you want to apply script only for selected projects
+
+// ==== SERVICE STATIC VARIABLES =======================================================================================

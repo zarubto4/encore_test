@@ -1,12 +1,13 @@
 import { Service } from "encore.dev/service";
-import { GoogleDocsService } from "../../../libs/3partyApis/googleDocs/googleDocs_service";
-import { AsanaService } from "../../../libs/3partyApis/asana/asana_service";
-import { TempoService } from "../../../libs/3partyApis/tempo/tempo_service";
-import { secret } from "encore.dev/config";
+// import { GoogleDocsService } from "../../../libs/3partyApis/googleDocs/googleDocs_service";
+// import { AsanaService } from "../../../libs/3partyApis/asana/asana_service";
+// import { TempoService } from "../../../libs/3partyApis/tempo/tempo_service";
+// import { secret } from "encore.dev/config";
 
 // ==== SERVICE ========================================================================================================
-new Service("transformation_bigPicture");
+new Service("transformationService_bigPicture");
 
+/*
 // ==== SERVICE secrets =================================================================================================
 
 const bigPicture_tempoService_token = secret("bigPicture_tempoService2_token");
@@ -34,3 +35,4 @@ export class BigPictureConfigApp {
 export const bigPicture_sTeam_spreadSheetId = "1sc1odN1DK72fYZVVlMz99o18mKFWKKfUeLLUSll5Twk";
 export const bigPicture_sTeam_managersWorkSheetId = 879128958;
 export const bigPicture_asana_project_id = "1207778959375434"; // Asana Kindly Reminder Production
+*/

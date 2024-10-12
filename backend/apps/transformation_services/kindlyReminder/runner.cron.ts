@@ -1,13 +1,13 @@
 import { CronJob } from "encore.dev/cron";
 import { api } from "encore.dev/api";
 import moment from "moment";
-import { transformation_kindly_reminder } from "~encore/clients";
+import { transformationService_kindlyReminder } from "~encore/clients";
 import log from "encore.dev/log";
 
 // --- Valid Week ------------------------------------------------------------------------------------------------------
 
 export const cronValidWeek = api({ expose: false }, async (): Promise<void> => {
-  await transformation_kindly_reminder
+  await transformationService_kindlyReminder
     .runValidatorScript({ value: moment().week() })
     .then(() => {
       log.info("cronValidWeek done");
@@ -27,7 +27,7 @@ new CronJob("transformation-kindlyReminder-weeklyChecker", {
 // --- Close Asana task from last week ---------------------------------------------------------------------------------
 
 export const cronCloseAsanaTaskFromLastWeek = api({ expose: false }, async (): Promise<void> => {
-  await transformation_kindly_reminder
+  await transformationService_kindlyReminder
     .runGeneratorScript({
       name: "close_asana_tickets",
       week: moment().week() - 1,
@@ -50,7 +50,7 @@ new CronJob("transformation-kindlyReminder-closeAsanaPreviousWeek", {
 // --- Generate next week -----------------------------------------------------------------------------------------------
 
 export const generateNextWeekOfIssues = api({ expose: false }, async (): Promise<void> => {
-  await transformation_kindly_reminder
+  await transformationService_kindlyReminder
     .runGeneratorScript({
       name: "run_whole_script",
       week: moment().week(),

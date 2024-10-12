@@ -19,6 +19,10 @@ Jelikož je Backend a Server Less architektura složitější, máme kompletně 
 
 
 ---
+👾👾 All instruction for terminal are prepared to call in directory ./backend 👾👾👾 <br>
+In Terminal use `cd backend` 💩
+
+
 
 ## <font color="#00a828">Run Serverless - Preparation Phase  (10 seconds step)</font>
 
