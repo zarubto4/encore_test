@@ -5,17 +5,84 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b0f03f1-4911-4b08-9860-01fefd388a34" name="Changes" comment="Update Cron for KR">
-      <change afterPath="$PROJECT_DIR$/frontend/localdev.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/test-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/test-app.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/client_export/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/libs/api-source/client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/client_export/openapi.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/client_export/test.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/apps/groupon-admin/specs/index.spec.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/apps/groupon-admin/specs/index.spec.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.prettierignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.prettierignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/asana_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/asana_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_comments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/asana_supported_rest_funtions/asana_comments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_projects.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/asana_supported_rest_funtions/asana_projects.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_tasks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/asana_supported_rest_funtions/asana_tasks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/asana_supported_rest_funtions/asana_users.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/asana_supported_rest_funtions/asana_users.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/models/asana_configModels.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/models/asana_configModels.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/models/asana_requestsModels.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/models/asana_requestsModels.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/asana/models/asana_resultsModels.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/asana/models/asana_resultsModels.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/googleDocs/googleDocs_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/googleDocs/googleDocs_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/googleDocs/googleDocs_supportedDocs/googleDocs_spreadSheet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/googleDocs/googleDocs_supportedDocs/googleDocs_spreadSheet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/googleDocs/models/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/googleDocs/models/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/enums/jira_enums.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/enums/jira_enums.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/jira_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/jira_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_issue_comments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/jira_supported_rest_functions/jira_issue_comments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_issues.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/jira_supported_rest_functions/jira_issues.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_project.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/jira_supported_rest_functions/jira_project.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/jira_supported_rest_functions/jira_user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/jira_supported_rest_functions/jira_user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/models/jira_childHierarchyIssue.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/models/jira_childHierarchyIssue.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/models/jira_config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/models/jira_config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/models/jira_extededIssue.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/models/jira_extededIssue.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/jira/utils/jira_commonUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/jira/utils/jira_commonUtils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/tempo/models/tempo_config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/tempo/models/tempo_config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/tempo/models/tempo_wokLogsRequest.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/tempo/models/tempo_wokLogsRequest.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/tempo/models/tempo_workLogsResponse.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/tempo/models/tempo_workLogsResponse.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/3partyApis/tempo/tempo_service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/3partyApis/tempo/tempo_service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/auth/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/auth/auth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/http_requests/models/promiseHttp_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/http_requests/models/promiseHttp_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/http_requests/promise_http_request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/http_requests/promise_http_request.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/http_requests/requests/promise_http_availableRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/http_requests/requests/promise_http_availableRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/parsing_and_formating/printPrettyArray.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/parsing_and_formating/printPrettyArray.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/_libraries/core/parsing_and_formating/stringInject.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/libs/core/parsing_and_formating/stringInject.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_1/encore.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_1/encore.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_1/hello.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_1/hello.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_1/hello.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_1/hello.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_1/hi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_1/hi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_2/encore.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_2/encore.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_1/service_2/hello2.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_1/service_2/hello2.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_2/service_3/encore.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_2/service_3/encore.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/system_2/service_3/hello_3.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/system_2/service_3/hello_3.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/big_picture/api_controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/big_picture/api_controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/big_picture/encore.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/big_picture/encore.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/api_controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/api_controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/api_models/controller_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/api_models/controller_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/encore.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/encore.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/asana/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/asana/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/asana/asanaIssueContent.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/asana/asanaIssueContent.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/asana/asanaLastWeekCloser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/asana/asanaLastWeekCloser.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/asana/createAsanaTasks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/asana/createAsanaTasks.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/dashboard/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/dashboard/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/dashboard/getDashboardAndConditions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/dashboard/getDashboardAndConditions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/dashboard/updateWeekTotalReport.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/dashboard/updateWeekTotalReport.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/getIssues/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/getIssues/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/getIssues/getIssueStatistics.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/getIssues/getIssueStatistics.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/getIssues/getPrintedIssues.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/getIssues/getPrintedIssues.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/getIssues/prepareIssuesSheetStage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/getIssues/prepareIssuesSheetStage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/getIssues/printIssuesIntoWorksheet.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/getIssues/printIssuesIntoWorksheet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issueAllInHunterGenerator.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issueAllInHunterGenerator.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issueAllInValidator.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issueAllInValidator.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issueValidation/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issueValidation/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issueValidation/issueAllInValidator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issueValidation/issueAllInValidator.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issuesHunting/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issuesHunting/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issuesHunting/fixinCapLabourScripts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issuesHunting/fixinCapLabourScripts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issuesHunting/getIssuesByConditionsForWeekReport.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issuesHunting/getIssuesByConditionsForWeekReport.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issuesPrint/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issuesPrint/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/issuesPrint/printIntWorkSheets.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/issuesPrint/printIntWorkSheets.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/projectWorkSheet/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/projectWorkSheet/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/projectWorkSheet/findAndSynchronizeProjects.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/projectWorkSheet/findAndSynchronizeProjects.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/projectWorkSheet/prepareProjectStatsStage.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/projectWorkSheet/prepareProjectStatsStage.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/userWorkSheet/_models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/userWorkSheet/_models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/userWorkSheet/prepareManagerStage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/userWorkSheet/prepareManagerStage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/userWorkSheet/prepareUserStatsStage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/userWorkSheet/prepareUserStatsStage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/reports/userWorkSheet/synchroniseUserList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/reports/userWorkSheet/synchroniseUserList.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/transformation/kindly_reminder/runner.cron.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/apps/transformation/kindly_reminder/runner.cron.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.node-version" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.npmrc" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,32 +106,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/tomaszaruba/Documents/groupon/encore_test&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;/Users/tomaszaruba/.nvm/versions/node/v20.8.0/bin/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.gen.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.prepush.executor&quot;: &quot;Run&quot;,
-    &quot;npm.run.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/tomaszaruba/Documents/groupon/encore_test/backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "/Users/tomaszaruba/.nvm/versions/node/v20.8.0/bin/node",
+    "nodejs_package_manager_path": "npm",
+    "npm.gen.executor": "Run",
+    "npm.lint.executor": "Run",
+    "npm.prepush.executor": "Run",
+    "npm.run.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "/Users/tomaszaruba/Documents/groupon/encore_test/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend" />
       <recent name="$PROJECT_DIR$/frontend/libs/api-source" />
       <recent name="$PROJECT_DIR$" />
     </key>

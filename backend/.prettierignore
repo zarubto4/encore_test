@@ -1,9 +1,4 @@
-# Ignore artifacts:
-build
-coverage
-node_modules
-encore.gen
+# Add files here to ignore them from prettier formatting
+/encore.gen
 .encore
-client_export
-**/.git
-**/node_modules
+/node_modules
