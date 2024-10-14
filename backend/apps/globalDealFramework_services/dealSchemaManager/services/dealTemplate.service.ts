@@ -15,13 +15,13 @@ import {
   DealTemplateUpdateRequest,
   DealTemplateUpdateRequestValidator,
 } from "../models/dealTemplate.models";
-import { rbacRequiredUserSignature } from "../../../gateways_services/rbac/utils/utils";
 import {
   dealSchemaManager_rbac_template_Create,
   dealSchemaManager_rbac_template_Get,
   dealSchemaManager_rbac_template_Remove,
   dealSchemaManager_rbac_template_Update,
 } from "../encore.service";
+import { rbacRequiredUserSignature } from "../utils/utils";
 
 export class DealTemplateService {
   /**

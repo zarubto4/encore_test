@@ -1,6 +1,5 @@
 import { api } from "encore.dev/api";
 import { DealTypeService } from "../services/dealType.service";
-import { currentRequest } from "encore.dev";
 import { DefaultResponses, DefaultResponsesI } from "../../../../libs/core/default_responses/responses.models";
 import {
   DealTypeCreateRequest,
@@ -21,7 +20,7 @@ const dealTypeService = new DealTypeService();
 export const dealTypeCreate = api(
   { expose: true, auth: true, method: "POST", path: "/deal_schema_management/type" },
   async (params: DealTypeCreateRequest): Promise<DealTypeResponse> => {
-    return await dealTypeService.createNewDealType(params, currentRequest());
+    return await dealTypeService.createNewDealType(params);
   },
 );
 
@@ -31,7 +30,7 @@ export const dealTypeCreate = api(
 export const dealTypeUpdate = api(
   { expose: true, auth: true, method: "PUT", path: "/deal_schema_management/type" },
   async (params: DealTypeUpdateRequest): Promise<DealTypeResponse> => {
-    const response = await dealTypeService.updateDealType(params, currentRequest());
+    const response = await dealTypeService.updateDealType(params);
     return response;
   },
 );
@@ -42,7 +41,7 @@ export const dealTypeUpdate = api(
 export const dealTypeGet = api(
   { expose: true, auth: true, method: "GET", path: "/deal_schema_management/type" },
   async (params: DealTypeGetRequest): Promise<DealTypeResponse> => {
-    return await dealTypeService.getDealType(params, currentRequest());
+    return await dealTypeService.getDealType(params);
   },
 );
 
@@ -52,7 +51,7 @@ export const dealTypeGet = api(
 export const dealTypeGetList = api(
   { expose: true, auth: true, method: "PUT", path: "/deal_schema_management/types" },
   async (params: DealTypeFilterRequest): Promise<DealTypeFilterResponse> => {
-    const response = await dealTypeService.getDealTypeFilter(params, currentRequest());
+    const response = await dealTypeService.getDealTypeFilter(params);
     return response;
   },
 );
@@ -63,7 +62,7 @@ export const dealTypeGetList = api(
 export const dealTypeRemove = api(
   { expose: true, auth: true, method: "DELETE", path: "/deal_schema_management/type" },
   async (params: DealTypeRemoveRequest): Promise<DefaultResponsesI> => {
-    await dealTypeService.removeDealType(params, currentRequest());
+    await dealTypeService.removeDealType(params);
     return new DefaultResponses();
   },
 );

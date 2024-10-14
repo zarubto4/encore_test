@@ -21,8 +21,8 @@ import {
   DealTypeUpdateRequest,
   DealTypeUpdateRequestValidator,
 } from "../models/dealType.models";
-import { rbacRequiredUserSignature } from "../../../gateways_services/rbac/utils/utils";
 import { DealTemplateFilterRequestValidator } from "../models/dealTemplate.models";
+import { rbacRequiredUserSignature } from "../utils/utils";
 
 export class DealTypeService {
   /**
