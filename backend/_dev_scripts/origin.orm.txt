@@ -1,0 +1,44 @@
+import { dealSchemaManager_ormDatabase } from "../encore.service";
+import { Model, Schema, model } from "mongoose";
+
+// Model as Interface  -------------------------------------------------------------------------------------------------
+interface IBlog {
+  firstName: string;
+  lastName: string;
+}
+
+// Model public taiiloder methods --------------------------------------------------------------------------------------
+interface IBlogMethods {
+  fullName(): string;
+}
+
+// Model public taiiloder methods --------------------------------------------------------------------------------------
+type BlogModel = Model<IBlog, unknown, IBlogMethods>;
+
+// Schema --------------------------------------------------------------------------------------------------------------
+const schema = new Schema<IBlog, BlogModel, IBlogMethods>({
+  firstName: {
+    type: String,
+    required: true,
+    minlength: [4, "name is to short"],
+    maxLength: [64, "name is too long"],
+  },
+  lastName: {
+    type: String,
+    required: true,
+    minlength: [4, "name is to short"],
+    maxLength: [64, "name is too long"],
+  },
+});
+
+// Private Methods -----------------------------------------------------------------------------------------------------
+schema.method("fullName", function fullName() {
+  return this.firstName + " " + this.lastName;
+});
+
+schema.methods.speak = function speak() {
+  const greeting = this.name ? "Meow name is " + this.name : "I don't have a name";
+  console.log(greeting);
+};
+
+export const Blog3 = dealSchemaManager_ormDatabase.db.model("Blog3", schema);

@@ -2,7 +2,14 @@ import { ProjectStage } from "../projectWorkSheet/prepareProjectStatsStage.servi
 import { GetIssueUserStatistics } from "../getIssues/getIssueStatistics";
 import { AsanaIssueContent } from "./asanaIssueContent";
 import { CreateTaskForIssuesOwner, CreateTaskForProjectOwner, CreateTaskForVP, GetListOfIssues } from "./_models";
-import { kindlyReminder_asana_followers_to_remove, kindlyReminder_asana_project_id, kindlyReminder_asana_project_section_id, kindlyReminder_grouponVPs, kindlyReminder_spreadSheetId, KindlyReminderConfigApp } from "../../encore.service";
+import {
+  kindlyReminder_asana_followers_to_remove,
+  kindlyReminder_asana_project_id,
+  kindlyReminder_asana_project_section_id,
+  kindlyReminder_grouponVPs,
+  kindlyReminder_spreadSheetId,
+  KindlyReminderConfigApp,
+} from "../../encore.service";
 import { replaceKeys } from "../../../../../libs/core/parsing_and_formating/stringInject";
 import { AsanaTicketResult } from "../../../../../libs/3partyApis/asana/models/asana_resultsModels";
 import moment, { Moment } from "moment";
@@ -27,11 +34,13 @@ export class CreateAsanaTasks {
 
     const generatedIssues = await new GetIssueUserStatistics().getIssueUserStatistics(content.week_number);
 
-    const worksheet_link: string = "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId;
+    const worksheet_link: string =
+      "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId;
     const asana_ticket = await this.createWeekReportTask({
       week_number: content.week_number,
       deadline: content.deadline,
-      worksheet_link: "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId,
+      worksheet_link:
+        "https://docs.google.com/spreadsheets/d/" + kindlyReminder_spreadSheetId + "/edit?gid=" + generatedIssues.sheet.sheetId,
     });
 
     if (!asana_ticket || !asana_ticket.data) {
@@ -83,8 +92,14 @@ export class CreateAsanaTasks {
 
               if (generatedIssues.userLog[vicePresidentEmail].projects[prj].issues_number > 0) {
                 let assign_project_gid: string | null = null;
-                if (generatedIssues.userLog[vicePresidentEmail].projects[prj] && generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email && asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email]) {
-                  assign_project_gid = asanaUsers.byMail[generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email].gid;
+                if (
+                  generatedIssues.userLog[vicePresidentEmail].projects[prj] &&
+                  generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email
+                ) {
+                  const project_owner_email = generatedIssues.userLog[vicePresidentEmail].projects[prj].project_owner_email;
+                  if (project_owner_email && asanaUsers.byMail[project_owner_email]) {
+                    assign_project_gid = asanaUsers.byMail[project_owner_email].gid;
+                  }
                 } else {
                   assign_project_gid = asanaUsers.byMail[vicePresidentEmail] ? asanaUsers.byMail[vicePresidentEmail].gid : null;
                 }
@@ -139,7 +154,8 @@ export class CreateAsanaTasks {
                         deadline: content.deadline,
                         created_as_string: content.created.format("dddd, MMMM Do, YYYY"),
                         deadline_as_string: content.deadline.format("dddd, MMMM Do, YYYY"),
-                        number_of_issues: "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].issues_number,
+                        number_of_issues:
+                          "" + generatedIssues.userLog[vicePresidentEmail].projects[prj].users[issueOwnerEmail].issues_number,
                         worksheet_link: worksheet_link,
                         parent_ticket_id: subTaskProjectIssue.data.gid,
                         week_ticket_id: asana_ticket.data.gid,
@@ -163,8 +179,15 @@ export class CreateAsanaTasks {
 
   // -- Create Task ------------------------------------------------------------------------------------------------------
 
-  private async createWeekReportTask(content: { week_number: number; deadline: Moment; worksheet_link: string }): Promise<AsanaTicketResult | null> {
-    console.log("CreateAsanaTasks: createWeekReportTask:Due on:", moment().week(content.week_number).subtract(1, "day").add(7, "day").format("YYYY-MM-DD"));
+  private async createWeekReportTask(content: {
+    week_number: number;
+    deadline: Moment;
+    worksheet_link: string;
+  }): Promise<AsanaTicketResult | null> {
+    console.log(
+      "CreateAsanaTasks: createWeekReportTask:Due on:",
+      moment().week(content.week_number).subtract(1, "day").add(7, "day").format("YYYY-MM-DD"),
+    );
     return this.configApp.asanaService.tasks.createTask({
       name: "Week " + content.week_number + " -  General Report",
       projects: [kindlyReminder_asana_project_id],
@@ -211,7 +234,18 @@ export class CreateAsanaTasks {
 
   private async createTaskForProjectOwner(content: CreateTaskForProjectOwner): Promise<AsanaTicketResult | null> {
     const ticket = await this.configApp.asanaService.tasks.createSubTask(content.parent_ticket_id, {
-      name: "Week " + content.week_number + " -" + " Project: [" + content.project_name + "]" + (!content.project_is_active ? " is DEACTIVATED!," : "") + " owner: " + content.owner_name + " - Opened Issues: " + content.number_of_issues,
+      name:
+        "Week " +
+        content.week_number +
+        " -" +
+        " Project: [" +
+        content.project_name +
+        "]" +
+        (!content.project_is_active ? " is DEACTIVATED!," : "") +
+        " owner: " +
+        content.owner_name +
+        " - Opened Issues: " +
+        content.number_of_issues,
       due_on: content.deadline.format("YYYY-MM-DD"),
       assignee: content.assign_gid,
       html_notes: replaceKeys(new AsanaIssueContent().project_text, {
@@ -232,7 +266,16 @@ export class CreateAsanaTasks {
 
   private async createTaskForIssuesOwner(content: CreateTaskForIssuesOwner): Promise<AsanaTicketResult | null> {
     const ticket = await this.configApp.asanaService.tasks.createSubTask(content.parent_ticket_id, {
-      name: "Week " + content.week_number + " - Non compliance issues in [" + content.project_name + "]" + " owner: " + content.owner_name + " - Opened Issues: " + content.number_of_issues,
+      name:
+        "Week " +
+        content.week_number +
+        " - Non compliance issues in [" +
+        content.project_name +
+        "]" +
+        " owner: " +
+        content.owner_name +
+        " - Opened Issues: " +
+        content.number_of_issues,
       due_on: content.deadline.format("YYYY-MM-DD"),
       assignee: content.assign_gid ? content.assign_gid : null,
       html_notes: replaceKeys(new AsanaIssueContent().issues_owners_text, {
@@ -264,7 +307,15 @@ export class CreateAsanaTasks {
       list_of_issues = list_of_issues + "<strong>What is Required to Fix:</strong> " + issues[scriptName].howToFixThat;
       list_of_issues = list_of_issues + "\n<ul>";
       for (const issue of issues[scriptName].issue) {
-        list_of_issues = list_of_issues + '<li>Issue: <a href="https://groupondev.atlassian.net/browse/' + issue.ticketKey + '">' + issue.ticketKey + "</a> - " + (issue.fixedStatus == "TODO" ? "Required by KR" : "Recommended, will be mandatory (probably next week)") + "</li>";
+        list_of_issues =
+          list_of_issues +
+          '<li>Issue: <a href="https://groupondev.atlassian.net/browse/' +
+          issue.ticketKey +
+          '">' +
+          issue.ticketKey +
+          "</a> - " +
+          (issue.fixedStatus == "TODO" ? "Required by KR" : "Recommended, will be mandatory (probably next week)") +
+          "</li>";
       }
       list_of_issues = list_of_issues + "</ul>\n\n";
     }

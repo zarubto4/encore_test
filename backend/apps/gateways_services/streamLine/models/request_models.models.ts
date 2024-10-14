@@ -1,7 +1,7 @@
 // Used to pass initial data, optional.
-import { ServiceSubscribeListEnum } from "../encore.service";
 
 export type ResponseType = "confirmation" | "message" | "message_with_expected_response";
+export type ServiceSubscribeListEnum = "global_deal_framework";
 
 export interface StreamLineDefaultHandshake {
   readonly userId: string;

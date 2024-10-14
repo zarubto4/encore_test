@@ -1,4 +1,9 @@
-import { StreamLineDefaultHandshake, MessageConfirmation, StreamLineDefaultOutMessage, StreamLineDefaultInMessage } from "./security/request_models.models";
+import {
+  StreamLineDefaultHandshake,
+  MessageConfirmation,
+  StreamLineDefaultOutMessage,
+  StreamLineDefaultInMessage,
+} from "./models/request_models.models";
 import { connectedStreams } from "./encore.service";
 import { dealDraftCreation_dealDraftWs } from "../../globalDealFramework_services/dealDraftCreation/encore.service";
 import { api, StreamInOut } from "encore.dev/api";
@@ -11,7 +16,7 @@ import { api, StreamInOut } from "encore.dev/api";
  * The loop will continue as long as the client keeps the connection open.
  */
 
-export const chat = api.streamInOut<StreamLineDefaultHandshake, StreamLineDefaultInMessage, StreamLineDefaultOutMessage>(
+export const websocket = api.streamInOut<StreamLineDefaultHandshake, StreamLineDefaultInMessage, StreamLineDefaultOutMessage>(
   { expose: true, auth: false, path: "/websocket" },
   async (handshake, neverEndingStream) => {
     validAndRegisterHandshake(handshake);
@@ -35,7 +40,7 @@ export const chat = api.streamInOut<StreamLineDefaultHandshake, StreamLineDefaul
       removeHandshake(handshake);
     }
     removeHandshake(handshake);
-  }
+  },
 );
 
 // --- Support Methods -------------------------------------------------------------------------------------------------
@@ -44,7 +49,10 @@ export const chat = api.streamInOut<StreamLineDefaultHandshake, StreamLineDefaul
  * Register Connection To global Map. User ID is first Map, second is Connection ID.
  * We are supporting multiple connections with the same USER_ID!
  */
-function registerHandshake(handshake: StreamLineDefaultHandshake, stream: StreamInOut<StreamLineDefaultInMessage, StreamLineDefaultOutMessage>): void {
+function registerHandshake(
+  handshake: StreamLineDefaultHandshake,
+  stream: StreamInOut<StreamLineDefaultInMessage, StreamLineDefaultOutMessage>,
+): void {
   if (!connectedStreams.has(handshake.userId)) {
     connectedStreams.set(handshake.userId, new Map());
     connectedStreams.get(handshake.userId)?.set(handshake.connectionSessionId, stream);

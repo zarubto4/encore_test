@@ -1,7 +1,7 @@
 import { api } from "encore.dev/api";
 import { z } from "zod";
 import log from "encore.dev/log";
-import { streamLine_sub_clientMessage } from "../../gateways_services/stream_line/encore.service";
+import { streamLine_sub_clientMessage } from "../../gateways_services/streamLine/encore.service";
 
 /**
  * Basic Description

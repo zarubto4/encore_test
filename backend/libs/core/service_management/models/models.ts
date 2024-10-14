@@ -29,5 +29,8 @@ export interface MandatoryServiceConfig {
 }
 
 export class GrouponServiceProvider {
-  constructor(private service: Service, protected mandatoryServiceConfig: MandatoryServiceConfig) {}
+  constructor(
+    private service: Service,
+    protected mandatoryServiceConfig: MandatoryServiceConfig,
+  ) {}
 }

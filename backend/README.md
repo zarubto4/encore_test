@@ -55,3 +55,11 @@ encore gen client --lang=openapi --output=../open-api/openapi.json --env=local
 npm lint
 ```
 
+
+
+
+**Linting**
+```bash
+./dev_script/replace_secret.sh input.ts output.ts "mySuperSecretValue"
+```
+

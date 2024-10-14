@@ -10,7 +10,7 @@ import { GrouponServiceProvider } from "../../../libs/core/service_management/mo
 
 export const service = new Service("transformationService_kindlyReminder");
 new GrouponServiceProvider(service, {
-  name: "Kindly Reminder",
+  name: "Kindly Reminder - Transformation",
   description: "Eye of Souron",
   contacts: {
     serviceOwnerEmail: "c_tzaruba@groupon.com",
@@ -29,7 +29,7 @@ new GrouponServiceProvider(service, {
   documentation: [],
 });
 
-// ==== SERVICE secrets =================================================================================================
+// ==== SERVICE SECRETS ================================================================================================
 
 const kindlyReminder_tempoService_token = secret("kindlyReminder_tempoService2_token");
 const kindlyReminder_asanaService_token = secret("kindlyReminder_asanaService_token");
@@ -38,7 +38,11 @@ const kindlyReminder_googleService_clientEmail = secret("kindlyReminder_googleSe
 const kindlyReminder_jiraService_email = secret("kindlyReminder_jiraService_email");
 const kindlyReminder_jiraService_apiToken = secret("kindlyReminder_jiraService_apiToken");
 
-// ==== Available Emitted Topics =======================================================================================
+// ==== SERVICE PERMISSIONS ============================================================================================
+// # none
+
+// ==== AVAILABLE EMITTED TOPICS =======================================================================================
+// # none
 
 // ==== SERVICE CONFIG =================================================================================================
 
@@ -105,5 +109,3 @@ export const kindlyReminder_grouponVPs: string[] = [
 
 // For IssueAllInHunterGenerator
 export const kindlyReminder_testProjectConditions = []; // ["QR"]; // ["QR", "GAPI"]; // <--- Change this if you want to apply script only for selected projects
-
-// ==== SERVICE STATIC VARIABLES =======================================================================================

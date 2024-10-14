@@ -1,6 +1,7 @@
 import { Subscription } from "encore.dev/pubsub";
-import { connectedStreams, ServiceSubscribeListEnum, streamLine_sub_clientMessage } from "./encore.service";
+import { connectedStreams, streamLine_sub_clientMessage } from "../encore.service";
 import log from "encore.dev/log";
+import { ServiceSubscribeListEnum } from "../models/request_models.models";
 
 // ---  Send Messages To Client  ---------------------------------------------------------------------------------------
 
