@@ -1,68 +1,41 @@
-# <font color="#e8a913">Frontend</font>
+# B2B-UI Monorepo
 
-## <font color="#e8a913">Project Documentation Overview</font>
+## Toolkit
 
-We are using Ant.Design library for UI components.
-You can find more information on [Ant.Design](https://ant.design/components/overview/).
-Do not create custom styles, always try to use Ant. Design components for page layout.
-For styling we are using TailwindCSS, you can find more information on [TailwindCSS](https://tailwindcss.com/docs).
-(<font color="#ff0000">TODO Documentation</font>)
+1. Run the `./.setup.sh`; this should get you started, if it doesn't crash horribly.
 
----
-## <font color="#e8a913">Developing locally - Preparation Phase  (5 minutes step)</font>
+### vpcs
 
-1) Everything from [Parent Readme](../README.md)
-2) We are using PNPM as package manager! Start with installing dependencies. But Before it, you need [installed](https://pnpm.io/installation) pnpm like via HomeBrew `brew install pnpm`
-    - `pnpm i`
+This is the primary script runner. It runs a few different kinds of scripts:
 
-## <font color="#e8a913">Running the app - Connected to Legacy* Groupon Backend Services</font>
-This service connects to other backend services, so for this to work,
-you need:
-1) Do everything from Developing locally -[Preparation Phase](../README.md)
-    1) That communicates with users service. More information can be found on [Confluence](https://groupondev.atlassian.net/wiki/spaces/JTIER/pages/37735732357/Running+Locally)
-       and you will also need [Cloud elevator](https://groupondev.atlassian.net/wiki/spaces/IS/pages/80352510009/Installing+Cloud-elevator+and+Port+Forwarding).
+- init - this initializes some platform feature, like pnpm or nx workspaces.
+- install - this installs required software for support, and of the correct version (usually).
+- sanity - used internally to ensure that things exist before calling them. Some scripts run on /bin/sh until bash support is guaranteed.
+- sys - does some system work, like finding your package manager
+- util - does a lot of utilities.
 
-Run shell script:
-```bash
-kubectl cloud-elevator auth browser
-sudo hb-local-proxy --context gcp-stable-us-central1 --namespace groupon-admin-staging
-```
+Most calls are done via namespace and script name:
 
-If you get `error: current-context is not set`, you need to remove your kube config `mv ~/.kube/config ~/.kube/config.old` and generate new one using `kubectl cloud-elevator auth`
+`vpcs init nx-workspace`
 
+But util scripts will be the default namespace, if a script exists, ergo:
 
-## <font color="#e8a913">Local development + Connection to Server Less</font>
+`vpcs log error "Failure"`
 
-It will start local development server
-```bash
-pnpm run dev
-```
+## RBAC-UI
 
-## <font color="#e8a913">Testing</font>
-Unit tests && E2E tests
-```bash
-pnpm run test && pnpm run e2e
-```
+For this to work, you need have HB proxy installed and ARQ access to any service (for example mx-notification-service), that communicates with users service and access service. More information can be found on Confluence https://groupondev.atlassian.net/wiki/spaces/JTIER/pages/37735732357/Running+Locally
 
-## <font color="#e8a913">Building the app</font>
-It is always good to check if the app is building correctly before committing
-```bash
-pnpm run build
-```
+First you need to authenticate with cloud-elevator
 
-**Running the app**
-```bash
-pnpm run start
-```
+`kubectl cloud-elevator auth`
 
-## <font color="#e8a913">Others</font>
+Then with sudo you can start the proxy
 
-**Linting - Decoration**
-```bash
-pnpm run lint
-```
+`sudo hb-local-proxy --context gcp-stable-us-central1 --namespace mx-notification-service-staging`
 
-**Formatting**
-```bash
-pnpm run format
-```
+### Local development
+
+It will start local development server, you will need authToken to use it localy. And it verifies the token with the users service.
+
+`nx dev rbac-ui`

@@ -1,12 +1,13 @@
 {
-  "name": "demo-ui",
+  "name": "b2b-ui",
   "version": "1.0.0",
   "description": "",
+  "main": "setup.sh",
   "scripts": {
     "dev": "nx dev rbac-ui",
     "start": "nx serve rbac-ui",
     "build": "nx build rbac-ui",
-    "generate-rbac-client": "npx swagger-typescript-api -p libs/rbac-client/swagger.yml -o libs/rbac-client/src/lib/ -n rbac-client.ts",
+    "generate-rbac-client": "npx swagger-typescript-api -p libs/vpcs/core/rbac-client/swagger.yml -o libs/vpcs/core/rbac-client/src/lib/ -n rbac-client.ts",
     "format": "prettier --ignore-path .prettierignore --write --plugin-search-dir=. .",
     "test": "jest",
     "lint": "nx lint rbac-ui"
@@ -27,11 +28,17 @@
     "framer-motion": "^11.2.12",
     "jest-junit": "^16.0.0",
     "jose": "^5.8.0",
+    "logform": "^2.6.0",
     "next": "14.0.4",
+    "nx-app-root-path": "^1.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "remote": "^0.2.6",
+    "server-only": "^0.0.1",
+    "swagger-client": "^3.28.0",
     "tslib": "^2.6.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@nx/devkit": "19.0.4",
@@ -43,6 +50,9 @@
     "@nx/next": "19.0.4",
     "@nx/playwright": "19.0.4",
     "@playwright/test": "^1.44.0",
+    "@swc-node/register": "~1.8.0",
+    "@swc/core": "1.4.13",
+    "@swc/helpers": "~0.5.11",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "15.0.6",
     "@types/cookie": "^0.6.0",
@@ -70,10 +80,13 @@
     "nx": "^19.0.8",
     "postcss": "^8.4.38",
     "prettier": "^2.8.8",
+    "swagger-client": "^3.28.0",
     "tailwindcss": "^3.4.4",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "~5.4.2"
+    "typescript": "~5.4.2",
+    "verdaccio": "^5.31.0",
+    "zustand": "^4.5.2"
   },
   "nx": {
     "includedScripts": []

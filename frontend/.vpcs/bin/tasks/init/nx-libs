@@ -1,0 +1,51 @@
+#!/bin/bash
+#- vpcs init nx-libs [type] [name] <ts|js> - use vpcs init nx-libs list for a list of supported types.
+A=( $(echo "$@") )
+Arg=()
+for i in "${A[@]}"; do
+  Arg+=("$i")
+done
+LibType="${Arg[0]}"
+LibName="${Arg[1]}"
+Language="ts"
+if [[ "${Arg[2]}" =~ ^js|ts$ ]]; then
+  Language="${Arg[2]}"
+elif [[ "$(vpcs getcfg ".apps.language")" =~ ^js|ts$ ]]; then
+  Language="$(vpcs getcfg ".apps.language")"
+fi
+vpcs log debug "LibType: $LibType LibName: $LibName Language: $Language"
+
+GCmd=""
+DirName=""
+Args=""
+case $LibType in
+  nx|npm)
+    GCmd="@nx/workspace:npm-package"
+    DirName="libs/modules/$LibName"
+    Args="--name=\"$LibName\" --directory=\"$DirName\""
+    ;;
+  esconfig|esbuild-config|esbuild-configuration)
+    GCmd="@nx/esbuild:configuration"
+    DirName="libs/esconfig/$LibName"
+    Args="--name=\"$LibName\" --directory=\"$DirName\""
+    ;;
+  eslint-project)
+    GCmd="@nx/eslint:workspace-rules-project"
+    ;;
+  eslint-rule)
+    GCmd="@nx/eslint:workspace-rule"
+    Args="--name=\"$LibName\""
+    ;;
+  list)
+    vpcs log critical "Usage: vpcs init nx-libs npm|esconfig|eslint-project|eslint-rule"
+    exit 0
+    ;;
+  *)
+    vpcs log critical "Unknown type for nx-libs! Use vpcs init nx-libs list to see the list."
+    exit 1
+    ;;
+esac
+vpcs sanity nx-workspace
+[[ ! -z "$DirName" ]] && mkdir -p "$AppRoot/$DirName"
+pnpm exec nx g $GCmd $Args
+exit 0

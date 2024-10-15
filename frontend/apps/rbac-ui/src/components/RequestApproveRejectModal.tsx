@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Modal, Form, Button, message, Input } from 'antd';
-import { RoleRequestStatus, ScopeType } from 'libs/rbac-client/src';
+import { RoleRequestStatus, ScopeType } from '@vpcs/rbac-client';
 import { handleError } from '@/utils';
 import RoleRequestCard from '@/components/RoleRequestCard';
 import type { OwnerRoleRequest } from '@/types';

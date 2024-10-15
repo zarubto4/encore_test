@@ -1,0 +1,38 @@
+#!/bin/bash
+#- vpcs list [install|util|init|sanity|help|sys] - find commands.
+
+show_file_info(){
+  local filecmdname="$(basename $1)"
+  local description="$(cat "$1" | head -n5 | grep "^#-" | sed 's/^#/ /')"
+  [[ -z "$description" ]] && description=" - no descriptor"
+  printf "%-15s %s\n" "$filecmdname" "$description"
+  return 0
+}
+
+export -f show_file_info
+
+list_commands(){
+  local binfolder="$(locate "tasks")/$1"
+  local ostype="$(vpcs sanity ostype)"
+  find $binfolder -maxdepth 1 -type f | sort | xargs -n1 -P2 bash -c 'show_file_info "$@"' _
+  [[ -d $binfolder/$ostype ]] && find $binfolder/$ostype -maxdepth 1 -type f | sort | xargs -n1 -P2 bash -c 'show_file_info "$@"' _
+}
+
+if [[ -z "$1" ]]; then
+  list_commands 'util'
+  exit 0
+fi
+
+for arg in "$@"; do
+  arg="$(echo $arg | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]' | tr -d '[:punct:]')"
+  case $arg in
+    install) list_commands 'install';;
+    util) list_commands 'util';;
+    init) list_commands 'init';;
+    sanity) list_commands 'sanity';;
+    sys|"sys"|--sys|"system"|system|--system) list_commands 'sys';;
+    autos) list_commands '..';;
+    -h|--help|help|*) echo "Usage: vpcs list [install|util|init|sanity|help|sys]" ;;
+  esac
+done
+exit 0

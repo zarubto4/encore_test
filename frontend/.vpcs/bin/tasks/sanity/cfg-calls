@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#- vpcs sanity cfg-calls - ensures the existence of yaml managing tools and configuration files.
+throw_error(){
+  vpcs log error "$1"
+  exit 1
+}
+[[ -z "$1" ]] && throw_error "Cannot update config without args!"
+#[[ ! "$1" =~ ^(\.[a-z]+)+$ ]] && throw_error "Invalid key format $1"
+[[ ! -f $APP_ROOT/vpcs.yml ]] && cp $(locate templates)/vpcs.yml $(locate vpcs-config)
+vpcs sanity yaml-mgr
+exit 0

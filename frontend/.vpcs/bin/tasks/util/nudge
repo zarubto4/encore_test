@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#- nudge - nudge vpcs version
+
+nudge_file(){
+  yq -i ".vpcs.version=\"$(date +%Y.%m.%d)\"" $1
+  yq -i ".version=\"$(date +%Y.%m.%d)\"" $1
+}
+
+nudge_file "$(locate vpcs-internal-config)"

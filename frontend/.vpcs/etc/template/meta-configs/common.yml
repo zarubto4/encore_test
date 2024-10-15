@@ -1,0 +1,21 @@
+---
+# Base Environment Information
+vpcsVersion: 1970.01.01
+
+# Logging Configuration
+logConfig:
+  configs:
+    app:
+      dir: "/var/groupon/logs"
+      file: "steno.log"
+      isJsonFormat: true
+
+# Service Configuration
+envVars:
+  NODE_OPTIONS: --max-old-space-size=256
+  PORT: 8000
+  UV_THREADPOOL_SIZE: 4
+  VPCS_CONFIG: /var/groupon/vpcs.yml
+harnessCanaryCompatible: false
+hbUpstream: true
+mtlsInterceptor: true

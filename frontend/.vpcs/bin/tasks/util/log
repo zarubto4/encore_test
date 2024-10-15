@@ -1,0 +1,39 @@
+#!/bin/bash
+#- vpcs log [chatty|debug|info|warning|error|critical] "Some log value"
+[[ -z "$VPCS_EchoLevel" ]] && VPCS_EchoLevel='silent'
+[[ -z "$VPCS_LogLevel" ]] && VPCS_LogLevel='silent'
+# usage: vpcs log <silent|critical|error|warning|info|debug|chatty> <args...> "message"
+declare -a Arguments=("$@")
+Arguments=${Arguments%%\"*}
+Arguments=${Arguments##*\"}
+
+if [[ "${Arguments[0]}" =~ ^silent|critical|error|warning|info|debug|chatty$ ]]; then
+  Criticality="${Arguments[0]}"
+  Arguments=($(echo "${Arguments[@]:1}"))
+  shift
+else
+  # No criticality message
+  Criticality="info"
+fi
+
+EmojiLevels=(check info info warning error stop stop)
+WarningLevels=(chatty debug info warning error critical) # never on silent
+
+ShouldEcho=-1
+ShouldLog=-1
+for i in "${!WarningLevels[@]}"; do
+  CurrentLevel="${WarningLevels[$i]}"
+  [[ "$VPCS_EchoLevel"  = "$CurrentLevel" ]] && ShouldEcho=$i
+  [[ "$VPCS_LogLevel" = "$CurrentLevel" ]] && ShouldLog=$i
+  if [[ "$Criticality" = "$CurrentLevel" ]]; then
+    [[ $ShouldEcho -gt -1 ]] &&  echo "$(ji "${EmojiLevels[$i]}") ${Arguments[@]}" >&2
+    if [[ $ShouldLog -gt -1 ]]; then
+      mkdir -p "$APP_ROOT/logs"
+      ji "${EmojiLevels[$i]}" "${Arguments[@]}" >> "$APP_ROOT/logs/vpcs.log"
+    fi
+    #ji xmark "Echo: $ShouldEcho Log: $ShouldLog Echo: $VPCS_EchoLevel Log: $VPCS_LogLevel"
+    exit 0
+  fi
+done
+ji critical "Logging failure!"
+exit 1

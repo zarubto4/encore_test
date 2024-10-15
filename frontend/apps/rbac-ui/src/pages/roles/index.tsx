@@ -12,7 +12,7 @@ import { withPermissions, getServerSideProps } from '@/hoc/withPermissions';
 import { usePermission } from '@/contexts/PermissionContext';
 import RoleRequestModal from '@/components/RoleRequestModal';
 
-import type { RolesResponse } from 'libs/rbac-client/src';
+import type { RolesResponse } from '@vpcs/rbac-client';
 import { UserEnum } from '@/types';
 
 const Page: NextPage = () => {

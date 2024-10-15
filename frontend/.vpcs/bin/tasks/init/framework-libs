@@ -1,0 +1,22 @@
+#!/bin/bash
+#- vpcs init framework-libs [svelte|next|express|fastify|react] <name> - generates library in libs.
+# For creating straight js libraries for vpcs internal
+if [[ "$1" =~ ^svelte|next|express|fastify|nx|react$ ]]; then
+  LibSpace="$1"
+else
+  vpcs log error "Unsupported library! Use [svelte|next|express|fastify|react] "
+  exit 1
+fi
+if [[ -z "$2" ]]; then
+  vpcs log error "Usage: vpcs init framework-libs [type] [name]"
+  exit 1
+fi
+
+if [[ "$2" =~ ^[a-z\-]+$ ]]; then
+  LibName="$2"
+  nx generate @nx/js:lib --bundler=esbuild --name="@vpcs/$LibName" --directory="libs/vpcs/$LibSpace/$LibName" --importPath="@vpcs/$LibSpace-$LibName" --publishable=true  --minimal="false" --tags="vpcs $LibSpace" --unitTestRunner="jest" --projectNameAndRootFormat="as-provided" -- "$LibName"
+  exit 0
+else
+  vpcs log error "$2 is not a valid library name."
+  exit 1
+fi

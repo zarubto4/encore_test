@@ -1,0 +1,16 @@
+#!/bin/bash
+R=("${@:2}")
+case $1 in
+  check) printf "\xE2\x9C\x94 " && echo "$R";;
+  xmark) printf "\xE2\x9C\x98 " && echo "$R";;
+  warning) printf "\xE2\x9A\xA0 " && echo "$R";;
+  info) printf "\xE2\x84\xB9 " && echo "$R";;
+  error) printf "\xE2\x9D\x8C " && echo "$R";;
+  success) printf "\xE2\x9C\x94 " && echo "$R";;
+  failure) printf "\xE2\x9C\x98 " && echo "$R";;
+  alert) printf "\xE2\x9A\xA0 " && echo "$R";;
+  help) printf "\xE2\x84\xB9 " && echo "$R";;
+  stop) printf "\xE2\x9D\x8C " && echo "$R";;
+  go) printf "\xE2\x9C\x94 " && echo "$R";;
+  *) echo "- $R";;
+esac

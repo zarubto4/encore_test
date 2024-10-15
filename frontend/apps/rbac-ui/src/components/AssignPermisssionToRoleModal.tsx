@@ -5,7 +5,7 @@ import SelectPermissions from '@/components/SelectPermissions';
 import RoleCard from '@/components/RoleCard';
 import { handleError } from '@/utils';
 
-import type { RolesResponse } from 'libs/rbac-client/src';
+import type { RolesResponse } from '@vpcs/rbac-client';
 import type { PermissionWithUser } from '@/types';
 import SelectRoles from '@/components/SelectRoles';
 import PermissionCard from '@/components/PermissionCard';

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#- vpcs nx-targets project-name - lists all targets for a project.
+if [[ -z "$1" ]]; then
+  vpcs log error "You must provide a project name."
+  exit 1
+fi
+ npx nx show project "$1" --json | jq -r '.targets | to_entries[] | .key'

@@ -2,7 +2,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RequestApproveRejectModal from '@/components/RequestApproveRejectModal';
-import { RoleRequestStatus } from 'libs/rbac-client/src';
+import { RoleRequestStatus } from '@vpcs/rbac-client';
 import { handleError } from '@/utils';
 import { matchMedia } from '@/specs/matchMedia.spec';
 

@@ -1,0 +1,45 @@
+#/usr/bin/env bash
+#- vpcs sanity direnv-cfg - makes sure direnv is installed everywhere. Forcibly.
+# Ensure direnv is set up here and also included  in the homedirs
+# Need to maybe bypass direnv allow
+if [[ ! -x "$(which direnv)" ]]; then
+ vpcs install package direnv
+fi
+Cfg="$VPCS_ROOT/usr/env/direnv.profile"
+echo "#!/usr/bin/env bash" > $Cfg
+echo "$(direnv hook bash)" >> $Cfg
+chmod -R 755 $Cfg
+exec "$Cfg"
+
+set_direnv_config_for_shell(){
+  local shellname="$1"
+  local rcfile="$HOME/.${shellname}rc"
+  local ZD="$(echo "$SHELL" | tr "/", " " | awk '{print $NF;}' | cut -c1 | xargs -n1 -I% echo "$HOME/.%direnv")"
+  echo "$(direnv hook "$shellname")" > $ZD
+  if [[ ! -f $rcfile ]]; then
+    rcfile="$HOME/.${1}_profile"
+    [[ ! -f $rcfile ]] && return 1
+  fi
+  if [[ -z "$(cat $rcfile | grep "direnv")" ]]; then
+    echo "source ${ZD}" >> $rcfile
+    direnv hook $shellname
+    return 0
+  fi
+  return 1
+}
+
+if [[ ! -d "$HOME" ]]; then
+  vpcs log critical "No homedir set for \$HOME! Please ensure this value is set."
+  exit 1
+fi
+# Stick direnv support everywhere
+set_direnv_config_for_resourcefile 'zsh'
+set_direnv_config_for_resourcefile 'bash'
+set_direnv_config_for_resourcefile 'csh'
+if [[ "$SHELL" =~ fish$ ]]; then
+  fn="~/.config/fish/config.fish"
+  [[ -z  "$(cat $fn | grep direnv)" ]] && echo "direnv hook fish | source" >> $fn
+fi
+if [[ -f "~/.cshrc" ]]; then
+  [[ -z "$(cat "~/.cshrc" | grep direnv)" ]] && echo "eval `direnv hook tcsh`" >> ~/.cshrc
+fi

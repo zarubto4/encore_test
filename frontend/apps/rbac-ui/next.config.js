@@ -2,6 +2,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
+const VPCSConfig = require('./vpcs.config.json');
 
 const REWRITES = [
   {
@@ -18,6 +19,8 @@ const REWRITES = [
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  publicRuntimeConfig: { vpcs: VPCSConfig.public },
+  serverRuntimeConfig: { vpcs: VPCSConfig.server },
   transpilePackages: ['@ant-design/icons'],
   experimental: {
     instrumentationHook: false,

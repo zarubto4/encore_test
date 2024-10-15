@@ -1,0 +1,42 @@
+#!/bin/bash
+#- vpcs nxconf [root|projectname] [json config file] [jq commands]
+function error_out(){
+  vpcs log error "vpcs nxconf [projectname|root] [jsonfile prefix] [jq commands...]"
+  exit 1
+}
+
+[[ -z "$1" ]] && error_out
+[[ -z "$2" ]] && error_out
+vpcs sanity nx-workspace
+vpcs sanity json-mgr
+
+Location=""
+if [[ "$1" =~ ^root$ ]]; then
+  Location="$APP_ROOT"
+else
+  Location="$(nx show projects | grep umapi | head -n1 | xargs nx show project | jq '.root' -- $NOERR)"
+  if [[ -z "$Location" ]]; then
+    vpcs log error "No projects match token $1. Available projects are: root, $(nx show projects --sep=", ")."
+    exit 1
+  else
+    Location="$APP_ROOT/$Location"
+  fi
+fi
+
+Location="$Location/$2.json"
+
+
+if [[ ! -f $Location ]]; then
+  vpcs log error "No file found at $Location."
+  exit 1
+end
+shift 2
+
+if [[ -z "$3" ]]; then
+  cat $Location | jq
+else
+  cat $Location | jq "$@" > $Location
+  exit 0
+fi
+
+

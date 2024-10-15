@@ -1,0 +1,3 @@
+#!/bin/sh -e
+#- vpcs sanity bash-shell - ensure bash is installed
+shabash

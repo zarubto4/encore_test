@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#- vpcs install pnpm-libs - install pnpm
+if [[ -z "$(pnpm -v $NOERR)" ]]; then
+  vpcs log debug "PNPM not found."
+  if [["$(npm -v)" =~ ^\d+\.\d+\.\d+$ ]]; then
+    vpcs log debug "Installing with npm."
+    npm install -g pnpm
+  else
+    vpcs log debug "Trying to install with native installer."
+    vpcs install package pnpm
+  fi
+fi
+
+if [[ -z "$(pnpm -v $NOERR)" ]]; then
+  vpcs log debug "Using self-installer."
+  curl -fsSL https://get.pnpm.io/install.sh | sh -
+  if [[ -z "$(pnpm -v $NOERR)" ]]; then
+    vpcs log critical "Cannot install pnpm!"
+    exit 1
+  fi
+fi
+
+vpcs log debug "Checking for package.json..."
+[[ ! -f $APP_ROOT/package.json ]] && cd $APP_ROOT && pnpm init
+
+vpcs log debug "Checking for node version..."
+pnpm env use  -g "$(vpcs sanity node-version-reqs)"
+
+vpcs log debug "Checking for npx."
+[[ -z "$(npx --version $NOERR)" ]] && pnpm add -g npx
+
+vpcs log debug "Checking for nx..."
+[[ -z "$(nx --version $NOERR)" ]] && vpcs install latest-nx
+
+vpcs log debug "Checking for node-fetch..."
+[[ -z "$(pnpm ls | grep 'fetch')" ]] && vpcs sanity pnpm-pkg node-fetch

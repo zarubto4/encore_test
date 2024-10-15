@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Flex, Input, Modal, Space, Tag, Typography, message } from 'antd';
 import Link from 'next/link';
 
-import type { RoleIdResponse, PermissionsResponse } from 'libs/rbac-client/src';
+import type { RoleIdResponse, PermissionsResponse } from '@vpcs/rbac-client';
 
 import ResponsiveTable from '@/components/ResponsiveTable';
 import User from '@/components/User';

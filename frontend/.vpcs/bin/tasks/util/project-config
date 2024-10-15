@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#- vpcs project-config <projectname> '.key.key1.key2' 'val'
+A=($(echo "$@"))
+P="${A[0]}"
+K="${A[1]}"
+V="${A[@]:2}"
+ragequit(){
+  vpcs log error "$1"
+  exit 1
+}
+[[ -z "$P" ]] && ragequit "Please pass <project-name> <key> <value>"
+[[ -z "$K" ]] && ragequit "No keys passed!"
+[[ -z "$V" ]] && ragequit "No value passed!"
+PD=$(nx show project $P | jq .root)
+TMP=$(locate tmp)
+VC="vpcs.config.json"
+[[ ! -f $PD/$VC ]] && vpcs next-configs $P
+[[ ! -f $PD/$VC ]] && ragequit "failed loading config files!"
+cat $PD/$VC | jq "$K=\"$V\"" > $TMP/$VC
+[[ -z "$(cat $TMP/$VC | jq . -- $NOERR)" ]] && ragequit "Failed creating json tempfile."
+mv $TMP/$VC $PD/$VC

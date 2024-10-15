@@ -1,0 +1,6 @@
+---
+components:
+  - name: app
+    type: api
+    archetype: generic
+    secret_path: '.meta/deployment/cloud/secrets'

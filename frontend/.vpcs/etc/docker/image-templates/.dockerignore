@@ -1,0 +1,6 @@
+.git
+dist
+.vscode
+.nx
+.verdaccio
+node_modules

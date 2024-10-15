@@ -1,0 +1,8 @@
+#!/bin/sh -e
+#- vpcs sanity dir-structure - ensures that important directories exist; primarily the direnv profiles.
+vpcs log debug "Ensuring the sanity of the directory structure..."
+vpcs sanity direnv-cfg
+if [[ ! -f "$(locate base-profile)" ]]; then
+  mkdir -p $(locate profiles)
+  cp $(locate templates)/envrc/base-profile.env $(locate base-profile)
+fi

@@ -1,8 +1,8 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
 import { RBAC_USER_ID_HEADER } from '@/constants';
 import { PermissionFactory } from '@/lib/Permission';
-import { RolesPatchRequest } from 'libs/rbac-client/src';
-import UsersApiClient from 'libs/users-client/src';
+import { RolesPatchRequest } from '@vpcs/rbac-client';
+import UsersApiClient from '@vpcs/users-client';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const roleId = req.query.roleId as string;

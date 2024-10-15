@@ -1,0 +1,17 @@
+@Library('itier-pipeline-dsl@latest-2') _
+
+itierPipeline([
+  timeoutMins: 45,
+  multiArch: false,
+  sonarExtraProperties: '',
+  projectType: 'javascript',
+  cloneSubModules: false,
+  shallowClone: false,
+  prepCmds: [],
+  testCmds: [
+    test: 'npm install -g pnpm@9.4.0 && pnpm install && pnpm run test',
+  ],
+  branchActions: [
+    main: [ test: true, publish: true, deploy: ["staging-us-central1"] ],
+  ],
+])

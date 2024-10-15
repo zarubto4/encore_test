@@ -14,6 +14,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { AnimatePresence } from 'framer-motion';
 import PageTransition from '@/components/PageTransition';
 import { RBAC_USER_ID_HEADER, MARKER_PROJECT_ID } from '@/constants';
+import logger from '@/lib/Logger/client';
 import { fixEncoding, handleError } from '@/utils';
 import type { UserData, HBUser } from '@/types';
 
@@ -82,7 +83,9 @@ const MyApp = ({
           },
         });
       } catch (error) {
-        console.error(error);
+        logger()
+          .crit(`Failed to init marker.io for userId:#${initialAccountId}, details:${handleError(error)}`)
+          .write();
       }
     }
     fetchUserData();

@@ -1,0 +1,15 @@
+#!/bin/sh -e
+#- shebang line which forces bash install
+install_bash(){
+  [[-x $(which apk)]] && apk add bash coreutils && return 0
+  [[ -x $(which brew) ]] && brew install bash && return 0
+  [[-x $(which apt-get)]] && apt-get install bash && return 0
+  [[-x $(which pkg)]] && pkg install bash && return 0
+  [[-x $(which yum)]] && yum install bash && return 0
+  [[-x $(which pacman)]] && pacman -S bash && return ;
+  vpcs log critical "Cannot install bash!"
+  exit 1
+}
+[[ "$(bash -c 'echo "bash exists"' 2>/dev/null)" != "bash exists" ]] && install_bash
+eval "#!/usr/bin/env bash --"
+exit 0

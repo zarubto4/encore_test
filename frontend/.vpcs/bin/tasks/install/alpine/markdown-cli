@@ -1,0 +1,3 @@
+#!/bin/bash
+[[ ! -z "$( mdp --version $NOERR)" ]] && exit 0
+vpcs install package mdp

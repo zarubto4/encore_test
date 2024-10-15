@@ -1,0 +1,5 @@
+#!/bin/bash
+#- vpcs getcfg ".key1.key2" - loads configuration calls from vpcs.yml.
+A=($(echo "$@"))
+[[ "${A[0]}" = "--silent" ]] && shift 1 || vpcs sanity cfg-calls "${A[0]}"
+cat $(locate vpcs-config) | yq "${A[1]}"

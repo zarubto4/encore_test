@@ -1,0 +1,33 @@
+---
+# Environment Information
+cloudProvider: gcp
+deployEnv: production
+region: us-central1
+vpc: prod
+
+namespace: rbac-ui-production-sox
+
+# Scaling
+minReplicas: 1
+maxReplicas: 4
+
+envVars:
+  NEXT_PUBLIC_ENV: production
+  NEXT_PUBLIC_RBAC_CLIENT_ID: eba46ce755364188bf62de909c0d6811_rbacui
+  JTIER_RUN_CONFIG: '.meta/deployment/cloud/secrets/cloud/production-us-central1.yml'
+  LOG_TO_STDOUT: 'true'
+
+cpus:
+  main:
+    request: 500m
+    limit: 2000m
+  filebeat:
+    request: 100m
+    limit: 2000m
+memory:
+  main:
+    request: 1Gi
+    limit: 2Gi
+  filebeat:
+    request: 200Mi
+    limit: 400Mi

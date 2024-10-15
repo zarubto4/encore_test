@@ -1,0 +1,2 @@
+#!/bin/bash
+[[ -z "$(brew --version $NOERR)" ]] && vpcs install homebrew || vpcs log debug "homebrew installed"

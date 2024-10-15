@@ -1,5 +1,5 @@
-import { handleError } from 'libs/stdlib/src';
-import { Api, RoleIdResponse, SecurityData } from 'libs/rbac-client/src';
+import { handleError } from '@vpcs/stdlib';
+import { Api, RoleIdResponse, SecurityData } from '@vpcs/rbac-client';
 
 export const resolveRoleIds = async (roleIds: string[], api: Api<SecurityData>) => {
   const uniqueRoleIds = [...new Set(roleIds)];

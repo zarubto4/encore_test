@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#- vpcs sys docker-precache : pre download files for docker
+cd $VPCS_ROOT/usr/docker-precache
+
+# Fetch node binaries for alpine
+NODE_VERSION="20.14.0"
+Architectures=("x64" "arm64")
+for OpenSSLArchitecture in "${Architectures[@]}"; do
+  NodeURL="https://nodejs.org/dist/latest-v20.x/node-v$NODE_VERSION-$OpenSSLArchitecture.tar.xz"
+  vpcs log info "Downloading node binary from $NodeURL..."
+  curl -fsSL --compressed $NodeURL -o ./node-v$NODE_VERSION-$OpenSSLArchitecture.tar.xz
+done
+cd $APP_ROOT
+exit 0

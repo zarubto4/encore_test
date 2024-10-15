@@ -1,0 +1,9 @@
+---
+services:
+  '@vpcs/vpcs-nextjs':
+    image: alpine:3.19
+    build:
+      context: ..
+      dockerfile: .vpcs/etc/env/development/Dockerfile
+      ssh:
+        - default

@@ -1,0 +1,53 @@
+#!/usr/bin/env shabash
+#- vpcs sys githook [hookname] - Updates git hooks.
+vpcs sanity git-repo
+[[ $? -eq 1 ]] && exit 1
+
+VALID_HOOKS=(applypatch-msg pre-applypatch post-applypatch pre-commit pre-merge-commit prepare-commit-msg commit-msg post-commit pre-rebase post-checkout post-merge pre-push pre-receive update proc-receive post-receive post-update reference-transaction push-to-checkout pre-auto-gc post-rewrite sendemail-validate fsmonitor-watchman p4-changelist p4-prepare-changelist p4-post-changelist p4-pre-submit post-index-change)
+UpdateIfNotExists=false
+Arguments=()
+for arg in "${@}"; do
+  case $arg in
+    --once) UpdateIfNotExists=true;;
+    --listhooks): for i in "${VALID_HOOKS[@]}"; do
+      echo "- $i"
+    done
+    exit 0
+    *) Arguments+=("$arg") ;;
+  esac
+done
+vpcs log debug "$Hook found."
+
+is_valid_hook(){
+  local TestValue="$1"
+  for i in "${VALID_HOOKS[@]}"; do
+    if [[ "$i" = "$TestValue" ]]; then
+      return 0;
+    fi
+  done
+  return 1;
+}
+
+GitEvent="${Arguments[0]}"
+GitHookDir="$(vpcs sanity git-repo)/hooks"
+[[ ! -z "$(git config --get "core.hooksPath")" ]] && GitHookDir="$(git config --get "core.hooksPath")"
+if [[ "$(is_valid_hook "$GitEvent")" -eq 1 ]]; then
+  vpcs log error "Trying to update invalid hook $GitHookDir. Use git help hooks to identify correct hooks."
+  exit 1
+else
+  Hookfile="$GitHookDir/$GitEvent"
+  if [[ ! -f "$Hookfile" ]]; then
+    vpcs log debug "creating hookfile..."
+    touch $Hookfile
+    chmod -R 755 $Hookfile
+    echo "#!/bin/bash" >> $Hookfile
+  else
+    vpcs log debug "Hookfile found."
+  fi
+  if [[ -z "$(cat "$Hookfile" | grep "$Arguments")" ]] && $UpdateIfNotExists; then
+    vpcs log debug "Content already in file.";
+    exit 0;
+  fi
+  echo "${Arguments[@]:1}" >> "$Hookfile"
+fi
+exit 0

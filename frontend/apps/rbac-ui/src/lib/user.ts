@@ -1,4 +1,4 @@
-import UsersApiClient, { USER_REGION, type UserRegionType } from 'libs/users-client/src';
+import UsersApiClient, { USER_REGION, type UserRegionType } from '@vpcs/users-client';
 import { RBAC_USER_ID_EMEA, RBAC_USER_ID_NA, USERS_DOMAINS, USER_REGION_SELECT } from '@/constants';
 import { NextApiRequest } from 'next';
 import { IncomingMessage } from 'http';

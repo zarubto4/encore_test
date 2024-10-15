@@ -1,0 +1,5 @@
+#!/bin/bash
+#- vpcs serve <project> - serve app with appropriate build targets.
+appname="$(echo "$1" | tr -d '[:space:]')"
+[[ -z "$appname" ]] && vpcs log error "No app name provided." && exit 1
+pnpm exec nx run "$appname:serve" "${@:2}"

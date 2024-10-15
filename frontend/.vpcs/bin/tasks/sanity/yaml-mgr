@@ -1,0 +1,9 @@
+#!/bin/sh -e
+#- vpcs sanity yaml-mgr - ensures yq
+if [[ -x $(which yq) ]]; then
+  vpcs log chatty "yq installed!"
+  exit 0
+else
+  vpcs log info "installing yq..."
+  vpcs install package yq
+fi

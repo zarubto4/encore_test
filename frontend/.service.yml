@@ -1,0 +1,23 @@
+version: 4
+name: rbac-ui
+title: RBAC UI
+description: UI for MAS (RBAC) service
+team:
+  name: RBAC
+  owner: c_jsima
+  email: MerchantCenter-BLR@groupon.com
+hosting_configured_via_ops_config: false
+sre:
+  runbook: 'https://github.groupondev.com/itier-next/technophrenia/blob/showcase/OWNERS_MANUAL.md'
+schema: disabled
+documentation:
+  - name: owners_manual
+    url: 'https://github.groupondev.com/itier-next/technophrenia/blob/showcase/OWNERS_MANUAL.md'
+  - name: runbook
+    url: 'https://github.groupondev.com/itier-next/technophrenia/blob/showcase/OWNERS_MANUAL.md'
+  - name: platform documentation
+    url: 'https://groupondev.atlassian.net/wiki/spaces/MBNXT/pages/81068490805/Versatile+Platforms+Starter+Space'
+  - name: VPCS Toolkit
+    url: 'https://groupondev.atlassian.net/wiki/spaces/MBNXT/pages/81111154691/VPCS+Toolkit+Commands'
+dependencies:
+  - conveyor-cloud

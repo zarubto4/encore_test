@@ -1,0 +1,49 @@
+{
+  "name": "@vpcs/grpn-next-logging",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/vpcs/core/grpn-next-logging/src",
+  "projectType": "library",
+  "publishConfig": {
+    "registry": "https://npm.groupondev.com"
+  },
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag"
+      }
+    }
+  },
+  "tags": ["platform vpcs"],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/vpcs/core/grpn-next-logging",
+        "main": "libs/vpcs/core/grpn-next-logging/src/index.js",
+        "exports": {
+          ".": "libs/vpcs/core/grpn-next-logging/src/index.js",
+          "./client": "libs/vpcs/core/grpn-next-logging/src/client.js",
+          "./server": "libs/vpcs/core/grpn-next-logging/src/server.js"
+        },
+        "tsConfig": "libs/vpcs/core/grpn-next-logging/tsconfig.lib.json",
+        "assets": ["libs/vpcs/core/grpn-next-logging/*.md"],
+        "generatePackageJson": true,
+        "format": ["cjs"]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/vpcs/core/grpn-next-logging/jest.config.js"
+      }
+    }
+  }
+}

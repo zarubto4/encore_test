@@ -2,8 +2,8 @@ import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
 import { RBAC_USER_ID_HEADER } from '@/constants';
 import { PermissionFactory } from '@/lib/Permission';
 import { resolveMyUserIdForRegion } from '@/lib/user';
-import { RoleRequestStatus } from 'libs/rbac-client/src';
-import { UserRegionType } from 'libs/users-client/src';
+import { RoleRequestStatus } from '@vpcs/rbac-client';
+import { UserRegionType } from '@vpcs/users-client';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const userId = req.headers[RBAC_USER_ID_HEADER] as string | undefined;

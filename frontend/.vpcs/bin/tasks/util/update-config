@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#- vpcs update-config ".key1.key2" "someval" - updates the vpcs.yml. Quotes required for special characters.
+A=( $( echo "$@" ))
+KV=()
+Index=0
+for i in "${A[@]}"; do
+  KV[Index++]="$i"
+done
+Key="${KV[0]}"
+Value="${KV[1]}"
+vpcs sanity cfg-calls "$Key"
+
+throw_error(){
+  vpcs log error "$1"
+  exit 1
+}
+
+vpcs log chatty "updating config ${Key} with \"$Value\"..."
+
+[[ -z "$Key" ]] && throw_error "No value supplied for $Key!"
+
+# attempt no autoquote first
+TEMPSAVE="$(locate tmp)/vpcs.yml.save"
+cp "$(locate vpcs-config)" "$TEMPSAVE"
+Result="$( yq -i "$(echo "$Key=$Value")" $(locate vpcs-config) 2>&1)"
+[[ "$Result" =~ invalid ]] && Result="$( yq -i "$(echo "$Key=\"$Value\"")" $(locate vpcs-config) 2>&1)"
+if [[ "$Result" =~ invalid ]]; then
+  vpcs log error "cannot save vpcs yaml config. error: $Result"
+  mv "$TEMPSAVE" $(locate vpcs-config)
+  exit 1
+fi

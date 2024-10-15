@@ -1,0 +1,36 @@
+#!/usr/bin/env shabash
+#- vpcs sanity envcheck - Runs a suite of tests to ensure basic environment exists. --no-fix will sometimes keep it from forcing things.
+# Autofix unless we are specifically told not to and even then we will autofix a lot of stuff.
+[[ "$1" = "--no-fix" ]] && Autofix=false || Autofix=true
+
+# Force access to vpcs
+[[ -z "$(vpcs version 2>/dev/null)" ]] && export PATH="$PATH:$(realpath $(dirname "$0/.."))"
+
+# Can we define your OS?
+VPCS_OS="$(vpcs sanity ostype)"
+if [[ -z "$VPCS_OS" ]]; then
+  vpcs log critical "We cannot identify your OS type! Contact your maintainer."
+  exit 1
+else
+  vpcs log debug "Your OS is defined as $VPCS_OS"
+fi
+
+
+# Ensure APP_ROOT and VPCS_ROOT are being set in .envrc, direnv or not
+validate_envrc() {
+  local Failures=()
+  [[ -z "$APP_ROOT" ]] && Failures+=("APP_ROOT is empty.")
+  [[ -z "$VPCS_ROOT" ]] && Failures+=("VPCS_ROOT is empty.")
+  [[ -z "$VPCS_PROFILE_AUTOLOAD" ]] && Failures+=("Autoload profiles not working.")
+  for reason in "${Failures[@]}"; do
+    vpcs log debug "$reason"
+  done
+  [[ ${#Failures[@]} -gt 0 ]] && return 1;
+  return 0;
+}
+
+if [[ "$(validate_envrc)" -eq 0 ]]; then
+  # ensure direnv is set up
+  vpcs sanity direnv-cfg
+  vpcs sanity dir-structure
+fi

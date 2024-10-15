@@ -1,0 +1,25 @@
+#!/bin/bash
+#- vpcs init fastify-app <name> - generate fastify app.
+
+if [[ -z "$1" ]]; then
+  vpcs log error "please give your fastify app a name!"
+  exit 1;
+fi
+vpcs log debug "running sanity checks..."
+vpcs sanity nx-workspace
+[[ "$(vpcs sanity pnpm-pkg "@nx/node")" -eq 1 ]] && vpcs install pnpm-libs "@nx/node"
+
+vpcs log debug "Trying to identify the directory name for $1..."
+DirName="$( echo "$1" | sed 's/[^a-zA-Z\-\._0-9]//g'  | sed 's/^[\-_0-9]+//g' | sed 's/[\-_]+/-/g' )"
+vpcs log debug "Dirname is $1 and converted to '$DirName'"
+if [[ "$DirName" =~ ^.?.?$  ]]; then
+  vpcs log error "App name \"$1\" resolves to dirname \"$DirName\" with fewer than 3 characters; please choose a different name."
+  exit 1;
+fi
+
+UseJS="false"
+[[ "$(vpcs getcfg ".apps.language")" = "js"  ]] && UseJS="true"
+AppName="$1"
+shift 1
+
+pnpm exec nx g @nx/node:app fastify-api --name="$AppName"  --directory="apps/$DirName" --linter="eslint" --projectNameAndRootFormat="as-provided"  --js="$UseJS" --use-pnpm -- "$AppName"

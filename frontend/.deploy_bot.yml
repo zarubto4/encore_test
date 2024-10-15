@@ -1,0 +1,32 @@
+version: 2
+targets:
+  defaults: &defaults
+    deployment_image: 'docker.groupondev.com/rapt/deploy_kubernetes:v2.8.4-3.13.2-3.0.1-1.29.0'
+    notify_events: start, complete, override
+    datacenter: snc1
+    environment_vars:
+      - 'DEPLOYCAP_BUNDLE_ARGS=--path .bundle'
+
+  staging-us-central1:
+    <<: *defaults
+    environment: staging
+    kubernetes_cluster: gcp-stable-us-central1
+    kubernetes_context: rbac-ui-gcp-staging-sox-us-central1
+    manual: false
+    availability_zones:
+      - us-central1
+    regions:
+      - us/canada
+    promote_to: production-us-central1
+    deployment_command: bash ./.meta/deployment/cloud/scripts/deploy.sh staging-us-central1 staging rbac-ui-staging-sox
+
+  production-us-central1:
+    <<: *defaults
+    environment: production
+    kubernetes_cluster: gcp-production-us-central1
+    kubernetes_context: rbac-ui-gcp-production-sox-us-central1
+    availability_zones:
+      - us-central1
+    regions:
+      - us/canada
+    deployment_command: bash ./.meta/deployment/cloud/scripts/deploy.sh production-us-central1 production rbac-ui-production-sox

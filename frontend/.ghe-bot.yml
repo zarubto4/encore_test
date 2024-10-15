@@ -1,0 +1,20 @@
+# https://github.groupondev.com/release-engineering/mergebot
+mergebot:
+  number_of_shipits: 1
+  approval_method: "approval_by_review"
+  merge_method: "squash"
+  block_words:
+    - "no ship"
+    - "do not ship"
+    - "don't ship"
+    - "no merge"
+    - "do not merge"
+    - "don't merge"
+    - "WIP"
+    - "Work in Progress"
+  after_merge:
+    delete: true
+    allowlist_refs:
+      - main
+      - develop
+  verbose_ci_failure: true

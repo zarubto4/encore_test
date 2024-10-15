@@ -1,7 +1,8 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import { Api, RbacApiClient, ScopeType, SecurityData } from 'libs/rbac-client/src';
+import { Api, RbacApiClient, ScopeType, SecurityData } from '@vpcs/rbac-client';
 import { handleError } from '@/utils';
-import UsersApiClient, { type UserRegionType } from 'libs/users-client/src';
+import UsersApiClient, { type UserRegionType } from '@vpcs/users-client';
+import { crit } from '@/lib/Logger/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { resolveMyUserIdForRegion, resolveUserByEmailForRegion } from '@/lib/user';
 import { resolveRoleIds } from '@/lib/roles';
@@ -58,7 +59,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse, rbac
   const api = rbac.api;
 
   if (!roles.length || !emails.length || !scopeType || !regions) {
-    return res.status(400).json({ message: 'Invalid request' });
+    return crit({ req, res, error: 'Invalid request', status: 400 });
   }
 
   const usersPerRegion = await Promise.all(
@@ -94,7 +95,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse, rbac
     },
   );
   if (!result.success.length) {
-    return res.status(404).json({ message: 'No users found' });
+    return crit({ req, res, error: 'No users found', status: 404 });
   }
 
   const finalResult = { success: [], failed: [...result.failed] } as {
@@ -118,7 +119,7 @@ const handlePostRequest = async (req: NextApiRequest, res: NextApiResponse, rbac
         );
         finalResult.success.push({ email, userId, region });
       } catch (error) {
-        console.error(error);
+        crit({ req, error: handleError(error), status: 500 });
         finalResult.failed.push({ email, region, error: handleError(error) });
       }
     }),

@@ -1,5 +1,5 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import UsersApiClient, { UserRegionType } from 'libs/users-client/src';
+import UsersApiClient, { UserRegionType } from '@vpcs/users-client';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const roleId = req.query.roleId as string;

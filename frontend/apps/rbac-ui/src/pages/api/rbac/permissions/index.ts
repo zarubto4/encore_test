@@ -1,6 +1,6 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import { Api, SecurityData, PaginatedPermissionsResponse } from 'libs/rbac-client/src';
-import UsersApiClient from 'libs/users-client/src';
+import { Api, SecurityData, PaginatedPermissionsResponse } from '@vpcs/rbac-client';
+import UsersApiClient from '@vpcs/users-client';
 
 const fetchAllPages = async (api: Api<SecurityData>, query: Partial<{ [key: string]: string | string[] }>) => {
   let page = 1;

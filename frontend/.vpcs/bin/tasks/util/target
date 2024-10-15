@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#- vpcs target project-name target - runs nx target for project.
+Args=( $(echo "$@") )
+Project="${Args[@]:0:1}"
+Target="${Args[@]:1:1}"
+vpcs log debug "Project: $Project Target: $Target"
+[[ -z "$Project" ]] && vpcs log error "You must provide a project name." && exit 1
+[[ -z "$Target" ]] && vpcs log error "You must provide a target name." && exit 1
+Config="$(nx show project $Project 2>/dev/null)"
+[[ -z "$Config" ]] && vpcs log error "Project $Project not found." && exit 1
+pnpm exec nx run "$Project:$Target"
+exit 0

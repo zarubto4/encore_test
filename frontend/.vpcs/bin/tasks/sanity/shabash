@@ -1,0 +1,10 @@
+#!/bin/sh -e
+#A shebang line which forces bash install
+[[ "$(bash -c 'echo "bash exists"' 2>/dev/null)" = "bash exists" ]] && exit 0;
+[[-x $(which apk)]] && apk add bash coreutils && exit 0;
+[[ -x $(which brew) ]] && brew install bash && exit 0;
+[[-x $(which apt-get)]] && apt-get install bash && exit 0;
+[[-x $(which pkg)]] && pkg install bash && exit 0;
+[[-x $(which yum)]] && yum install bash && exit 0;
+[[-x $(which pacman)]] && pacman -S bash && exit 0;
+echo "Bash not found. Exiting." && exit 1;

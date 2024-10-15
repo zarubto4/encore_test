@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#- vpcs log-level [--console|--echo|--log] <level>
+
+CHANGE_STDOUT=1
+CHANGE_LOGFILE=1
+LOG_LEVEL="silent"
+A=($(echo "$@"))
+for i in "${A[@]}"; do
+vpcs log debug "Token for $i..."
+  case $i in
+      --console|--echo|--stdout|-c|console|echo|stdout) CHANGE_STDOUT=0;;
+      --log|--logfile|--logs|-l|logs|logfile|file) CHANGE_LOGFILE=0;;
+      silent) LOG_LEVEL="silent";;
+      critical|crit) LOG_LEVEL="critical";;
+      error) LOG_LEVEL="error";;
+      warning) LOG_LEVEL="warning";;
+      info) LOG_LEVEL="info";;
+      debug) LOG_LEVEL="debug";;
+      chatty) LOG_LEVEL="chatty";;
+      --help|-h|usage) echo "vpcs log-level  <--console> <--logfile> [silent|critical|error|warning|info|debug|chatty]" && exit 0;;
+  esac
+done
+vpcs log debug "Stdout: $CHANGE_STDOUT Logfile: $CHANGE_LOGFILE"
+NewLogLevel="$VPCS_LogLevel"
+NewEchoLevel="$VPCS_Echolevel"
+[[ $CHANGE_STDOUT -eq 0 ]] && NewEchoLevel="$LOG_LEVEL"
+[[ $CHANGE_LOGFILE -eq 0 ]] && NewLogLevel="$LOG_LEVEL"
+[[ -z "$NewLogLevel" ]] && NewLogLevel="info"
+[[ -z "$NewEchoLevel" ]] && NewEchoLevel="chatty"
+ConfigPath="$(locate profiles)/logger.profile"
+echo "#!/usr/bin/env bash" > $ConfigPath
+echo "export VPCS_EchoLevel=\"$NewEchoLevel\"" >> $ConfigPath
+echo "export VPCS_LogLevel=\"$NewLogLevel\"" >> $ConfigPath

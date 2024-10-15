@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#- vpcs build-library <project-name>
+
+LibraryPath="$(cat $APP_ROOT/tsconfig.base.json | jq ".compilerOptions.paths[\"$1\"][0]" $NOERR)"
+if [[ "$LibraryPath" =~ ^null$ ]]; then
+  vpcs log error "Library <$1> not found in tsconfig.base.json."
+  exit 1
+fi
+vpcs sanity pnpm-pkg
+vpcs sanity nx-workspace
+pnpm exec nx build "$1" --with-deps

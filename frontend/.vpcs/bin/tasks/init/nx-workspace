@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#- vpcs init nx-workspace: Installs an nx workspace in app root.
+vpcs sanity node-basics
+vpcs install latest-nx
+touch $APP_ROOT/nx.json
+touch $APP_ROOT/.gitignore
+echo "{}" >> $APP_ROOT/nx.json
+[[ -z "$(cat "$APP_ROOT/.gitignore" | grep ".nx/cache")" ]] && : || echo ".nx/cache" >> $APP_ROOT/.gitignore

@@ -2,7 +2,7 @@ import { Select, SelectProps, Spin } from 'antd';
 import useFetchPermissions from '@/hooks/useFetchPermissions';
 import { useEffect, useState } from 'react';
 
-import type { RolesResponse } from 'libs/rbac-client/src';
+import type { RolesResponse } from '@vpcs/rbac-client';
 
 type SelectPermissionsProps = {
   onPermissionChange: (roles: string[]) => void;

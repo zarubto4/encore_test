@@ -1,7 +1,8 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
+import { crit } from '@/lib/Logger/server';
 import { resolveMyUserIdForRegion, resolveUserByEmailForRegion } from '@/lib/user';
-import { handleError } from 'libs/stdlib/src';
-import { UserRegionType } from 'libs/users-client/src';
+import { handleError } from '@vpcs/stdlib';
+import { UserRegionType } from '@vpcs/users-client';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const roleId = req.query.roleId as string;
@@ -13,7 +14,7 @@ const handler: RbacApiClientHandler = async (req, res, rbac) => {
   if (req.method === 'POST') {
     const { emails, regions }: { emails: string[], regions: UserRegionType[] } = req.body;
     if (!emails.length || !regions?.length) {
-      return res.status(400).json({ message: 'emails and regions are required' });
+      return crit({ req, res, error: 'emails and regions are required', status: 400 });
     }
 
     const usersPerRegion = await Promise.all(

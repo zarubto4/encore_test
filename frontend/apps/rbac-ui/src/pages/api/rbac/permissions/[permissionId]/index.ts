@@ -1,5 +1,5 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import { PermissionsPatchRequest } from 'libs/rbac-client/src';
+import { PermissionsPatchRequest } from '@vpcs/rbac-client';
 
 const handler: RbacApiClientHandler = async (req, res, rbac) => {
   const permissionId = req.query.permissionId as string;

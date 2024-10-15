@@ -11,7 +11,8 @@ import { HB_USER_EMAIL } from '@/constants';
 import type { FormProps } from 'antd';
 import type { NextPageWithLayout } from '@/pages/_app';
 import { resolveUserByEmailForRegion } from '@/lib/user';
-import { USER_REGION } from 'libs/users-client/src';
+import { USER_REGION } from '@vpcs/users-client';
+import { crit } from '@/lib/Logger/server';
 import { signToken } from '@/lib/auth';
 
 type FieldType = {
@@ -111,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!isDevMode) {
     const userEmail = ctx.req.headers[HB_USER_EMAIL] ?? null;
     if (!userEmail) {
-      console.error('Failed to get user email from HB');
+      crit({ error: 'Failed to get user email from HB' });
       return {
         redirect: {
           destination: '/error?type=hb-failed',
@@ -124,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       const responseNA = await resolveUserByEmailForRegion(userEmail as string, USER_REGION.NA, ctx.req);
       const responseEMEA = await resolveUserByEmailForRegion(userEmail as string, USER_REGION.EMEA, ctx.req);
       if (!responseNA?.user && !responseEMEA?.user) {
-        console.error(`Account with email ${userEmail} was not found in any region`);
+        crit({ error: `Account with email ${userEmail} was not found in any region` });
         return {
           redirect: {
             destination: '/error?type=user-failed-to-resolve',
@@ -147,7 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         },
       };
     } catch (error) {
-      console.error(error);
+      crit({ error: handleError(error) });
       return {
         redirect: {
           destination: '/error?type=unexpected-error',

@@ -1,4 +1,4 @@
-import { RbacApiClient } from 'libs/rbac-client/src';
+import { RbacApiClient } from '@vpcs/rbac-client';
 import { PermissionStrategy, UserPermissionStrategy } from '@/lib/Permission';
 
 const CACHE_EXPIRATION = 1 * 60 * 1000; // 1 minutes
@@ -11,7 +11,7 @@ const fetchPermissionsFromApi = async (userId: string): Promise<string[]> => {
 
   try {
     const rbac = new RbacApiClient({ userId });
-    const { data } = await rbac.api.v2.usersPermissionsDetail(userId);
+    const { data } = await rbac.api.v2.usersPermissionsDetail(userId, { scopeType: 'RBAC_INTERNAL', scopeValue: 'GLOBAL' });
 
     const permissions = new Set<string>();
     data.forEach((role) => {
