@@ -1,13 +1,9 @@
 import { Api, ApiConfig } from './lib/rbac-client';
-import { StenoExpandedValueType, StenoKVRecordType } from '@vpcs/grpn-next-logging';
 
 export * from './lib/rbac-client';
 
-type LoggerFunction = (message: string, data?: StenoKVRecordType, ...optionalParams: unknown[]) => void;
-
 type ApiClientData = {
   userId?: string;
-  logger?: LoggerFunction;
   xRequestId?: string;
 };
 
@@ -25,7 +21,7 @@ export class RbacApiClient {
   private baseUrl = process.env['NEXT_PRIVATE_RBAC_API_URL'] ?? 'http://rbac.staging.service';
   private xRequestId: string;
 
-  constructor({ userId = '', xRequestId = '', logger = undefined }: ApiClientData) {
+  constructor({ userId = '', xRequestId = '' }: ApiClientData) {
     this.userId = userId;
     this.xRequestId = xRequestId;
     this.apiConfig = {
@@ -36,12 +32,6 @@ export class RbacApiClient {
       customFetch: (input, init) => {
         const url = new URL(input.toString());
         url.searchParams.set('client_id', this.clientId);
-        logger?.(`Sending request to RBAC-API`, {
-          url: url.toString(),
-          method: init?.method,
-          headers: init?.headers as StenoExpandedValueType,
-          body: init?.body ? JSON.parse(init?.body.toString()) : undefined,
-        });
         return fetch(url.toString(), init);
       },
       securityWorker: () => {

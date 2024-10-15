@@ -1,7 +1,0 @@
-{
-  "grpn-suboptimal": {
-    "apiEndpoint": "/api/optimize",
-    "trackyLogFileName": "tracky.log",
-    "trackyLogPath": "logs"
-  }
-}
