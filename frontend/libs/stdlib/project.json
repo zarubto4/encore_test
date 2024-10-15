@@ -1,7 +1,7 @@
 {
-  "name": "@vpcs/users-client",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vpcs/core/users-client/src",
+  "name": "@vpcs/stdlib",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/stdlib/src",
   "projectType": "library",
   "release": {
     "version": {
@@ -17,10 +17,10 @@
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/vpcs/core/users-client",
-        "main": "libs/vpcs/core/users-client/src/index.js",
-        "tsConfig": "libs/vpcs/core/users-client/tsconfig.lib.json",
-        "assets": ["libs/vpcs/core/users-client/*.md"],
+        "outputPath": "dist/libs/stdlib",
+        "main": "libs/stdlib/src/index.js",
+        "tsConfig": "libs/stdlib/tsconfig.lib.json",
+        "assets": ["libs/stdlib/*.md"],
         "generatePackageJson": true,
         "format": ["cjs"]
       }
@@ -34,7 +34,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/vpcs/core/users-client/jest.config.js"
+        "jestConfig": "libs/stdlib/jest.config.js"
       }
     }
   }

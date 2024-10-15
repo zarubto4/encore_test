@@ -15,9 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@vpcs/rbac-client": ["libs/vpcs/core/rbac-client/src/index"],
-      "@vpcs/stdlib": ["libs/vpcs/core/stdlib/src/index.js"],
-      "@vpcs/users-client": ["libs/vpcs/core/users-client/src/index"]
+      "@vpcs/rbac-client": ["libs/rbac-client/src/index"],
+      "@vpcs/stdlib": ["libs/stdlib/src/index.js"],
+      "@vpcs/users-client": ["libs/users-client/src/index"]
     }
   },
   "exclude": ["node_modules", "tmp"]

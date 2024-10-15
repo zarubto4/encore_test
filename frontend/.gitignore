@@ -58,12 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-# Natural side effects of builds
-.vpcs/tmp/*
-.vpcs/bin/npx
-.vpcs/bin/node
-.vpcs/bin/npm
-.vpcs/bin/corepack
 .env/*
 
 # Remove from main but not build branch

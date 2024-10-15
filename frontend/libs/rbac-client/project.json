@@ -1,7 +1,7 @@
 {
-  "name": "@vpcs/stdlib",
-  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/vpcs/core/stdlib/src",
+  "name": "@vpcs/rbac-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/rbac-client/src",
   "projectType": "library",
   "release": {
     "version": {
@@ -17,10 +17,10 @@
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/vpcs/core/stdlib",
-        "main": "libs/vpcs/core/stdlib/src/index.js",
-        "tsConfig": "libs/vpcs/core/stdlib/tsconfig.lib.json",
-        "assets": ["libs/vpcs/core/stdlib/*.md"],
+        "outputPath": "dist/libs/rbac-client",
+        "main": "libs/rbac-client/src/index.js",
+        "tsConfig": "libs/rbac-client/tsconfig.lib.json",
+        "assets": ["libs/rbac-client/*.md"],
         "generatePackageJson": true,
         "format": ["cjs"]
       }
@@ -34,7 +34,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/vpcs/core/stdlib/jest.config.js"
+        "jestConfig": "libs/rbac-client/jest.config.js"
       }
     }
   }
