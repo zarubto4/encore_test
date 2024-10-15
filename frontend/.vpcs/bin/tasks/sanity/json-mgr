@@ -1,2 +1,0 @@
-#!/bin/bash
-[[ -z "$(jq --version $NOERR)" ]] && vpcs sys installer add jq

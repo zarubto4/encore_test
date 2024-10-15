@@ -1,5 +1,0 @@
----
-memory:
-  main:
-    request: 100Mi
-    limit: 250Mi

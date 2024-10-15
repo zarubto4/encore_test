@@ -1,6 +1,0 @@
-#!/bin/bash
-#- vpcs sanity node-version-reqs - reads the required node version as configured.
-NodeVersionNeeded="$(cat $(locate vpcs-config) | yq .node.version)"
-[[ -z "$NodeVersionNeeded" ]] && NodeVersionNeeded="20.12.2"
-echo "$NodeVersionNeeded"
-exit 0

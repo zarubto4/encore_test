@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import UsersApiClient, { UserRegionType, UserType } from '@vpcs/users-client';
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
 import { Api, AuditResponse, SecurityData } from '@vpcs/rbac-client';
-import { crit } from '@/lib/Logger/server';
 import { handleError } from '@/utils';
 import { resolveUserByEmailForRegion } from '@/lib/user';
 
@@ -154,7 +153,6 @@ const handler: RbacApiClientHandler = async (req, res, rbac) => {
     });
   } catch (error) {
     console.error(error);
-    crit({ req, res, error: handleError(error) });
     return res.status(500).json({ message: 'Failed to process audit data' });
   }
 };

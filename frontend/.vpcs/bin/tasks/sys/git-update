@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#- vpcs sys git-update - updates vpcs configs. designed to be a githook (see vpcs sys githook)
-vpcs update-config ".git.sha" "$(git rev-parse HEAD)"
-vpcs update-config ".git.branch" "$(git branch --show-current)"

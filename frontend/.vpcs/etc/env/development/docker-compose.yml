@@ -1,9 +1,0 @@
----
-services:
-  vpcs_app:
-    image: alpine:3.18
-    build:
-      context: .
-      dockerfile: .vpcs/etc/env/development/Dockerfile
-      ssh:
-        - default

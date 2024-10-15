@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-#- vpcs sys chmod-bindir - makes vpcs scripts executable
-chmod -R 755 "$(locate bin)"

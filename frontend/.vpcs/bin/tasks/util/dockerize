@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-if [[ -z "$(docker -v 2>/dev/null)" ]]; then
-  vpcs install package docker
-fi
-cd $APP_ROOT
-docker buildx build .

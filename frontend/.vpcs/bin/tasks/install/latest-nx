@@ -1,6 +1,0 @@
-#!/bin/bash
-vpcs sanity node-basics
-[[ -z "$(nx --version $NOERR)" ]] && npx create-nx-workspace@latest --pm=pnpm --nx-cloud=false --preset=empty --nxWorkspaceRoot=$APP_ROOT
-[[ -z "$(nx --version $NOERR)" ]] && vpcs log critical "Cannot install nx!"
-[[ -f $VPCS_ROOT/bin/nx ]] && rm $VPCS_ROOT/bin/nx
-exit 0

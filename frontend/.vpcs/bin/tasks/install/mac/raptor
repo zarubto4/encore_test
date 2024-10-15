@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-vpcs sanity homebrew
-if [[ -z "$(which raptor &>/dev/null)" ]]; then
-  brew tap groupon/engineering git@github.groupondev.com:engineering/homebrew-groupon.git
-  brew update
-  brew install raptor-cli
-fi
-[[ ! -d $APP_ROOT/.raptor ]] && cd $APP_ROOT && raptor init
-vpcs log info "If you had an error with the previous raptor command, try modifying the ruby file that throws the error to change 'exists' into 'exist'; then rerun this command."

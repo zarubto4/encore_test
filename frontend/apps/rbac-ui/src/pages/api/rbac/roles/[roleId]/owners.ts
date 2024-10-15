@@ -1,5 +1,4 @@
 import { RbacApiClientHandler, withRbacApiClient } from '@/clients/rbac';
-import { crit } from '@/lib/Logger/server';
 import { resolveMyUserIdForRegion, resolveUserByEmailForRegion } from '@/lib/user';
 import { handleError } from '@vpcs/stdlib';
 import { UserRegionType } from '@vpcs/users-client';
@@ -68,7 +67,7 @@ const handler: RbacApiClientHandler = async (req, res, rbac) => {
           })
           finalResult.success.push({ email, userId, region });
         } catch (error) {
-          crit({ req, error: handleError(error), status: 500 });
+          console.error(`Error in rbac/roles/[roleId]/owners: ${handleError(error)}`);
           finalResult.failed.push({ email, region, error: handleError(error) });
         }
       }),

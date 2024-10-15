@@ -1,4 +1,3 @@
-import { crit } from '@/lib/Logger/server';
 import { handleError, setCookie } from '@/utils';
 import { resolveUserByEmailForRegion } from '@/lib/user';
 import { USER_REGION } from '@vpcs/users-client';
@@ -19,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const responseEMEA = await resolveUserByEmailForRegion(email, USER_REGION.EMEA, req);
       if (!responseNA?.user && !responseEMEA?.user) {
         const errorMessage = `Account with email ${email} was not found in any region`;
-        crit({ req, res, error: errorMessage });
+        console.error(`Error in login/local: ${errorMessage}`);
         return res.status(400).json({ message: errorMessage });
       }
       const maxAge = 60 * 60 * 24; // 1 day
@@ -32,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(200).json({ message: 'OK' });
     } catch (error: unknown) {
       console.error(error);
-      crit({ req, res, error: handleError(error) });
+      console.error(`Error in login/local: ${handleError(error)}`);
     }
   } else {
     res.setHeader('Allow', ['POST']);

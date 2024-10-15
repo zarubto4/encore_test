@@ -1,3 +1,0 @@
-#!/bin/bash
-#- vpcs version - gets the version of vpcs from the template vpcs.yaml.
-yq e '.vpcs.version' $VPCS_ROOT/etc/vpcs.yml | tail -n1

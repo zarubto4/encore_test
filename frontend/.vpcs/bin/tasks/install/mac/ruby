@@ -1,9 +1,0 @@
-#!/bin/bash
-if [[ -z "$(brew --version 2>/dev/null)" ]]; then
-  vpcs install homebrew && brew install ruby-build ruby-install ruby chruby
-  ruby-install ruby "3.2.4"
-fi
-
-ChrubySources="$(brew info chruby | grep source)"
-Content="$(echo "$ChrubySources" | head -n1)\nchruby ruby-3.2\n$(echo "$ChrubySources" | tail -n1)"
-vpcs init env-profile "ruby" "$Content"
