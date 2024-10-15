@@ -11,5 +11,5 @@ This will start the proxy and the local development server
 
 ## Setup and development
 
-1. `pnpm install`
+1. `pnpm i`
 2. `pnpm run dev`
