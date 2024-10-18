@@ -47,7 +47,6 @@ const kindlyReminder_jiraService_apiToken = secret("kindlyReminder_jiraService_a
 // ==== SERVICE CONFIG =================================================================================================
 
 export class KindlyReminderConfigApp {
-  // Helpers - Jira
   public readonly jiraServices: JiraService = new JiraService({
     email: kindlyReminder_jiraService_email(),
     apiToken: kindlyReminder_jiraService_apiToken(),

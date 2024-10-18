@@ -65,7 +65,7 @@ export class IssueAllInHunterGenerator {
         await new CreateAsanaTasks().generateAsanaTasks({
           week_number: script.week,
           created: moment().week(script.week).startOf("week").subtract(1, "day"),
-          deadline: moment().week(script.week).startOf("week").subtract(1, "day").add(5, "day"),
+          deadline: moment().week(script.week).startOf("week").subtract(1, "day").add(6, "day"),
         });
         break;
       }
@@ -77,7 +77,10 @@ export class IssueAllInHunterGenerator {
 
       case "read_dashboard": {
         const dashboardsConfigs = await new GetDashBoardAndConditions().getSearchConditions();
-        log.trace("Result - Request script done mandatoryEpicDesignationFields:\n" + JSON.stringify(dashboardsConfigs.mandatoryEpicDesignationFields, null, 2));
+        log.trace(
+          "Result - Request script done mandatoryEpicDesignationFields:\n" +
+            JSON.stringify(dashboardsConfigs.mandatoryEpicDesignationFields, null, 2),
+        );
         log.trace("Result - Request script done projectOverride:\n" + JSON.stringify(dashboardsConfigs.projectOverride, null, 2));
         break;
       }

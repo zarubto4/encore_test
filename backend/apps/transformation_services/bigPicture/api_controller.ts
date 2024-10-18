@@ -1,25 +1,30 @@
 import { api } from "encore.dev/api";
 import log from "encore.dev/log";
-import { TransformationKindlyReminderUniversalResponse, TransformationKindlyReminderValidatorRequest } from "../kindlyReminder/api_models/controller_models";
-import { JiraBugWeekHunterChecker } from "../kindlyReminder/reports/issueAllInValidator.service";
+import { ProductRoadmapService } from "./reports/product_roadmap/productRoadmap.service";
+import { TransformationBigPictureUniversalRequest, TransformationBigPictureUniversalResponse } from "./models/api.models";
 
 //  API ----------------------------------------------------------------------------------------------------------------
 
-// Valid week from Kindly Reminder
-export const runValidatorScript = api(
+// Update Product RoadMap
+export const createProductRoadmap = api(
   { expose: true, method: "POST", path: "/transformation/big_picture/generator" },
-  async (params: TransformationKindlyReminderValidatorRequest): Promise<TransformationKindlyReminderUniversalResponse> => {
+  async (params: TransformationBigPictureUniversalRequest): Promise<TransformationBigPictureUniversalResponse> => {
     log.info("api::run_validator_script");
-    new JiraBugWeekHunterChecker()
-      .runScript(params)
-      .then(() => {
-        // Dont Wait, dont do anything here
-      })
-      .catch((error) => {
-        console.error("We have error!!!!");
-        console.error("We have error: " + error.message);
-      });
+
+    switch (params.name) {
+      case "generate_product_roadmap": {
+        new ProductRoadmapService()
+          .runScript()
+          .then(() => {
+            // Dont Wait, dont do anything here
+          })
+          .catch((error) => {
+            console.error("We have error!!!!");
+            console.error("We have error: " + error.message);
+          });
+      }
+    }
 
     return { status: "script_is_running" };
-  }
+  },
 );
