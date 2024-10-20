@@ -1,6 +1,6 @@
 import { JWT } from "google-auth-library";
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { SpreadSheetWorkSheet } from "../models/config";
+import { SpreadSheetWorkSheet, SpreadSheetWorkSheetWithRows } from "../models/config";
 import log from "encore.dev/log";
 
 export class GoogleSpreadSheetService {
@@ -26,7 +26,7 @@ export class GoogleSpreadSheetService {
     workSheetId: number,
     cellLoad: string,
     rows: { offset?: number; limit?: number },
-  ): Promise<SpreadSheetWorkSheet> {
+  ): Promise<SpreadSheetWorkSheetWithRows> {
     log.trace("SpreadSheet:getSpreadsheetWithWorksheet: try to call", { fileId: fileId, workSheetId: workSheetId });
     try {
       const sheet = await this.getSpreadsheet(fileId);
@@ -34,11 +34,12 @@ export class GoogleSpreadSheetService {
       const worksheet = this.getWorkSheet(sheet, workSheetId);
 
       await worksheet.loadCells(cellLoad);
-      await worksheet.getRows(rows);
+      const loadedRows = await worksheet.getRows(rows);
 
       return {
         doc: sheet,
         sheet: worksheet,
+        rows: loadedRows,
       };
     } catch (error) {
       log.trace("SpreadSheet:getSpreadsheetWithWorksheet: error", error);

@@ -76,6 +76,9 @@ export const kindlyReminder_asana_project_id = "1207778959375434"; // Asana Kind
 export const kindlyReminder_asana_project_section_id = "1207778959375446"; // Project section in Asana project
 export const kindlyReminder_asana_followers_to_remove: string[] = ["1204853356727858"]; // User ids that we want to remove after ticket was created
 
+// TODOž
+export const kindlyReminder_asana_dispute_form = "https://form.asana.com/?k=XD2--zRlGU4GRv0S9bb5VQ&d=8437193015852";
+
 export const kindlyReminder_hideThiesVps: string[] = [
   "Barbara Weisz", // CSO
   "Jiri Ponrt", // CFO

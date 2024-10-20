@@ -7,9 +7,30 @@ import {
 } from "../../encore.service";
 import log from "encore.dev/log";
 import { ExtendedIssue } from "../../../../../libs/3partyApis/jira/models/jira_extededIssue";
-import { Sorter, TransformationBigPictureInitiativeMap, TransformationBigPictureQuarterMap } from "../../models/api.models";
+import { Sorter, SortType, TransformationBigPictureInitiativeMap, TransformationBigPictureQuarterMap } from "../../models/api.models";
 import { ProductRoadmapIndexes } from "./productRoadmap.models";
-import { SpreadSheetWorkSheet } from "../../../../../libs/3partyApis/googleDocs/models/config";
+import { SpreadSheetWorkSheetWithRows } from "../../../../../libs/3partyApis/googleDocs/models/config";
+
+// console.log("Asana Ticket:-----");
+// console.log("  gid:", asanaTicket.gid);
+// console.log("  ticket:", asanaTicket.name);
+// console.log("  completed:", asanaTicket.completed);
+// console.log("  section:", asanaTicket.assignee_section?.name);
+// console.log("  assignee:", asanaTicket.assignee?.name);
+// console.log("    ", "OrgEst Eng", asanaTicket.custom_fields_parsed["1207921702169258"]?.number_value);
+// console.log("    ", "OrgEst Others:", asanaTicket.custom_fields_parsed["1208169980261768"]?.number_value);
+// console.log("    ", "CPO approvement:", asanaTicket.custom_fields_parsed["1207921702169260"]?.enum_value?.name);
+// console.log("    ", "Priority:", asanaTicket.custom_fields_parsed["1207921702169265"]?.enum_value?.name);
+// console.log("    ", "Quarter:", asanaTicket.custom_fields_parsed["1207921702169271"]?.enum_value?.name);
+// console.log("    ", "PM responsible:", asanaTicket.custom_fields_parsed["1208150820765644"]?.people_values?.length);
+// console.log("    ", "EM responsible:", asanaTicket.custom_fields_parsed["1208150820765640"]?.people_values?.length);
+// console.log("    ", "UX responsible:", asanaTicket.custom_fields_parsed["1208150820765642"]?.people_values?.length);
+// console.log("    ", "Type:", asanaTicket.custom_fields_parsed["1208179848059789"]?.enum_value?.name);
+// console.log("    ", "Description F:", asanaTicket.custom_fields_parsed["1208508846416202"]?.text_value);
+// console.log("    ", "Spend Hours:", asanaTicket.custom_fields_parsed["1207921704130775"]?.number_value);
+// console.log("    ", "Warning status:", asanaTicket.custom_fields_parsed["1207921704130777"]?.enum_value?.name);
+// console.log("    ", "Jira Ticket:", asanaTicket.custom_fields_parsed["1207650952964344"]?.text_value);
+// console.log("    ", "Jira Status:", asanaTicket.custom_fields_parsed["1208179548296766"]?.enum_value?.name);
 
 export class ProductRoadmapService {
   // -- Private Values -----------------------------------------------------------------------------------------------
@@ -24,35 +45,46 @@ export class ProductRoadmapService {
     log.trace("runScript:: script is running");
 
     // List of Worksheets
-    const workSheets: Record<string, SpreadSheetWorkSheet> = {};
+    const workSheets: Record<string, { doc: SpreadSheetWorkSheetWithRows }> = {};
+
     // Add 2024 - Q4
-    workSheets["2024-Q4"] = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheetLoadCellsAndGetRows(
-      bigPicture_productRoadMap_spreadSheetId,
-      bigPicture_productRoadMap_mainWorkSheet_2024_Q4,
-      "A1:M300",
-      { offset: 8 },
-    );
+    workSheets["2024-Q4"] = {
+      doc: await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheetLoadCellsAndGetRows(
+        bigPicture_productRoadMap_spreadSheetId,
+        bigPicture_productRoadMap_mainWorkSheet_2024_Q4,
+        "A1:M300",
+        { offset: 8 },
+      ),
+    };
 
-    workSheets["2025-Q1"] = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheetLoadCellsAndGetRows(
-      bigPicture_productRoadMap_spreadSheetId,
-      bigPicture_productRoadMap_mainWorkSheet_2025_Q1,
-      "A1:M300",
-      { offset: 8 },
-    );
+    // Add 2025 - Q1
+    workSheets["2025-Q1"] = {
+      doc: await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheetLoadCellsAndGetRows(
+        bigPicture_productRoadMap_spreadSheetId,
+        bigPicture_productRoadMap_mainWorkSheet_2025_Q1,
+        "A1:M300",
+        { offset: 8 },
+      ),
+    };
 
-    for (const sheetKey of Object.keys(workSheets)) {
-      await workSheets[sheetKey].sheet.unmergeCells({
-        startRowIndex: 9,
-        endRowIndex: 150,
-        startColumnIndex: 0,
-        endColumnIndex: 15,
-      });
-      await workSheets[sheetKey].sheet.saveUpdatedCells();
-    }
+    // Sorter
+    const asanaTicketsSortedByQuarters: SortType = await this.getSorter(workSheets);
+    await this.print(asanaTicketsSortedByQuarters, workSheets);
+  }
 
-    const sectionsWithJiraThemes = await this.sections();
-    const sorter: Sorter = new Sorter();
+  public async getSorter(
+    workSheets: Record<
+      string,
+      {
+        doc: SpreadSheetWorkSheetWithRows;
+      }
+    >,
+  ): Promise<SortType> {
     const allValidAsanaTicket = await this.ticketsFromGlobalInitiativesProject();
+
+    // Get ASana Sections with extracted Jira themes (Same name as Asana section is Jira theme)
+    const sectionsWithJiraThemes = await this.getAsanaSections();
+    const sorter: Sorter = new Sorter();
 
     for (const ticket of allValidAsanaTicket) {
       console.log("ticket:", ticket.asanaTicket.gid, "section", ticket.sectionId, "quarter", ticket.quarter);
@@ -62,10 +94,15 @@ export class ProductRoadmapService {
         continue;
       }
 
+      if (!workSheets[ticket.quarter]) {
+        console.log(" - available worksheets not supporting this ticket in quarter ", ticket.quarter);
+        continue;
+      }
+
       if (sectionsWithJiraThemes.sectionAsanaId[ticket.sectionId].theme_jira) {
         sorter.insert(
           ticket.quarter,
-          workSheets[ticket.quarter],
+          workSheets[ticket.quarter].doc,
           sectionsWithJiraThemes.sectionAsanaId[ticket.sectionId].theme_jira.fields["customfield_22046"].value,
           sectionsWithJiraThemes.sectionAsanaId[ticket.sectionId].theme_jira,
           ticket.asanaTicket,
@@ -75,13 +112,19 @@ export class ProductRoadmapService {
       }
     }
 
-    const srt = sorter.sort;
+    return sorter.sort;
+  }
 
+  // Private -----------------------------------------------------------------------------------------------------------
+
+  private async print(srt: SortType, workSheets: Record<string, { doc: SpreadSheetWorkSheetWithRows }>) {
+    // Remove Sheets style before generation
+    await this.cleanSheetsMerging(workSheets);
     for (const quarterKey of Object.keys(srt)) {
       const quarter = srt[quarterKey];
       const sheetConfig = new ProductRoadmapIndexes();
 
-      if (quarterKey != "2024-Q4" && quarterKey != "2025-Q1") {
+      if (!workSheets[quarterKey]) {
         continue;
       }
 
@@ -152,8 +195,10 @@ export class ProductRoadmapService {
               ticket.asana_ticket.custom_fields_parsed["1207921702169260"]?.enum_value?.name
                 ? ticket.asana_ticket.custom_fields_parsed["1207921702169260"]?.enum_value?.name
                 : "Before validation";
+
             quarter.quarterWorkSheet.sheet.getCellByA1(sheetConfig.cells.ticketAsana + sheetConfig.latestIndexOfRow).value =
               '=hyperlink("https://app.asana.com/0/1207921702169255/' + ticket.asana_ticket.gid + '";"Asana")';
+
             quarter.quarterWorkSheet.sheet.getCellByA1(sheetConfig.cells.ticketJira + sheetConfig.latestIndexOfRow).value = ticket
               .asana_ticket.custom_fields_parsed["1207650952964344"]?.text_value
               ? '=hyperlink("https://groupondev.atlassian.net/browse/' +
@@ -185,49 +230,26 @@ export class ProductRoadmapService {
 
       await quarter.quarterWorkSheet.sheet.saveUpdatedCells();
     }
+  }
 
-    /*
-    for (const quarterKey of Object.keys(quarters)) {
-      console.log("quarter:", quarterKey);
-      const quarter = quarters[quarterKey].sectionAsanaId;
-      for (const sectionKey of Object.keys(quarter)) {
-        console.log("      sectionKey:", sectionKey);
-        for (const asanaTicket of quarter[sectionKey]) {
-          console.log("          ticket:", asanaTicket.name);
-
-          spreadSheet2024Q4.sheet.mergeCells({
-            sheetId: spreadSheet2024Q4.sheet.sheetId,
-            startRowIndex: 5,
-            endRowIndex: 10,
-            startColumnIndex: 1,
-            endColumnIndex: 1,
-          });
-
-
-        }
+  private async cleanSheetsMerging(
+    workSheets: Record<
+      string,
+      {
+        doc: SpreadSheetWorkSheetWithRows;
       }
-    }*/
-
-    // console.log("Asana Ticket:-----");
-    // console.log("  gid:", asanaTicket.gid);
-    // console.log("  ticket:", asanaTicket.name);
-    // console.log("  completed:", asanaTicket.completed);
-    // console.log("  section:", asanaTicket.assignee_section?.name);
-    // console.log("  assignee:", asanaTicket.assignee?.name);
-    // console.log("    ", "OrgEst Eng", asanaTicket.custom_fields_parsed["1207921702169258"]?.number_value);
-    // console.log("    ", "OrgEst Others:", asanaTicket.custom_fields_parsed["1208169980261768"]?.number_value);
-    // console.log("    ", "CPO approvement:", asanaTicket.custom_fields_parsed["1207921702169260"]?.enum_value?.name);
-    // console.log("    ", "Priority:", asanaTicket.custom_fields_parsed["1207921702169265"]?.enum_value?.name);
-    // console.log("    ", "Quarter:", asanaTicket.custom_fields_parsed["1207921702169271"]?.enum_value?.name);
-    // console.log("    ", "PM responsible:", asanaTicket.custom_fields_parsed["1208150820765644"]?.people_values?.length);
-    // console.log("    ", "EM responsible:", asanaTicket.custom_fields_parsed["1208150820765640"]?.people_values?.length);
-    // console.log("    ", "UX responsible:", asanaTicket.custom_fields_parsed["1208150820765642"]?.people_values?.length);
-    // console.log("    ", "Type:", asanaTicket.custom_fields_parsed["1208179848059789"]?.enum_value?.name);
-    // console.log("    ", "Description F:", asanaTicket.custom_fields_parsed["1208508846416202"]?.text_value);
-    // console.log("    ", "Spend Hours:", asanaTicket.custom_fields_parsed["1207921704130775"]?.number_value);
-    // console.log("    ", "Warning status:", asanaTicket.custom_fields_parsed["1207921704130777"]?.enum_value?.name);
-    // console.log("    ", "Jira Ticket:", asanaTicket.custom_fields_parsed["1207650952964344"]?.text_value);
-    // console.log("    ", "Jira Status:", asanaTicket.custom_fields_parsed["1208179548296766"]?.enum_value?.name);
+    >,
+  ) {
+    // Clean Cells
+    for (const sheetKey of Object.keys(workSheets)) {
+      await workSheets[sheetKey].doc.sheet.unmergeCells({
+        startRowIndex: 9,
+        endRowIndex: 150,
+        startColumnIndex: 0,
+        endColumnIndex: 15,
+      });
+      await workSheets[sheetKey].doc.sheet.saveUpdatedCells();
+    }
   }
 
   private async ticketsFromGlobalInitiativesProject(): Promise<TransformationBigPictureQuarterMap[]> {
@@ -246,11 +268,6 @@ export class ProductRoadmapService {
       if (asanaTicket.name.includes("Example")) {
         continue;
       }
-
-      // // TODO Smazat
-      // if (asanaTicket.name == "[Q424] Deep dive: Inbox management & cadence reduction inputs, rules and accuracy") {
-      //   return asanaTicketsResult;
-      // }
 
       let asanaTicketSection = asanaTicket?.assignee_section?.gid;
 
@@ -279,7 +296,7 @@ export class ProductRoadmapService {
     return asanaTicketsResult;
   }
 
-  private async sections(): Promise<TransformationBigPictureInitiativeMap> {
+  private async getAsanaSections(): Promise<TransformationBigPictureInitiativeMap> {
     const structure: TransformationBigPictureInitiativeMap = { sectionAsanaId: {} };
 
     const asanaSections = await this.configApp.asanaService.projects.getProjectSections(bigPicture_globalInitiatives_asanaProjects);

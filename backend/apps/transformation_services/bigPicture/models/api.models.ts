@@ -3,7 +3,7 @@ import { ExtendedIssue } from "../../../../libs/3partyApis/jira/models/jira_exte
 import { SpreadSheetWorkSheet } from "../../../../libs/3partyApis/googleDocs/models/config";
 
 export interface TransformationBigPictureUniversalRequest {
-  name: "generate_product_roadmap";
+  name: "generate_product_roadmap" | "generate_product_week_statistics";
 }
 
 export interface TransformationBigPictureUniversalResponse {
