@@ -35,22 +35,6 @@ export class IssueAllInHunterGenerator {
         break;
       }
 
-      /*case "run_project_issue_hunting": {
-                for (const projectKey of <string[]> script.value['projects']) {
-                    // Find and print all issues by search conditions
-                    await new GetIssuesByConditionsForWeekReport()
-                        .getProjectIssuesAndPrint(projectKey,  <number> script.value['week'])
-                        .then((printResult) => {
-                             log.trace("Result - Request script done:", script.name);
-                        });
-                }
-                break;
-       }*/
-
-
-
-      {{#=}}(({{issue.timetracking.originalEstimateSeconds}}-{{issue.timetracking.timeSpentSeconds}})/{{3600}}){{/}}
-
       case "prepare_issue_stage": {
         await new IssueStage().getActiveOrCreateActiveIssueWorkSheet(script.week);
         break;
