@@ -1,17 +1,17 @@
 import { Issue } from "jira.js/src/version3/models/issue";
 import { Project } from "jira.js/src/version3/models/project";
 import moment from "moment/moment.js";
-import { GetDashBoardAndConditions } from "../dashboard/getDashboardAndConditions";
-import { PrintIssuesIntoWorksheet } from "../getIssues/printIssuesIntoWorksheet";
-import { DashboardsConfigs, SearchCondition, SearchScripts } from "../dashboard/_models";
-import { ConvertedAndAgregatedHoursByIssue } from "../issuesPrint/_models";
+import { GetDashboardAndConditionsService } from "../dashboard/getDashboardAndConditions.service";
+import { PrintIssuesIntoWorksheetService } from "../getIssues/printIssuesIntoWorksheet.service";
+import { DashboardsConfigs, SearchCondition, SearchScripts } from "../dashboard/dashboardKR.models";
+import { ConvertedAndAgregatedHoursByIssue } from "../issuesPrint/issuePrint.models";
 import { KindlyReminderConfigApp } from "../../encore.service";
-import { IssueProjectStructure, JQLProjectQueries, ProjectStructure, TEMPOLogsXResponse } from "./_models";
+import { IssueProjectStructure, JQLProjectQueries, ProjectStructure, TEMPOLogsXResponse } from "./issueHunting.models";
 import { ExtendedIssue } from "../../../../../libs/3partyApis/jira/models/jira_extededIssue";
 import { WorkLog } from "../../../../../libs/3partyApis/tempo/models/tempo_workLogsResponse";
 import log from "encore.dev/log";
 
-export class GetIssuesByConditionsForWeekReport {
+export class GetIssuesByConditionsForWeekReportService {
   // -- Private Values -----------------------------------------------------------------------------------------------
   private readonly configApp = new KindlyReminderConfigApp();
   private readonly doneStates: string[] = ["Done", "Won't do it", "Won’t do"];
@@ -25,7 +25,7 @@ export class GetIssuesByConditionsForWeekReport {
     log.trace("Project:", projectKey);
 
     // Report conditions
-    const dashboardsConfigs = await new GetDashBoardAndConditions().getSearchConditions();
+    const dashboardsConfigs = await new GetDashboardAndConditionsService().getSearchConditions();
 
     // Right Issue Worksheet
 
@@ -42,104 +42,169 @@ export class GetIssuesByConditionsForWeekReport {
     log.trace("Project " + project.name + " all issues done");
     issueProjectStructure[projectKey] = projectStructure;
 
-    await new PrintIssuesIntoWorksheet().printIssuesIntoActiveWeekSheet(projectStructure, activeWeekNumber);
+    await new PrintIssuesIntoWorksheetService().printIssuesIntoActiveWeekSheet(projectStructure, activeWeekNumber);
 
     return issueProjectStructure[projectKey];
   }
 
   // Common Project Issues
-  public async getProjectIssues(project: Project, activeWeekNumber: number, dashboardsConfigs: DashboardsConfigs): Promise<ProjectStructure> {
+  public async getProjectIssues(
+    project: Project,
+    activeWeekNumber: number,
+    dashboardsConfigs: DashboardsConfigs,
+  ): Promise<ProjectStructure> {
     const queries: JQLProjectQueries = new JQLProjectQueries(project.key);
     const projectStructure: ProjectStructure = {
       issues: {},
     };
 
     // Epic without parent
-    if (dashboardsConfigs.searchConditions[SearchScripts.epicWithoutParent] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.epicWithoutParent].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutParent] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutParent].active_rule
+    ) {
       for (const ticket of await this.getEpicsWithoutParent(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.epicWithoutParent], ticket);
       }
     }
 
     // Epic without owner
-    if (dashboardsConfigs.searchConditions[SearchScripts.epicWithoutOwner] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.epicWithoutOwner].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutOwner] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutOwner].active_rule
+    ) {
       for (const ticket of await this.getEpicsWithoutOwner(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.epicWithoutOwner], ticket);
       }
     }
 
     // Epic without field (Epic Designation)
-    if (dashboardsConfigs.searchConditions[SearchScripts.epicWithoutDesignation] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.epicWithoutDesignation].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutDesignation] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.epicWithoutDesignation].active_rule
+    ) {
       for (const ticket of await this.getEpicWithoutProperFieldEpicDesignation(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.epicWithoutDesignation], ticket);
       }
     }
 
     // Initiative without Parent
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutParent] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutParent].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutParent] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutParent].active_rule
+    ) {
       for (const ticket of await this.getInitiativesTicketsWithoutParent(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutParent], ticket);
       }
     }
 
     //  Initiative without owner
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutOwner] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutOwner].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutOwner] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutOwner].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutOwner(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutOwner], ticket);
       }
     }
 
     //  Initiative without Quarts labels
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutQuarterLabels(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeQRLabels], ticket);
       }
     }
 
     //  Initiative without field (Initiative category)
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeQRFieldIC] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.initiativeQRFieldIC].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeQRFieldIC] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeQRFieldIC].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutProperField(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeQRFieldIC], ticket);
       }
     }
 
     //  Initiative without field (Original Estimate (Eng) & Original Estimate (Prd))
-    if (dashboardsConfigs.searchConditions[SearchScripts.originalEstimateInitiative] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.originalEstimateInitiative].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.originalEstimateInitiative] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.originalEstimateInitiative].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutProperOriginalEstimate(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.originalEstimateInitiative], ticket);
       }
     }
 
     //  Initiative without field (Initiative - Financial Description)
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutFinancialDescription(queries)) {
-        this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription], ticket);
+        this.addToStructure(
+          projectStructure,
+          dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialDescription],
+          ticket,
+        );
       }
     }
 
     //  Initiative without field (Initiative - Customer Facing)
-    if (dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialCFacing] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialCFacing].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialCFacing] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialCFacing].active_rule
+    ) {
       for (const ticket of await this.getInitiativesWithoutCustomerFacing(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.initiativeWithoutFinancialCFacing], ticket);
       }
     }
 
     // theme without Owner
-    if (dashboardsConfigs.searchConditions[SearchScripts.themeWithoutOwner] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.themeWithoutOwner].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.themeWithoutOwner] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.themeWithoutOwner].active_rule
+    ) {
       for (const ticket of await this.getThemeWithoutOwner(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.themeWithoutOwner], ticket);
       }
     }
 
     // theme without field (Strategic Objectives)
-    if (dashboardsConfigs.searchConditions[SearchScripts.themeQRFieldSO] && project.key == "QR" && dashboardsConfigs.searchConditions[SearchScripts.themeQRFieldSO].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.themeQRFieldSO] &&
+      project.key == "QR" &&
+      dashboardsConfigs.searchConditions[SearchScripts.themeQRFieldSO].active_rule
+    ) {
       for (const ticket of await this.getThemeWithoutProperField(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.themeQRFieldSO], ticket);
       }
     }
 
     // Tempo tickets without parents
-    if (dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent].active_rule
+    ) {
       const getTEMPO_logsX = await this.getTEMPOLogsX(project, activeWeekNumber);
       for (const ticket of getTEMPO_logsX.issues) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.tickWithTempoNoParent], ticket);
@@ -148,14 +213,25 @@ export class GetIssuesByConditionsForWeekReport {
     }
 
     // Sprint ticket without owner
-    if (dashboardsConfigs.searchConditions[SearchScripts.sprintTicketOwner] && project.key != "QR" && project.key != "ADMIN" && dashboardsConfigs.searchConditions[SearchScripts.sprintTicketOwner].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.sprintTicketOwner] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      dashboardsConfigs.searchConditions[SearchScripts.sprintTicketOwner].active_rule
+    ) {
       for (const ticket of await this.getSprintTicketsWithoutOwner(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.sprintTicketOwner], ticket);
       }
     }
 
     // Sprint ticket without Original Estimate
-    if (dashboardsConfigs.searchConditions[SearchScripts.originalEstimateTicket] && project.key != "QR" && project.key != "ADMIN" && project.key != "RE" && dashboardsConfigs.searchConditions[SearchScripts.originalEstimateTicket].active_rule) {
+    if (
+      dashboardsConfigs.searchConditions[SearchScripts.originalEstimateTicket] &&
+      project.key != "QR" &&
+      project.key != "ADMIN" &&
+      project.key != "RE" &&
+      dashboardsConfigs.searchConditions[SearchScripts.originalEstimateTicket].active_rule
+    ) {
       for (const ticket of await this.getSprintTicketsWithoutOriginalEstimate(queries)) {
         this.addToStructure(projectStructure, dashboardsConfigs.searchConditions[SearchScripts.originalEstimateTicket], ticket);
       }
@@ -277,7 +353,10 @@ export class GetIssuesByConditionsForWeekReport {
       }
 
       if (extendedTicket.quartalTags.length > 0) {
-        log.trace("     QR label Check: " + ticket.key + " status " + extendedTicket.status + " parent: ", extendedTicket.parent ? extendedTicket.parent.issueKey : " No parent " + " Labels: " + extendedTicket.labels);
+        log.trace(
+          "     QR label Check: " + ticket.key + " status " + extendedTicket.status + " parent: ",
+          extendedTicket.parent ? extendedTicket.parent.issueKey : " No parent " + " Labels: " + extendedTicket.labels,
+        );
 
         if (!extendedTicket.labels.includes("24Q3") && extendedTicket.parent && extendedTicket.parent.issueKey == "QR-111") {
           log.trace("      - We have KTLO Initiative");
@@ -303,7 +382,12 @@ export class GetIssuesByConditionsForWeekReport {
         }
 
         if (extendedTicket.parent && extendedTicket.parent.issueKey != "QR-111") {
-          if (extendedTicket.quartalTags.includes("24Q2") && !extendedTicket.quartalTags.includes("24Q3") && !extendedTicket.quartalTags.includes("spillover") && extendedTicket.status == "In Progress") {
+          if (
+            extendedTicket.quartalTags.includes("24Q2") &&
+            !extendedTicket.quartalTags.includes("24Q3") &&
+            !extendedTicket.quartalTags.includes("spillover") &&
+            extendedTicket.status == "In Progress"
+          ) {
             log.trace("  QR label contains 24Q2 but it spillover and status is in progress " + ticket.key);
 
             await this.configApp.jiraServices.issue.updateIssue({
@@ -367,7 +451,10 @@ export class GetIssuesByConditionsForWeekReport {
       const extendedTicket = new ExtendedIssue(ticket);
       if (this.doneStates.includes(extendedTicket.status)) {
         return "DONE";
-      } else if ((extendedTicket.fields["customfield_22047"] != null && extendedTicket.fields["customfield_22047"].value != "") || (extendedTicket.fields["customfield_22048"] != null && extendedTicket.fields["customfield_22048"].value != "")) {
+      } else if (
+        (extendedTicket.fields["customfield_22047"] != null && extendedTicket.fields["customfield_22047"].value != "") ||
+        (extendedTicket.fields["customfield_22048"] != null && extendedTicket.fields["customfield_22048"].value != "")
+      ) {
         return "DONE";
       } else {
         return "TODO";
@@ -423,7 +510,10 @@ export class GetIssuesByConditionsForWeekReport {
       return "REMOVED";
     } else {
       const extendedTicket = new ExtendedIssue(ticket);
-      if ((extendedTicket.fields["customfield_22185"] != null && extendedTicket.fields["customfield_22185"].value != "") || (extendedTicket.fields["customfield_22185"] != null && extendedTicket.fields["customfield_22185"].value != "")) {
+      if (
+        (extendedTicket.fields["customfield_22185"] != null && extendedTicket.fields["customfield_22185"].value != "") ||
+        (extendedTicket.fields["customfield_22185"] != null && extendedTicket.fields["customfield_22185"].value != "")
+      ) {
         return "DONE";
       } else {
         return "TODO";
@@ -505,7 +595,10 @@ export class GetIssuesByConditionsForWeekReport {
         let totalSump = 0;
         for (const childIssue of childIssues.issues) {
           if (response.convertorBetweenIdAndKey[childIssue.id]) {
-            log.trace("           : Child issue " + childIssue.key, " exist in convertor with all hours: " + response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ);
+            log.trace(
+              "           : Child issue " + childIssue.key,
+              " exist in convertor with all hours: " + response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ,
+            );
             totalSump += response.convertorBetweenIdAndKey[childIssue.id].loggedHoursInQ;
           } else {
             log.trace("           : Child issue " + childIssue.key + " not Exist in Convertor");
@@ -517,7 +610,11 @@ export class GetIssuesByConditionsForWeekReport {
     return response;
   }
 
-  private async getTEMPOLogs(projectID: number, projectKey: string, activeWeekNumber: number): Promise<{ convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue; issues: Issue[]; logs: WorkLog[] }> {
+  private async getTEMPOLogs(
+    projectID: number,
+    projectKey: string,
+    activeWeekNumber: number,
+  ): Promise<{ convertorBetweenIdAndKey: ConvertedAndAgregatedHoursByIssue; issues: Issue[]; logs: WorkLog[] }> {
     const result = await this.configApp.tempoService.getUsersWorkLogs({
       projectId: projectID,
       from: moment().week(activeWeekNumber).startOf("quarter").subtract(2, "month").format("YYYY-MM-DD"),

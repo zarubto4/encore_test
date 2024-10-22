@@ -1,12 +1,12 @@
 import moment from "moment/moment.js";
 
-import { ActiveIssueWorkSheetWithIssues } from "./getIssues/_models";
-import { GetPrintedIssuesList } from "./getIssues/getPrintedIssues";
+import { ActiveIssueWorkSheetWithIssues } from "./getIssues/issues.models";
+import { GetPrintedIssuesList } from "./getIssues/getPrintedIssues.service";
 import { KindlyReminderConfigApp } from "../encore.service";
-import { Print } from "./issuesPrint/printIntWorkSheets";
-import { JiraIssueValidator } from "./issueValidation/issueAllInValidator";
-import { TransformationKindlyReminderValidatorRequest } from "../api_models/controller_models";
-import { IssueFilterResponse, IssueListForValidation, IssueListForValidationScriptContent } from "./issueValidation/_models";
+import { Print } from "./issuesPrint/issuePrint.service";
+import { JiraIssueValidator } from "./issueValidation/issueValidation.service";
+import { TransformationKindlyReminderValidatorRequest } from "../api_models/controllers.models";
+import { IssueFilterResponse, IssueListForValidation, IssueListForValidationScriptContent } from "./issueValidation/issueValidation.models";
 import log from "encore.dev/log";
 
 export class JiraBugWeekHunterChecker {

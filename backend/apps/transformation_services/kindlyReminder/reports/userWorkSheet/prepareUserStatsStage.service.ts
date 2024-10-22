@@ -1,6 +1,11 @@
 import { GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { ActiveUserWorkSheet, WeekUserWorkSheet, WeekUserWorkSheetCellIndexes, WeekUserWorkSheetUserContent } from "./_models";
-import { Stats } from "../issuesPrint/_models";
+import {
+  ActiveUserWorkSheet,
+  WeekUserWorkSheet,
+  WeekUserWorkSheetCellIndexes,
+  WeekUserWorkSheetUserContent,
+} from "./prepareManagerStage.models";
+import { Stats } from "../issuesPrint/issuePrint.models";
 import { kindlyReminder_spreadSheetId, kindlyReminder_userWorkSheetId, KindlyReminderConfigApp } from "../../encore.service";
 import log from "encore.dev/log";
 
@@ -28,12 +33,17 @@ export class UserStage {
       };
 
       log.trace("ActiveUserWorkSheet:getActiveUserWorkSheet: get user spreadsheet");
-      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_userWorkSheetId);
+      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(
+        kindlyReminder_spreadSheetId,
+        kindlyReminder_userWorkSheetId,
+      );
       log.trace("ActiveUserWorkSheet:getActiveUserWorkSheet: get rows");
       const rows = await result.sheet.getRows();
       await result.sheet.loadCells("A1:BZ1500");
 
-      log.trace("ActiveUserWorkSheet:getActiveUserWorkSheet: try to find first user line: weekInYearRow" + userWorkSheet.cells.weekInYearRow);
+      log.trace(
+        "ActiveUserWorkSheet:getActiveUserWorkSheet: try to find first user line: weekInYearRow" + userWorkSheet.cells.weekInYearRow,
+      );
 
       for (let i = 5; i < result.sheet.columnCount; i++) {
         const cellWithStats = result.sheet.getCell(userWorkSheet.cells.weekInYearRow, i);
@@ -133,7 +143,9 @@ export class UserStage {
     const sheet: GoogleSpreadsheetWorksheet = result.sheet;
 
     log.trace("printUserStats: User " + userName + " is not in list - WE have to create that on line: " + userWorkSheet.latestIndexOfRow);
-    log.trace("printUserStats: User " + userName + " emailColumn " + userWorkSheet.cells.userCells.userEmailColum + userWorkSheet.latestIndexOfRow);
+    log.trace(
+      "printUserStats: User " + userName + " emailColumn " + userWorkSheet.cells.userCells.userEmailColum + userWorkSheet.latestIndexOfRow,
+    );
 
     const userEmailCell = sheet.getCellByA1(userWorkSheet.cells.userCells.userEmailColum + userWorkSheet.latestIndexOfRow); // access cells using a zero-based index
     const userStatusCell = sheet.getCellByA1(userWorkSheet.cells.userCells.statusUserColum + userWorkSheet.latestIndexOfRow); // access cells using a zero-based index

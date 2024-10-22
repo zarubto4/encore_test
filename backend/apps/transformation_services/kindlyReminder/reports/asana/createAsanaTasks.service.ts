@@ -1,7 +1,7 @@
 import { ProjectStage } from "../projectWorkSheet/prepareProjectStatsStage.service";
-import { GetIssueUserStatistics } from "../getIssues/getIssueStatistics";
-import { AsanaIssueContent } from "./asanaIssueContent";
-import { CreateTaskForIssuesOwner, CreateTaskForProjectOwner, CreateTaskForVP, GetListOfIssues } from "./_models";
+import { GetIssueUserStatistics } from "../getIssues/getIssueStatistics.service";
+import { AsanaIssueContentModel } from "./asanaIssueContent.model";
+import { CreateTaskForIssuesOwner, CreateTaskForProjectOwner, CreateTaskForVP, GetListOfIssues } from "./asanaCreateKR.models";
 import {
   kindlyReminder_asana_followers_to_remove,
   kindlyReminder_asana_project_id,
@@ -20,7 +20,7 @@ export interface GenerateAsanaContent {
   deadline: Moment;
 }
 
-export class CreateAsanaTasks {
+export class CreateAsanaTasksService {
   // -- Private Values -----------------------------------------------------------------------------------------------
   private readonly configApp = new KindlyReminderConfigApp();
 
@@ -194,7 +194,7 @@ export class CreateAsanaTasks {
       assignee: "1204853356727858",
       due_on: content.deadline.format("YYYY-MM-DD"),
       assignee_section: kindlyReminder_asana_project_section_id,
-      html_notes: replaceKeys(new AsanaIssueContent().week_text, {
+      html_notes: replaceKeys(new AsanaIssueContentModel().week_text, {
         ...content,
         ...{
           project_id: kindlyReminder_asana_project_id,
@@ -212,7 +212,7 @@ export class CreateAsanaTasks {
       name: "Week " + content.week_number + " - " + content.owner_name + " - Opened issues(" + content.number_of_issues + ")",
       assignee: content.assign_gid,
       due_on: content.deadline.format("YYYY-MM-DD"),
-      html_notes: replaceKeys(new AsanaIssueContent().vp_text, {
+      html_notes: replaceKeys(new AsanaIssueContentModel().vp_text, {
         ...content,
         ...{
           project_id: kindlyReminder_asana_project_id,
@@ -248,7 +248,7 @@ export class CreateAsanaTasks {
         content.number_of_issues,
       due_on: content.deadline.format("YYYY-MM-DD"),
       assignee: content.assign_gid,
-      html_notes: replaceKeys(new AsanaIssueContent().project_text, {
+      html_notes: replaceKeys(new AsanaIssueContentModel().project_text, {
         ...content,
         ...{
           project_id: kindlyReminder_asana_project_id,
@@ -278,7 +278,7 @@ export class CreateAsanaTasks {
         content.number_of_issues,
       due_on: content.deadline.format("YYYY-MM-DD"),
       assignee: content.assign_gid ? content.assign_gid : null,
-      html_notes: replaceKeys(new AsanaIssueContent().issues_owners_text, {
+      html_notes: replaceKeys(new AsanaIssueContentModel().issues_owners_text, {
         ...content,
         ...{
           project_id: kindlyReminder_asana_project_id,

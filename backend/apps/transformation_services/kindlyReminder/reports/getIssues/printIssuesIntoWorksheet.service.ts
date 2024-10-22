@@ -1,13 +1,13 @@
-import { GetDashBoardAndConditions } from "../dashboard/getDashboardAndConditions";
-import { GetPrintedIssuesList } from "./getPrintedIssues";
+import { GetDashboardAndConditionsService } from "../dashboard/getDashboardAndConditions.service";
+import { GetPrintedIssuesList } from "./getPrintedIssues.service";
 import { ProjectStage } from "../projectWorkSheet/prepareProjectStatsStage.service";
-import { UserStage } from "../userWorkSheet/prepareUserStatsStage";
-import { IssueLog, ResponsibilityOwnerShipAssigment, WriteIssuesContent, WriteIssuesWithAllConditionsContent } from "./_models";
-import { EnuKPI, SearchScripts } from "../dashboard/_models";
-import { ProjectStructure } from "../issuesHunting/_models";
+import { UserStage } from "../userWorkSheet/prepareUserStatsStage.service";
+import { IssueLog, ResponsibilityOwnerShipAssigment, WriteIssuesContent, WriteIssuesWithAllConditionsContent } from "./issues.models";
+import { EnuKPI, SearchScripts } from "../dashboard/dashboardKR.models";
+import { ProjectStructure } from "../issuesHunting/issueHunting.models";
 import { ExtendedIssue } from "../../../../../libs/3partyApis/jira/models/jira_extededIssue";
 
-export class PrintIssuesIntoWorksheet {
+export class PrintIssuesIntoWorksheetService {
   // -- Private Values -----------------------------------------------------------------------------------------------
 
   // -- Constructor  -------------------------------------------------------------------------------------------------
@@ -18,9 +18,11 @@ export class PrintIssuesIntoWorksheet {
   // Print Project ------------------------------------------------------------------------------------------------------------------------
 
   public async printIssuesIntoActiveWeekSheet(structure: ProjectStructure, activeWeekNumber: number) {
-    console.log("PrintIssuesIntoWorksheet:printIssuesIntoActiveWeekSheet: init =========================================================================");
+    console.log(
+      "PrintIssuesIntoWorksheet:printIssuesIntoActiveWeekSheet: init =========================================================================",
+    );
     console.log("PrintIssuesIntoWorksheet:printIssuesIntoActiveWeekSheet: week", activeWeekNumber);
-    const dashboardConfig = await new GetDashBoardAndConditions().getSearchConditions();
+    const dashboardConfig = await new GetDashboardAndConditionsService().getSearchConditions();
     const projectWorkSheet = await new ProjectStage().loadProjects(activeWeekNumber);
     const activeWorkSheetIssue = await new GetPrintedIssuesList().getIssueWorksheet(activeWeekNumber);
     const userWorkSheet = await new UserStage().getActiveUserWorkSheet(activeWeekNumber);
@@ -44,7 +46,13 @@ export class PrintIssuesIntoWorksheet {
 
   private writeIssueWithAllIssuesIntoSpreadSheets(content: WriteIssuesWithAllConditionsContent): void {
     if (content.extendedTicket == null || content.extendedTicket.fields == null) {
-      console.error("writeIssueWithAllIssuesIntoSpreadSheets: ticket is null?", JSON.stringify(content.extendedTicket), "project:", content.extendedTicket.projectKey, JSON.stringify(content.ourIssues));
+      console.error(
+        "writeIssueWithAllIssuesIntoSpreadSheets: ticket is null?",
+        JSON.stringify(content.extendedTicket),
+        "project:",
+        content.extendedTicket.projectKey,
+        JSON.stringify(content.ourIssues),
+      );
       return;
     }
 
@@ -68,35 +76,93 @@ export class PrintIssuesIntoWorksheet {
   }
 
   private writeIssueIntoWorkSheet(content: WriteIssuesContent): void {
-    console.log("writeIssueIntoSpreadSheet trying to print issue:", content.extendedTicket.issueKey, "ourIssue", content.ourIssue.script_name);
+    console.log(
+      "writeIssueIntoSpreadSheet trying to print issue:",
+      content.extendedTicket.issueKey,
+      "ourIssue",
+      content.ourIssue.script_name,
+    );
 
-    const alreadyCreatedIssues: IssueLog[] = content.activeWorkSheetIssue.issueWorkSheet.issueList.filter((is) => is.ticketKey == content.extendedTicket.issueKey);
+    const alreadyCreatedIssues: IssueLog[] = content.activeWorkSheetIssue.issueWorkSheet.issueList.filter(
+      (is) => is.ticketKey == content.extendedTicket.issueKey,
+    );
     if (alreadyCreatedIssues.length > 0 && alreadyCreatedIssues.filter((is) => is.scriptName == content.ourIssue.script_name).length > 0) {
       console.log("writeIssueIntoSpreadSheet issue", content.extendedTicket.issueKey, "already exist in worksheet");
       return;
     }
 
-    const fixedStatusCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.fixedStatusCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const projectKeyCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectKeyCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const ticketKeyCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketKeyCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const statusCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketStatusCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const ticketTypeCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketTypeCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const vicePresidentOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketVPCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const projectOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectOwnerCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const ticketOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketOwnerCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const whoIsResponsibleNameCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.responsibilityOwnerCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const issueCellHowToFixThat = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.howToFixIssueCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const tempoHours = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.tempoHoursCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const reportedCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.issueReportedCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const latestUpdateCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.issueLatestUpdateCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const missingTempoFormula = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.missingInTempoFormulaCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const scriptName = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.scriptNameCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
+    const fixedStatusCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.fixedStatusCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const projectKeyCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectKeyCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const ticketKeyCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketKeyCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const statusCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketStatusCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const ticketTypeCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketTypeCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const vicePresidentOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketVPCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const projectOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectOwnerCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const ticketOwnerCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketOwnerCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const whoIsResponsibleNameCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.responsibilityOwnerCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const issueCellHowToFixThat = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.howToFixIssueCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const tempoHours = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.tempoHoursCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const reportedCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.issueReportedCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const latestUpdateCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.issueLatestUpdateCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const missingTempoFormula = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.missingInTempoFormulaCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const scriptName = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.scriptNameCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
 
-    const projectOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectOwnerEmailCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
+    const projectOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.projectOwnerEmailCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
 
-    const responsibilityOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.responsibilityOwnerEmailCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const ticketOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketOwnerEmailCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
-    const ticketVPEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketVPEmailCell + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow);
+    const responsibilityOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.responsibilityOwnerEmailCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const ticketOwnerEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketOwnerEmailCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
+    const ticketVPEmailCell = content.activeWorkSheetIssue.sheet.getCellByA1(
+      content.activeWorkSheetIssue.issueWorkSheet.cells.cells.ticketVPEmailCell +
+        content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow,
+    );
 
     if (content.ourIssue.kpi_policy == EnuKPI.Mandatory) {
       fixedStatusCell.value = "TODO";
@@ -118,10 +184,17 @@ export class PrintIssuesIntoWorksheet {
     let ticketVPEmailCellTemporaryValue = "";
 
     if (content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey]) {
-      projectOwnerTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name ? content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name : "No owner";
-      projectOwnerEmailTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_email ? content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_email : "No owner";
-      vicePresidentOwnerTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].vp_manager_name;
-      ticketVPEmailCellTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].vp_manager_email;
+      projectOwnerTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name
+        ? content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_name
+        : "No owner";
+      projectOwnerEmailTemporaryValue = content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey]
+        .owner_email
+        ? content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].owner_email
+        : "No owner";
+      vicePresidentOwnerTemporaryValue =
+        content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].vp_manager_name;
+      ticketVPEmailCellTemporaryValue =
+        content.projectWorkSheet.projectOwnerShipOverview.byProject[content.extendedTicket.projectKey].vp_manager_email;
     }
 
     ticketOwnerCell.value = content.extendedTicket.assignee ? content.extendedTicket.assignee.displayName : "No owner";
@@ -130,7 +203,12 @@ export class PrintIssuesIntoWorksheet {
     issueCellHowToFixThat.value = content.ourIssue.how_to_fix_description;
     latestUpdateCell.value = content.extendedTicket.updated.toDateString();
     reportedCell.value = content.extendedTicket.created.toDateString();
-    missingTempoFormula.value = "=if( NE(A" + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ',"DONE"),K' + content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow + ", 0)";
+    missingTempoFormula.value =
+      "=if( NE(A" +
+      content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow +
+      ',"DONE"),K' +
+      content.activeWorkSheetIssue.issueWorkSheet.latestIndexOfRow +
+      ", 0)";
     scriptName.value = content.ourIssue.script_name;
 
     // Special Conditions for QR project
@@ -138,9 +216,12 @@ export class PrintIssuesIntoWorksheet {
       console.log("writeIssueIntoSpreadSheet special condition for QR project");
       if (content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey]) {
         projectOwnerTemporaryValue = content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_name;
-        projectOwnerEmailTemporaryValue = content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_email;
-        vicePresidentOwnerTemporaryValue = content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_name;
-        ticketVPEmailCellTemporaryValue = content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_email;
+        projectOwnerEmailTemporaryValue =
+          content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_email;
+        vicePresidentOwnerTemporaryValue =
+          content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_name;
+        ticketVPEmailCellTemporaryValue =
+          content.dashboardConfig.projectOverride[content.extendedTicket.parent.issueKey].project_owner_email;
       } else {
         projectOwnerTemporaryValue = content.dashboardConfig.projectOverride["else"].project_owner_name;
         projectOwnerEmailTemporaryValue = content.dashboardConfig.projectOverride["else"].project_owner_email;
@@ -242,7 +323,9 @@ export class PrintIssuesIntoWorksheet {
       default: {
         console.log("sortByPriorityOwnership: check First - its Default checking probably by mail?:", priority);
         if (priority.includes("@")) {
-          ownership.responsibleOwner.nameCell.value = ownership.userWorkSheet.userWorkSheet.users[priority] ? ownership.userWorkSheet.userWorkSheet.users[priority].userName : priority;
+          ownership.responsibleOwner.nameCell.value = ownership.userWorkSheet.userWorkSheet.users[priority]
+            ? ownership.userWorkSheet.userWorkSheet.users[priority].userName
+            : priority;
           ownership.responsibleOwner.emailCell.value = priority;
           return;
         }

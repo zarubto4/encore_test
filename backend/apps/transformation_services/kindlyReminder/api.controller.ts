@@ -4,7 +4,7 @@ import {
   TransformationKindlyReminderUniversalRequest,
   TransformationKindlyReminderUniversalResponse,
   TransformationKindlyReminderValidatorRequest,
-} from "./api_models/controller_models";
+} from "./api_models/controllers.models";
 import { IssueAllInHunterGenerator } from "./reports/issueAllInHunterGenerator.service";
 import log from "encore.dev/log";
 

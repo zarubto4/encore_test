@@ -1,6 +1,6 @@
-import { DashboardsConfigs, SearchCondition } from "../dashboard/_models";
-import { ProjectWorkSheet } from "../projectWorkSheet/_models";
-import { ActiveUserWorkSheet } from "../userWorkSheet/_models";
+import { DashboardsConfigs, SearchCondition } from "../dashboard/dashboardKR.models";
+import { ProjectWorkSheet } from "../projectWorkSheet/prepareProjectStatsStage.models";
+import { ActiveUserWorkSheet } from "../userWorkSheet/prepareManagerStage.models";
 import { GoogleSpreadsheet, GoogleSpreadsheetCell, GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
 import { ExtendedIssue } from "../../../../../libs/3partyApis/jira/models/jira_extededIssue";
 

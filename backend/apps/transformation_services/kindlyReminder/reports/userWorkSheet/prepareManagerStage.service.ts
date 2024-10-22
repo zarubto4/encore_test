@@ -1,6 +1,11 @@
 import { GoogleSpreadsheetRow } from "google-spreadsheet";
-import { ManagerStructure, ManagerUserWorkSheet } from "./_models";
-import { kindlyReminder_grouponVPs, kindlyReminder_managersWorkSheetId, kindlyReminder_spreadSheetId, KindlyReminderConfigApp } from "../../encore.service";
+import { ManagerStructure, ManagerUserWorkSheet } from "./prepareManagerStage.models";
+import {
+  kindlyReminder_grouponVPs,
+  kindlyReminder_managersWorkSheetId,
+  kindlyReminder_spreadSheetId,
+  KindlyReminderConfigApp,
+} from "../../encore.service";
 import log from "encore.dev/log";
 
 export class ManagerStage {
@@ -18,7 +23,10 @@ export class ManagerStage {
       return ManagerStage.sheetCopy;
     } else {
       const managerStructure: Record<string, ManagerStructure> = {};
-      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_managersWorkSheetId);
+      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(
+        kindlyReminder_spreadSheetId,
+        kindlyReminder_managersWorkSheetId,
+      );
 
       log.trace("getManagers: get Worksheet done");
       const rows = await result.sheet.getRows();

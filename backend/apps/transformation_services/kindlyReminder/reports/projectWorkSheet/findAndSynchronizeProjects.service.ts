@@ -1,6 +1,12 @@
-import { ManagerStage } from "../userWorkSheet/prepareManagerStage";
-import { Projects, WeekProjectWorkSheetCell } from "./_models";
-import { kindlyReminder_hideThiesVps, kindlyReminder_hideThiesVpsConvertor, kindlyReminder_projectWorkSheetId, kindlyReminder_spreadSheetId, KindlyReminderConfigApp } from "../../encore.service";
+import { ManagerStage } from "../userWorkSheet/prepareManagerStage.service";
+import { Projects, WeekProjectWorkSheetCell } from "./prepareProjectStatsStage.models";
+import {
+  kindlyReminder_hideThiesVps,
+  kindlyReminder_hideThiesVpsConvertor,
+  kindlyReminder_projectWorkSheetId,
+  kindlyReminder_spreadSheetId,
+  KindlyReminderConfigApp,
+} from "../../encore.service";
 
 export class FindAndSynchronizeProjects {
   // -- Private Values -----------------------------------------------------------------------------------------------
@@ -14,7 +20,10 @@ export class FindAndSynchronizeProjects {
     console.log("ProjectStage:prepareProjects: init =========================================================================");
 
     const projects: Projects = {};
-    const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_projectWorkSheetId);
+    const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(
+      kindlyReminder_spreadSheetId,
+      kindlyReminder_projectWorkSheetId,
+    );
     const rows = await result.sheet.getRows();
     await result.sheet.loadCells("A1:BZ30000");
     const managerWorksheet = await new ManagerStage().getManagers();
@@ -24,17 +33,29 @@ export class FindAndSynchronizeProjects {
 
     //
     for (const row of rows) {
-      const projectKey: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber).stringValue;
+      const projectKey: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber,
+      ).stringValue;
 
       if (!projectKey) {
         continue;
       }
 
-      const projectActiveStatus: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.activeColum + row.rowNumber).stringValue;
-      const ownerUserNameCell: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber).stringValue;
-      const ownerEmailCell: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber).stringValue;
-      const vpNameCell: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber).stringValue;
-      const vpEmailCell: string | undefined = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber).stringValue;
+      const projectActiveStatus: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.activeColum + row.rowNumber,
+      ).stringValue;
+      const ownerUserNameCell: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber,
+      ).stringValue;
+      const ownerEmailCell: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber,
+      ).stringValue;
+      const vpNameCell: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber,
+      ).stringValue;
+      const vpEmailCell: string | undefined = result.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber,
+      ).stringValue;
 
       console.log("Project line:", row.rowNumber, "projectKey", projectKey, "status", projectActiveStatus);
 
@@ -65,7 +86,12 @@ export class FindAndSynchronizeProjects {
       console.log("prepareProjects: Jira project:", project.key, "lead", project.lead.displayName);
 
       if (!projects[project.key]) {
-        console.log("prepareProjects: Jira project:", project.key, " - this project is missing in complete overview. Last index", latestIndexOfRow);
+        console.log(
+          "prepareProjects: Jira project:",
+          project.key,
+          " - this project is missing in complete overview. Last index",
+          latestIndexOfRow,
+        );
 
         const projectKey = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectKeyColum + latestIndexOfRow);
         const projectActiveStatus = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.activeColum + latestIndexOfRow);
@@ -82,7 +108,12 @@ export class FindAndSynchronizeProjects {
           projectActiveStatus.value = "READ ONLY";
         }
 
-        console.log("prepareProjects: Jira project:", project.key, " - this project is missing in complete overview. Last index", latestIndexOfRow);
+        console.log(
+          "prepareProjects: Jira project:",
+          project.key,
+          " - this project is missing in complete overview. Last index",
+          latestIndexOfRow,
+        );
         console.log("                             : project.lead?: ", project.lead ? project.lead.displayName : "No lead");
 
         if (project.lead && project.lead.displayName == "Former user") {
@@ -116,8 +147,12 @@ export class FindAndSynchronizeProjects {
 
         latestIndexOfRow++;
       } else {
-        const ownerUserNameCell = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + projects[project.key].row);
-        const ownerEmailCell = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + projects[project.key].row);
+        const ownerUserNameCell = result.sheet.getCellByA1(
+          new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + projects[project.key].row,
+        );
+        const ownerEmailCell = result.sheet.getCellByA1(
+          new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + projects[project.key].row,
+        );
         const projectActiveStatus = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.activeColum + projects[project.key].row);
 
         // Update in every iteration
@@ -139,8 +174,12 @@ export class FindAndSynchronizeProjects {
         }
 
         if (managerWorksheet && project.lead.displayName && managerWorksheet.managerStructure[project.lead.displayName]) {
-          const managerNameCell = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + projects[project.key].row);
-          const managerEmailCell = result.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + projects[project.key].row);
+          const managerNameCell = result.sheet.getCellByA1(
+            new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + projects[project.key].row,
+          );
+          const managerEmailCell = result.sheet.getCellByA1(
+            new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + projects[project.key].row,
+          );
 
           if (managerNameCell.stringValue == "No VP" || !managerNameCell.stringValue) {
             if (managerWorksheet.managerStructure[project.lead.displayName].vicePresidentLevelManager) {

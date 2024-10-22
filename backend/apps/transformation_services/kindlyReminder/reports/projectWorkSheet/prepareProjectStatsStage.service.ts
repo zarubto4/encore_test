@@ -1,6 +1,14 @@
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { AddProjectToMap, FindRightWeekColum, Projects, ProjectsOverview, ProjectWorkSheet, WeekProjectWorkSheet, WeekProjectWorkSheetCell } from "./_models";
-import { Stats } from "../issuesPrint/_models";
+import {
+  AddProjectToMap,
+  FindRightWeekColum,
+  Projects,
+  ProjectsOverview,
+  ProjectWorkSheet,
+  WeekProjectWorkSheet,
+  WeekProjectWorkSheetCell,
+} from "./prepareProjectStatsStage.models";
+import { Stats } from "../issuesPrint/issuePrint.models";
 import { kindlyReminder_projectWorkSheetId, kindlyReminder_spreadSheetId, KindlyReminderConfigApp } from "../../encore.service";
 import { SpreadSheetWorkSheet } from "../../../../../libs/3partyApis/googleDocs/models/config";
 
@@ -19,7 +27,10 @@ export class ProjectStage {
     if (ProjectStage.weekSheetCopy[activeWeek + ""] != null) {
       return ProjectStage.weekSheetCopy[activeWeek + ""];
     } else {
-      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(kindlyReminder_spreadSheetId, kindlyReminder_projectWorkSheetId);
+      const result = await this.configApp.googleServices.spreadsheet.getSpreadsheetWithWorksheet(
+        kindlyReminder_spreadSheetId,
+        kindlyReminder_projectWorkSheetId,
+      );
       const rows = await result.sheet.getRows();
       await result.sheet.loadCells("A1:BZ30000");
 
@@ -60,7 +71,9 @@ export class ProjectStage {
       throw new Error("Missing active week colum in project Stats");
     }
 
-    const activeWeekReportedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
+    const activeWeekReportedIssuesCell = sheet.getCellByA1(
+      userWorkSheet.activeWeekColumReportedIssues + userWorkSheet.project[projectKey].row,
+    ); // access cells using a zero-based index
     const activeWeekFixedIssuesCell = sheet.getCellByA1(userWorkSheet.activeWeekColumFixedIssues + userWorkSheet.project[projectKey].row); // access cells using a zero-based index
 
     activeWeekReportedIssuesCell.value = stats.TODO + stats.RECOMMENDED + stats.DONE + stats.SKIP + stats["Cap Labour"];
@@ -77,7 +90,9 @@ export class ProjectStage {
     };
 
     for (const row of rows) {
-      const project: string | undefined = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber).stringValue;
+      const project: string | undefined = sheet.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber,
+      ).stringValue;
 
       if (project == undefined) {
         continue;
@@ -87,12 +102,16 @@ export class ProjectStage {
         projectLog: projectOwnerShipOverview,
         project: project,
         owner: {
-          ownerUserName: sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber).stringValue ?? "",
-          ownerUserEmail: sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber).stringValue ?? "",
+          ownerUserName:
+            sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber).stringValue ?? "",
+          ownerUserEmail:
+            sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber).stringValue ?? "",
         },
         manager: {
-          vpManagerName: sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber).stringValue ?? "",
-          vpManagerEmail: sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber).stringValue ?? "",
+          vpManagerName:
+            sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber).stringValue ?? "",
+          vpManagerEmail:
+            sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber).stringValue ?? "",
         },
       });
     }
@@ -120,11 +139,19 @@ export class ProjectStage {
       const projectKey = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectKeyColum + row.rowNumber).stringValue;
       const projectActiveStatus = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.activeColum + row.rowNumber).stringValue;
 
-      const ownerUserNameCell = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber).stringValue;
-      const ownerEmailCell = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber).stringValue;
+      const ownerUserNameCell = sheet.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerNameColum + row.rowNumber,
+      ).stringValue;
+      const ownerEmailCell = sheet.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerEmailColum + row.rowNumber,
+      ).stringValue;
 
-      const vpNameCell = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber).stringValue;
-      const vpEmailCell = sheet.sheet.getCellByA1(new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber).stringValue;
+      const vpNameCell = sheet.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerLeaderNameColum + row.rowNumber,
+      ).stringValue;
+      const vpEmailCell = sheet.sheet.getCellByA1(
+        new WeekProjectWorkSheetCell().cell.projectOwnerLeaderEmailColum + row.rowNumber,
+      ).stringValue;
 
       if (!projectKey || projectKey == "") {
         continue;
@@ -178,12 +205,14 @@ export class ProjectStage {
       addProject.projectLog.byOwnerEmail[addProject.owner.ownerUserEmail] = {};
     }
 
-    addProject.projectLog.byOwnerEmail[addProject.owner.ownerUserEmail][addProject.project] = addProject.projectLog.byProject[addProject.project];
+    addProject.projectLog.byOwnerEmail[addProject.owner.ownerUserEmail][addProject.project] =
+      addProject.projectLog.byProject[addProject.project];
 
     if (!addProject.projectLog.byVicePresidentEmail[addProject.manager.vpManagerEmail]) {
       addProject.projectLog.byVicePresidentEmail[addProject.manager.vpManagerEmail] = {};
     }
 
-    addProject.projectLog.byVicePresidentEmail[addProject.manager.vpManagerEmail][addProject.project] = addProject.projectLog.byProject[addProject.project];
+    addProject.projectLog.byVicePresidentEmail[addProject.manager.vpManagerEmail][addProject.project] =
+      addProject.projectLog.byProject[addProject.project];
   }
 }

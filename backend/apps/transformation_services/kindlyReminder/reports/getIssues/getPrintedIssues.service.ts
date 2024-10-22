@@ -1,6 +1,6 @@
 import { GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { IssueStage } from "./prepareIssuesSheetStage";
-import { ActiveIssueWorkSheetWithIssues, IssueWorkSheet, WeekIssueWorkSheetCellIndexes } from "./_models";
+import { IssueStage } from "./prepareIssuesSheetStage.service";
+import { ActiveIssueWorkSheetWithIssues, IssueWorkSheet, WeekIssueWorkSheetCellIndexes } from "./issues.models";
 import { kindlyReminder_spreadSheetId, KindlyReminderConfigApp } from "../../encore.service";
 
 export class GetPrintedIssuesList {

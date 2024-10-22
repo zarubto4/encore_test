@@ -1,5 +1,5 @@
 import moment, { Moment } from "moment";
-import { IssueLog } from "../getIssues/_models";
+import { IssueLog } from "../getIssues/issues.models";
 
 export interface CreateTaskForVP {
   owner_name: string;

@@ -1,22 +1,22 @@
 import moment from "moment";
-import { TransformationKindlyReminderUniversalRequest } from "../api_models/controller_models";
-import { GetIssueUserStatistics } from "./getIssues/getIssueStatistics";
-import { UpdateWeekConditionIntoWeekOverview } from "./dashboard/updateWeekTotalReport";
-import { GetDashBoardAndConditions } from "./dashboard/getDashboardAndConditions";
-import { CloseAsanaTicketsFromLastWeek } from "./asana/asanaLastWeekCloser";
-import { CreateAsanaTasks } from "./asana/createAsanaTasks";
-import { GetIssuesByConditionsForWeekReport } from "./issuesHunting/getIssuesByConditionsForWeekReport";
+import { TransformationKindlyReminderUniversalRequest } from "../api_models/controllers.models";
+import { GetIssueUserStatistics } from "./getIssues/getIssueStatistics.service";
+import { UpdateWeekConditionIntoWeekOverview } from "./dashboard/updateWeekTotalReport.service";
+import { GetDashboardAndConditionsService } from "./dashboard/getDashboardAndConditions.service";
+import { CloseAsanaTicketsFromLastWeek } from "./asana/asanaLastWeekCloser.service";
+import { CreateAsanaTasksService } from "./asana/createAsanaTasks.service";
+import { GetIssuesByConditionsForWeekReportService } from "./issuesHunting/getIssuesByConditionsForWeekReport.service";
 import { ProjectStage } from "./projectWorkSheet/prepareProjectStatsStage.service";
-import { IssueStage } from "./getIssues/prepareIssuesSheetStage";
-import { GetPrintedIssuesList } from "./getIssues/getPrintedIssues";
-import { Print } from "./issuesPrint/printIntWorkSheets";
-import { GetFixableIssuesByAutomation } from "./issuesHunting/fixinCapLabourScripts";
+import { IssueStage } from "./getIssues/prepareIssuesSheetStage.service";
+import { GetPrintedIssuesList } from "./getIssues/getPrintedIssues.service";
+import { Print } from "./issuesPrint/issuePrint.service";
+import { GetFixableIssuesByAutomation } from "./issuesHunting/fixinCapLabourScripts.service";
 import { FindAndSynchronizeProjects } from "./projectWorkSheet/findAndSynchronizeProjects.service";
-import { SynchronizeUserWorkSheet } from "./userWorkSheet/synchroniseUserList";
-import { UserStage } from "./userWorkSheet/prepareUserStatsStage";
-import { ManagerStage } from "./userWorkSheet/prepareManagerStage";
+import { SynchronizeUserWorkSheet } from "./userWorkSheet/synchroniseUserList.service";
+import { UserStage } from "./userWorkSheet/prepareUserStatsStage.service";
+import { ManagerStage } from "./userWorkSheet/prepareManagerStage.service";
 import { kindlyReminder_testProjectConditions } from "../encore.service";
-import { IssueProjectStructure } from "./issuesHunting/_models";
+import { IssueProjectStructure } from "./issuesHunting/issueHunting.models";
 import log from "encore.dev/log";
 
 export class IssueAllInHunterGenerator {
@@ -44,13 +44,13 @@ export class IssueAllInHunterGenerator {
         const allowedProjects = await new ProjectStage().loadProjects(script.week);
         for (const projectKey of allowedProjects.allowedProjects) {
           // Find and print all issues by search conditions
-          await new GetIssuesByConditionsForWeekReport().getProjectIssuesAndPrint(projectKey, script.week);
+          await new GetIssuesByConditionsForWeekReportService().getProjectIssuesAndPrint(projectKey, script.week);
         }
         break;
       }
 
       case "create_asana_tickets": {
-        await new CreateAsanaTasks().generateAsanaTasks({
+        await new CreateAsanaTasksService().generateAsanaTasks({
           week_number: script.week,
           created: moment().week(script.week).startOf("week").subtract(1, "day"),
           deadline: moment().week(script.week).startOf("week").subtract(1, "day").add(6, "day"),
@@ -64,7 +64,7 @@ export class IssueAllInHunterGenerator {
       }
 
       case "read_dashboard": {
-        const dashboardsConfigs = await new GetDashBoardAndConditions().getSearchConditions();
+        const dashboardsConfigs = await new GetDashboardAndConditionsService().getSearchConditions();
         log.trace(
           "Result - Request script done mandatoryEpicDesignationFields:\n" +
             JSON.stringify(dashboardsConfigs.mandatoryEpicDesignationFields, null, 2),
@@ -162,7 +162,7 @@ export class IssueAllInHunterGenerator {
     let issueProjectStructure: IssueProjectStructure = {};
     for (const projectKey of projectWorkSheet.allowedProjects) {
       // Find and print all issues by search conditions
-      const printResult = await new GetIssuesByConditionsForWeekReport().getProjectIssuesAndPrint(projectKey, activeWeekNumber);
+      const printResult = await new GetIssuesByConditionsForWeekReportService().getProjectIssuesAndPrint(projectKey, activeWeekNumber);
       issueProjectStructure = Object.assign(issueProjectStructure, printResult);
     }
 

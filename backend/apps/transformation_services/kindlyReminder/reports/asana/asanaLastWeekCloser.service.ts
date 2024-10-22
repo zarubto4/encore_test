@@ -1,4 +1,4 @@
-import { AsanaIssueContent } from "./asanaIssueContent";
+import { AsanaIssueContentModel } from "./asanaIssueContent.model";
 import { AsanaTicket } from "../../../../../libs/3partyApis/asana/models/asana_resultsModels";
 import { kindlyReminder_asana_project_id, KindlyReminderConfigApp } from "../../encore.service";
 
@@ -50,7 +50,7 @@ export class CloseAsanaTicketsFromLastWeek {
       console.log("CloseAsanaTicketsFromLastWeek:closeSubtask", space, "Ticket:", subtask.name, "status", subtask.completed);
       if (!subtask.completed) {
         await this.configApp.asanaService.comments.createComment(subtask.gid, {
-          html_text: new AsanaIssueContent().kindly_reminder_close_message,
+          html_text: new AsanaIssueContentModel().kindly_reminder_close_message,
         });
 
         console.log("CloseAsanaTicketsFromLastWeek:closeSubtask", space, space, "Ticket:", subtask.name, "comment created");
