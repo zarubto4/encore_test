@@ -24,7 +24,7 @@ export class JiraBugWeekHunterChecker {
   }
 
   public async validate(activeWeekNumber: number): Promise<void> {
-    log.trace("JiraBugWeekHunterChecker:validate: call getActiveUserWorkSheet");
+    log.trace("JiraBugWeekHunterChecker:validate: call getActiveUserWorkSheet: activeWeekNumber", activeWeekNumber);
 
     // const userWorkSheet = await new UserStage().getActiveUserWorkSheet(activeWeekNumber);
     // const projectsWorkSheet = await new ProjectStage().loadProjects(activeWeekNumber);

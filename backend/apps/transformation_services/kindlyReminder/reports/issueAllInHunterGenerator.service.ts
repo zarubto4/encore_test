@@ -47,6 +47,10 @@ export class IssueAllInHunterGenerator {
                 break;
        }*/
 
+
+
+      {{#=}}(({{issue.timetracking.originalEstimateSeconds}}-{{issue.timetracking.timeSpentSeconds}})/{{3600}}){{/}}
+
       case "prepare_issue_stage": {
         await new IssueStage().getActiveOrCreateActiveIssueWorkSheet(script.week);
         break;
@@ -188,8 +192,8 @@ export class IssueAllInHunterGenerator {
     log.trace("generate: printProjectStats done:" + printProjectResult);
 
     // Print user Stats --------------------------------------------------------------------------------------------
-    const printUserResult = await new Print().printUserStats(activeWeekNumber);
-    log.trace("generate: printProjectStats done:" + printUserResult);
+    // const printUserResult = await new Print().printUserStats(activeWeekNumber);
+    // log.trace("generate: printProjectStats done:" + printUserResult);
 
     // Create Asana Tasks ------------------------------------------------------------------------------------
     /* const createAsanaTaskResult = await new CreateAsanaTasks().generateAsanaTasks({
