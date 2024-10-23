@@ -98,20 +98,20 @@ export abstract class WebSocketClient {
     message: IWebSocketMessageToServer,
     options?: IWebSocketRequestOptions
   ): Promise<IWebSocketMessageFromServer> {
-    console.log('WebSocketClient:sendWithResponse: try to send Message: ', message);
+    console.log('WebSocketClient::sendWithResponse:: try to send Message: ', message);
 
     message.response_type = 'message_with_expected_response';
 
     const request: WebSocketRequest = new WebSocketRequest(this, message, options);
-    console.log('WebSocketClient:sendWithResponse: try to send Request: ', request);
+    console.log('WebSocketClient::sendWithResponse:: try to send Request: ', request);
 
     if (this.messageBuffer[message.message_id]) {
-      console.log('WebSocketClient::sendWithResponse: messageBuffer contains message already');
+      console.log('WebSocketClient::sendWithResponse:: messageBuffer contains message already');
       return null;
     }
 
     this.messageBuffer[message.message_id] = request;
-    console.log('WebSocketClient::sendWithResponse: ass to messageBuffer under Message ID', message.message_id);
+    console.log('WebSocketClient::sendWithResponse:: ass to messageBuffer under Message ID', message.message_id);
 
     request.onCompleted((id: string) => {
       console.log('WebSocketClient::sendWithResponse:: onCompleted - id', id, 'message_id:', message.message_id);

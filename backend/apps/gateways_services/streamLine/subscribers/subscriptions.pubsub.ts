@@ -24,7 +24,11 @@ export interface SendMessageToClient {
 const streamLine = new Subscription(streamLine_sub_clientMessage, "gatewayService-streamLine-sendToClient", {
   handler: async (event) => {
     try {
-      log.trace("streamLine: incoming message for WebSocket", { ...event, user_connected: connectedStreams.has(event.user_id) });
+      log.trace("streamLine: incoming message for WebSocket", {
+        ...event,
+        subscription: "gatewayService-streamLine-sendToClient",
+        user_connected: connectedStreams.has(event.user_id),
+      });
       if (connectedStreams.has(event.user_id)) {
         const userConnections = connectedStreams.get(event.user_id);
         if (userConnections) {

@@ -1,9 +1,5 @@
 import { Service } from "encore.dev/service";
 import { GrouponServiceProvider } from "../../../libs/core/service_management/models/models";
-import { SendMessageToClient } from "./subscribers/subscriptions.pubsub";
-import { Topic } from "encore.dev/pubsub";
-import { StreamLineDefaultInMessage, StreamLineDefaultOutMessage } from "./models/request_models.models";
-import { StreamInOut } from "encore.dev/api";
 
 // ==== SERVICE ========================================================================================================
 
@@ -36,11 +32,7 @@ new GrouponServiceProvider(service, {
 
 // ==== AVAILABLE EMITTED TOPICS =======================================================================================
 
-// 👾 Emit to this topic - don't subscribe it.
-export const streamLine_sub_clientMessage = new Topic<SendMessageToClient>("streamLine_sub_clientMessage", {
-  deliveryGuarantee: "at-least-once",
-});
-
 // ==== SERVICE CONFIG =================================================================================================
 
-export const connectedStreams = new Map<string, Map<string, StreamInOut<StreamLineDefaultInMessage, StreamLineDefaultOutMessage>>>(); // Map to hold all connected streams, <user_id, <connect_id, ws>>
+// Store all subscribed websockets for Notifications
+export const connectedStreams = new Map<string, string[]>(); // Map to hold all connected streams, <user_id, connect_id[]>

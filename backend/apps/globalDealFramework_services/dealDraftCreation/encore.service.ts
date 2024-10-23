@@ -1,7 +1,7 @@
 import { Service } from "encore.dev/service";
 import { GrouponServiceProvider } from "../../../libs/core/service_management/models/models";
 import { Topic } from "encore.dev/pubsub";
-import { GlobalDealFrameworkMessage } from "./api_models/subscriptions.models";
+import { IStreamOneTimeResponse } from "../../gateways_services/streamLine/models/streamLine.models";
 
 // ==== SERVICE ========================================================================================================
 
@@ -30,10 +30,11 @@ new GrouponServiceProvider(service, {
 
 // ==== Available Emitted Topics =======================================================================================
 
-export const dealDraftCreation_dealDraftWs = new Topic<GlobalDealFrameworkMessage>("dealDraftCreation_dealDraftWs", {
+export const dealDraftCreation_dealDraftWs = new Topic<IStreamOneTimeResponse>("dealDraftCreation_dealDraftWs", {
   deliveryGuarantee: "at-least-once",
 });
-export const userNotification_notificationsWs = new Topic<GlobalDealFrameworkMessage>("userNotification_notificationsWs", {
+
+export const userNotification_notificationsWs = new Topic<IStreamOneTimeResponse>("userNotification_notificationsWs", {
   deliveryGuarantee: "at-least-once",
 });
 

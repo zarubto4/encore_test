@@ -1,68 +1,38 @@
 import { Subscription } from "encore.dev/pubsub";
 import { connectedStreams } from "../encore.service";
 import log from "encore.dev/log";
-import {
-  ServiceSubscribeListEnum,
-  ServiceSubscribeResponseType,
-  StreamLineDefaultInMessage,
-  StreamLineDefaultOutMessage,
-} from "../models/request_models.models";
 import { userNotification_notificationsWs } from "../../../globalDealFramework_services/dealDraftCreation/encore.service";
-import { StreamInOut } from "encore.dev/api";
-import { GlobalDealFrameworkMessage } from "../../../globalDealFramework_services/dealDraftCreation/api_models/subscriptions.models";
+import { streamLine_sub_clientMessage } from "../../streamLine/encore.service";
+import { StreamResponse } from "../../streamLine/models/streamLine.models";
 
-// ---  Send Messages To Client  ---------------------------------------------------------------------------------------
-export interface SendMessageToClient {
-  user_id: string;
-  connection_session_id?: string; // Optional!
-  service: ServiceSubscribeListEnum;
-  message_id?: string; // UUID - Always optional
-  type?: ServiceSubscribeResponseType; // Always optional
-  topic: string;
-  message: unknown;
-}
+// ---  Subscribing and collection all websockets subscribing notifications  -------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const streamLine = new Subscription(userNotification_notificationsWs, "gatewayService-streamLine-sendToClient", {
   handler: async (event) => {
     try {
-      log.trace("streamLine: incoming message for WebSocket", { ...event, user_connected: connectedStreams.has(event.user_id) });
-      if (connectedStreams.has(event.user_id)) {
-        const userConnections = connectedStreams.get(event.user_id);
-        if (userConnections) {
-          if (!event.connection_session_id) {
-            for (const [connection_session_id, stream] of userConnections) {
-              await send(event, connection_session_id, stream);
-            }
-          } else {
-            const userSessionConnections = userConnections.get(event.connection_session_id);
-            if (userSessionConnections) {
-              await send(event, event.connection_session_id, userSessionConnections);
-            }
-          }
-        }
+      log.trace("streamLine: incoming message for WebSocket", {
+        ...event,
+        subscription: "gatewayService-streamLine-sendToClient",
+        user_connected: connectedStreams.has(event.user_id),
+      });
+
+      const userConnections = connectedStreams.get(event.user_id);
+
+      if (userConnections == null) {
+        connectedStreams.set(event.user_id, [event.connection_session_id]);
+      } else {
+        userConnections.push(event.connection_session_id);
       }
+
+      await streamLine_sub_clientMessage.publish(
+        new StreamResponse(event, {
+          status: "success",
+        }),
+      );
     } catch (error) {
       console.log(error);
       log.error("streamLine: error", error);
     }
   },
 });
-
-async function send(
-  event: GlobalDealFrameworkMessage,
-  connection_session_id: string,
-  userSessionConnections: StreamInOut<StreamLineDefaultInMessage, StreamLineDefaultOutMessage>,
-) {
-  await userSessionConnections.send({
-    user_id: event.user_id,
-    connection_session_id: connection_session_id,
-    service: "ws_core",
-    response_type: "message",
-    topic: event.topic,
-    message_id: event.message_id ? event.message_id : crypto.randomUUID(),
-    message: {
-      status: "success",
-    },
-  });
-}

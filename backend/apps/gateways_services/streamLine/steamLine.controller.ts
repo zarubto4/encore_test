@@ -14,6 +14,7 @@ import {
 import { api, StreamInOut } from "encore.dev/api";
 import { gatewayService_rbac } from "~encore/clients";
 import log from "encore.dev/log";
+import { StreamNessage } from "./models/streamLine.models";
 
 /**
  * All Supported Services
@@ -42,19 +43,33 @@ export const websocket = api.streamInOut<StreamLineDefaultHandshake, StreamLineD
 
     try {
       for await (const chatMessage of neverEndingStream) {
+        const streamMessage = new StreamNessage(chatMessage, validatedHandshake);
+
         switch (chatMessage.service) {
+          /**
+           *
+           *
+           *
+           */
           // 👾👾👾 START HERE 👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾 //
 
           case "global_deal_framework": {
-            await dealDraftCreation_dealDraftWs.publish({ ...chatMessage, ...validatedHandshake });
+            await dealDraftCreation_dealDraftWs.publish(streamMessage);
             break;
           }
+
           case "ws_core": {
-            await userNotification_notificationsWs.publish({ ...chatMessage, ...validatedHandshake });
+            console.log("Posílám na notifikační kanál!");
+            await userNotification_notificationsWs.publish(streamMessage);
             break;
           }
 
           // 👾👾👾 END HERE 👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾👾 //
+          /**
+           *
+           *
+           *
+           */
         }
         // Always send receive confirmation for an incoming message
         if (chatMessage.response_type == "message") {

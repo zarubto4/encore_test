@@ -48,16 +48,11 @@ export class SynchronizeUserWorkSheet {
 
     // Srt Emails for missing Mangers
     for (const userKey of Object.keys(result.userWorkSheet.users)) {
-      if (
-        result.userWorkSheet.users[userKey].manager &&
-        !result.userWorkSheet.users[userKey].manager.managerEmail &&
-        result.userWorkSheet.users[userKey].manager.managerName
-      ) {
-        log.trace("   - we are looking for manager: " + result.userWorkSheet.users[userKey].manager.managerName);
+      const manager = result.userWorkSheet.users[userKey].manager;
+      if (manager && !manager.managerEmail && manager.managerName) {
+        log.trace("   - we are looking for manager: " + manager.managerName);
         const found: User[] = users.filter(
-          (us) =>
-            result.userWorkSheet.users[userKey].manager != null &&
-            us.displayName == result.userWorkSheet.users[userKey].manager.managerName,
+          (us) => result.userWorkSheet.users[userKey].manager != null && us.displayName == manager.managerName,
         );
 
         if (found.length > 0) {
@@ -65,7 +60,7 @@ export class SynchronizeUserWorkSheet {
             result.userWorkSheet.cells.managerCells.managerEmailColum + result.userWorkSheet.users[userKey].row,
           ).value = found[0].emailAddress;
         } else {
-          log.trace("   -  manager not found in JIRA list: Manager Name:", result.userWorkSheet.users[userKey].manager.managerName);
+          log.trace("   -  manager not found in JIRA list: Manager Name:", manager.managerName);
         }
       } else {
         log.trace("   - user not contains any fragment of manager");

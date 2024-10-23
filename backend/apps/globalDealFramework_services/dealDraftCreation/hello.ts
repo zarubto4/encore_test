@@ -6,24 +6,26 @@ import { streamLine_sub_clientMessage } from "../../gateways_services/streamLine
 /**
  * Basic Description
  */
-export const api_controller = api({ expose: true, method: "GET", path: "/hi/:name" }, async (params: DefaultRequest1): Promise<DefaultResponse> => {
-  const msg = `hi ${params.name}! From service 1`;
+export const api_controller = api(
+  { expose: true, method: "GET", path: "/hi/:name" },
+  async (params: DefaultRequest1): Promise<DefaultResponse> => {
+    const msg = `hi ${params.name}! From service 1`;
 
-  log.trace("Incoming Message");
+    log.trace("Incoming Message");
 
-  await streamLine_sub_clientMessage.publish({
-    userId: params.name,
-    service: "global_deal_framework",
-    message: {
+    await streamLine_sub_clientMessage.publish({
+      user_id: params.name,
+      connection_session_id: params.name,
+      service: "global_deal_framework",
       topic: "topic",
-      content: {
+      message: {
         msg: params.name,
       },
-    },
-  });
+    });
 
-  return { message: msg };
-});
+    return { message: msg };
+  },
+);
 
 interface DefaultRequest1 {
   name: string;

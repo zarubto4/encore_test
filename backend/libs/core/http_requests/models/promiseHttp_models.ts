@@ -7,7 +7,7 @@ export interface PromiseQuery {
 }
 
 export interface PromiseError {
-  response: undefined;
+  response: object | undefined;
   code: number | undefined;
   message: string | undefined;
 }
