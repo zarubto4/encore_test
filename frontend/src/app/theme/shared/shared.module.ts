@@ -14,6 +14,7 @@ import { IconModule } from '@ant-design/icons-angular';
 
 // bootstrap import
 import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { PartialsModule } from '../../component_templates/_template_components.module';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@
     NgbCollapseModule,
     NgScrollbarModule,
     CardComponent,
-    IconModule
+    IconModule,
+    PartialsModule
   ],
   exports: [
     CommonModule,
@@ -41,7 +43,8 @@ import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@
     NgbCollapseModule,
     NgScrollbarModule,
     CardComponent,
-    IconModule
+    IconModule,
+    PartialsModule
   ],
   declarations: [SpinnerComponent]
 })

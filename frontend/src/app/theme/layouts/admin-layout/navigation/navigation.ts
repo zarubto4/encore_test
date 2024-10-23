@@ -36,6 +36,7 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
+  /*
   {
     id: 'authentication',
     title: 'Authentication',
@@ -63,7 +64,8 @@ export const NavigationItems: NavigationItem[] = [
         breadcrumbs: false
       }
     ]
-  },
+  },*/
+  /*
   {
     id: 'utilities',
     title: 'UI Components',
@@ -97,17 +99,17 @@ export const NavigationItems: NavigationItem[] = [
         external: true
       }
     ]
-  },
+  },*/
 
   {
     id: 'other',
-    title: 'Other',
+    title: 'Deal Creation Tool',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
         id: 'sample-page',
-        title: 'Sample Page',
+        title: 'Deal Templates',
         type: 'item',
         url: '/sample-page',
         classes: 'nav-item',

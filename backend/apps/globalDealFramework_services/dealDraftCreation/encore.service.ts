@@ -30,7 +30,12 @@ new GrouponServiceProvider(service, {
 
 // ==== Available Emitted Topics =======================================================================================
 
-export const dealDraftCreation_dealDraftWs = new Topic<GlobalDealFrameworkMessage>("dealDraftCreation_dealDraftWs", { deliveryGuarantee: "at-least-once" });
+export const dealDraftCreation_dealDraftWs = new Topic<GlobalDealFrameworkMessage>("dealDraftCreation_dealDraftWs", {
+  deliveryGuarantee: "at-least-once",
+});
+export const userNotification_notificationsWs = new Topic<GlobalDealFrameworkMessage>("userNotification_notificationsWs", {
+  deliveryGuarantee: "at-least-once",
+});
 
 // ==== SERVICE CONFIG =================================================================================================
 

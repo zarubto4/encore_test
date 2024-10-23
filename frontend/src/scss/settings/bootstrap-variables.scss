@@ -36,7 +36,7 @@ $colors: (
 );
 // scss-docs-end colors-map
 
-$primary: $blue; // change
+$primary: $green; // change
 $secondary: $secondary; // change
 $success: $green; // change
 $info: $cyan; // change
@@ -72,15 +72,15 @@ $color-contrast-light: $white;
 
 // fusv-disable
 $blues: (
-  'blue-100': $blue-100,
-  'blue-200': $blue-200,
-  'blue-300': $blue-300,
-  'blue-400': $blue-400,
-  'blue-500': $blue-500,
-  'blue-600': $blue-600,
-  'blue-700': $blue-700,
-  'blue-800': $blue-800,
-  'blue-900': $blue-900
+  'blue-100': $green-100,
+  'blue-200': $green-200,
+  'blue-300': $green-300,
+  'blue-400': $green-400,
+  'blue-500': $green-500,
+  'blue-600': $green-600,
+  'blue-700': $green-700,
+  'blue-800': $green-800,
+  'blue-900': $green-900
 );
 
 // Characters which are escaped by the escape-svg function

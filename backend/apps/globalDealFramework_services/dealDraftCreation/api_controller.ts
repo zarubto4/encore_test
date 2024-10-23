@@ -5,7 +5,7 @@ import { dealDraftCreation_dealDraftWs } from "./encore.service";
 new Subscription(dealDraftCreation_dealDraftWs, "dealDraftCreation_dealDraftWs_subscribeDCD", {
   handler: async (event) => {
     try {
-      switch (event.message.topic) {
+      switch (event.topic) {
         case "test1": {
           break;
         }

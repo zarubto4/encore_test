@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
-import { SharedModule } from '../theme/shared/shared.module';
 
 @Component({
   selector: 'template-default-page',
   standalone: true,
-  imports: [SharedModule],
+  imports: [],
   template: `
     <div class="row">
       <div class="col-sm-12">
-        <div #pageBody></div>
+        <div #pageBody>
+          <ng-content select="[pageBody]"></ng-content>
+        </div>
       </div>
     </div>
   `,
-  styleUrls: ['./sample-page.component.scss']
+  styleUrls: []
 })
-export default class SamplePageComponent {}
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export default class DefaultPageComponent {}

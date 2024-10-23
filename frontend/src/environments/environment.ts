@@ -3,6 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 import packageInfo from '../../package.json';
+import { Injectable } from '@angular/core';
 
 export const environment = {
   appVersion: packageInfo.version,
@@ -17,5 +18,29 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
-
 // import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+
+export interface ProductEnvironmentConfig {
+  backend_url: string;
+  application_url: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductEnvironment {
+  private readonly currentURL: string;
+
+  constructor() {
+    this.currentURL = window.location.href;
+  }
+
+  public getProduct(): ProductEnvironmentConfig {
+    const project: ProductEnvironmentConfig = {
+      backend_url: 'localhost:4200',
+      application_url: this.currentURL
+    };
+
+    return project;
+  }
+}

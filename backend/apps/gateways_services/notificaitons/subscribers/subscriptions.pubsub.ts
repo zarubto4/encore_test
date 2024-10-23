@@ -1,5 +1,5 @@
 import { Subscription } from "encore.dev/pubsub";
-import { connectedStreams, streamLine_sub_clientMessage } from "../encore.service";
+import { connectedStreams } from "../encore.service";
 import log from "encore.dev/log";
 import {
   ServiceSubscribeListEnum,
@@ -7,7 +7,9 @@ import {
   StreamLineDefaultInMessage,
   StreamLineDefaultOutMessage,
 } from "../models/request_models.models";
+import { userNotification_notificationsWs } from "../../../globalDealFramework_services/dealDraftCreation/encore.service";
 import { StreamInOut } from "encore.dev/api";
+import { GlobalDealFrameworkMessage } from "../../../globalDealFramework_services/dealDraftCreation/api_models/subscriptions.models";
 
 // ---  Send Messages To Client  ---------------------------------------------------------------------------------------
 export interface SendMessageToClient {
@@ -21,7 +23,7 @@ export interface SendMessageToClient {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const streamLine = new Subscription(streamLine_sub_clientMessage, "gatewayService-streamLine-sendToClient", {
+const streamLine = new Subscription(userNotification_notificationsWs, "gatewayService-streamLine-sendToClient", {
   handler: async (event) => {
     try {
       log.trace("streamLine: incoming message for WebSocket", { ...event, user_connected: connectedStreams.has(event.user_id) });
@@ -48,15 +50,15 @@ const streamLine = new Subscription(streamLine_sub_clientMessage, "gatewayServic
 });
 
 async function send(
-  event: SendMessageToClient,
+  event: GlobalDealFrameworkMessage,
   connection_session_id: string,
   userSessionConnections: StreamInOut<StreamLineDefaultInMessage, StreamLineDefaultOutMessage>,
 ) {
   await userSessionConnections.send({
     user_id: event.user_id,
     connection_session_id: connection_session_id,
-    service: event.service,
-    response_type: event.type ? event.type : "message",
+    service: "ws_core",
+    response_type: "message",
     topic: event.topic,
     message_id: event.message_id ? event.message_id : crypto.randomUUID(),
     message: {

@@ -1,9 +1,7 @@
 export interface GlobalDealFrameworkMessage {
-  userId: string;
-  connectionSessionId: string;
-  messageId: string;
-  message: {
-    topic: string;
-    content: unknown;
-  };
+  user_id: string;
+  connection_session_id: string;
+  message_id: string;
+  topic: string;
+  message: unknown;
 }
