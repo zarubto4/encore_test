@@ -5,29 +5,25 @@ import { authHandler } from "encore.dev/auth";
 // the auth handler is interested in. In this case it only
 // cares about requests that contain the `Authorization` header.
 interface AuthParams {
-  bToken: Header<"b_token">;
+  b_token: Header<"b_token">;
 }
 
 // The AuthData specifies the information about the authenticated user
 // that the auth handler makes available.
 interface AuthDataGroupon {
-  userID: string;
-  bToken: string;
-  my_session_mandatory_id: string;
+  userID: string; // Mandatory by Encore!
+  b_token: string;
 }
 
 // The auth handler itself.
 export const auth = authHandler<AuthParams, AuthDataGroupon>(async (params) => {
-  console.log("authHandler - params", params);
-
-  if (params.bToken != "test") {
-    throw APIError.unauthenticated("bad credentials. My description ");
+  if (params.b_token != "XXX" && params.b_token != "YYY") {
+    throw APIError.unauthenticated("bad credentials. My description");
   }
 
   return {
-    userID: "my-user-id",
-    bToken: params.bToken,
-    my_session_mandatory_id: "aaasss",
+    userID: "my-user-id", // Mandatory by Encore!
+    b_token: params.b_token,
   };
 });
 

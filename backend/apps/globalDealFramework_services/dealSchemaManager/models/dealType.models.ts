@@ -46,10 +46,18 @@ export interface DealTypeRemoveRequest {
 
 // Filter --------------------------------------------------------------------------------------------------------------
 export interface DealTypeFilterRequest {
-  id: string;
+  alias?: string;
 }
+
+export const DealTypeFilterRequestValidator = z.object({
+  alias: z.string().max(64, "Alias To long").min(1, "Alias To short").optional(),
+});
+
 export interface DealTypeFilterResponse {
-  userId: string;
+  list: {
+    name: string;
+    email: string;
+  }[];
 }
 // TODO
 

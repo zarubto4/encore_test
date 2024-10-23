@@ -8,7 +8,7 @@ export interface StreamLineDefaultHandshake {
   readonly b_token: string;
 }
 
-// After RBAC valid and convert bToken to user
+// After RBAC valid and convert b_token to user
 export interface StreamLineValidatedAndFilledHandshake {
   readonly user_id: string;
   readonly b_token: string;

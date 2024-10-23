@@ -35,9 +35,9 @@ export class ProjectBackend {
 
   // Set Website URL - Backend URL, and protocol. It's first Job
   private async setRestApiClient() {
-    this.client = new Client(this.backend_url, {
+    this.client = new Client(this.protocol + '://' + this.backend_url, {
       auth: {
-        bToken: await this.isAuthorized()
+        b_token: await this.isAuthorized()
       }
     });
   }

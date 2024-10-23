@@ -53,8 +53,9 @@ export type DealTemplateRemoveRequest = DealTemplateGetRequest;
 export interface DealTemplateFilterRequest {
   id: string;
 }
+
 export interface DealTemplateFilterResponse {
-  userId: string;
+  user_id: string;
 }
 
 // Validator for Rest Api - Create Template

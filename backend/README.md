@@ -1,5 +1,8 @@
 # <font color="#00a828">Backend</font>
 
+### Interesting libraries
+- https://www.resonatehq.io/
+
 ## <font color="#00a828">Project Documentation Overview</font>
 
 Jelikož je Backend a Server Less architektura složitější, máme kompletně řešenou dokumentaci jak funguje architektura v samostatné sekci.

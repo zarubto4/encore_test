@@ -51,6 +51,7 @@ export const dealTypeGet = api(
 export const dealTypeGetList = api(
   { expose: true, auth: true, method: "PUT", path: "/deal_schema_management/types" },
   async (params: DealTypeFilterRequest): Promise<DealTypeFilterResponse> => {
+    console.log("Test Test Test");
     const response = await dealTypeService.getDealTypeFilter(params);
     return response;
   },

@@ -23,16 +23,15 @@ export async function rbacRequiredUserSignature(permission: IRBACPermission, id:
 
   if (auth) {
     const result = await gatewayService_rbac.validPermission({
-      user_id: auth.userID,
-      b_token: auth.bToken,
+      b_token: auth.b_token,
       permission: injectIdIfAvailable(permission, id),
     });
 
     if (result.valid) {
-      console.trace("permissionKey", { permissionKey: permission, object_id: id, rbac_result: result });
+      log.trace("permissionKey", { permissionKey: permission, object_id: id, rbac_result: result });
       return true;
     } else {
-      console.error("permissionKey - is not valid or allowed", { permissionKey: permission, object_id: id, rbac_result: result });
+      log.error("permissionKey - is not valid or allowed", { permissionKey: permission, object_id: id, rbac_result: result });
       if (exception) {
         throw APIError.unauthenticated("RBAC Not valid permission key" + permission);
       } else {
@@ -40,7 +39,7 @@ export async function rbacRequiredUserSignature(permission: IRBACPermission, id:
       }
     }
   } else {
-    console.error("permissionKey - missing", { permissionKey: permission, object_id: id });
+    log.error("permissionKey - missing", { permissionKey: permission, object_id: id });
     if (exception) {
       throw APIError.unauthenticated("RBAC - not valid or missing permission");
     } else {

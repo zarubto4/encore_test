@@ -247,7 +247,7 @@ export class IssuesJira extends CommonJira {
           { projectKey: projectKey },
         ),
       }).then((result) => {
-        console.trace("getUnparentedJiraTicketsLogsByTempo: results", { result_length: result.length });
+        console.log("getUnparentedJiraTicketsLogsByTempo: results", { result_length: result.length });
 
         if (uniIssueIds.length > 0) {
           this.getUnparentedJiraTicketsLogsByTempo_partialQuery(projectKey, uniIssueIds).then((resul2) => {

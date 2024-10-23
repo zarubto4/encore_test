@@ -5,7 +5,6 @@ import { IRBACPermission } from "../../../../libs/core/rbac/models";
 /** Request ============================================================================================================*/
 
 export interface IRBACValidationRequest {
-  user_id: string;
   b_token: string;
   permission: IRBACPermission;
 }

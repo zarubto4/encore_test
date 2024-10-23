@@ -59,7 +59,6 @@ export const websocket = api.streamInOut<StreamLineDefaultHandshake, StreamLineD
           }
 
           case "ws_core": {
-            console.log("Posílám na notifikační kanál!");
             await userNotification_notificationsWs.publish(streamMessage);
             break;
           }

@@ -26,14 +26,14 @@ export class WebSocketClientBackand extends WebSocketClient {
     try {
       const b_token = await this.backend.isAuthorized();
       if (b_token) {
-        console.log('WebSocketClientBackand::connect:: isAuthorized with bToken:', b_token);
+        console.log('WebSocketClientBackand::connect:: isAuthorized with b_token:', b_token);
         this.url = this.optionalUrl
           ? this.optionalUrl
           : this.backend.wsProtocol + '://' + this.backend.backend_url + '/websocket?b_token=' + b_token;
         console.log('WebSocketClientBackand::connect:: try to connect final url: ', this.url);
         super.connect();
       } else {
-        console.log('WebSocketClientBackand::connect:: is not Authorized bToken ios missing');
+        console.log('WebSocketClientBackand::connect:: is not Authorized b_token ios missing');
         this.url = null;
         this.reconnectAfterTimeout();
       }
@@ -60,7 +60,7 @@ export class WebSocketClientBackand extends WebSocketClient {
   }
 
   protected override onClose(event): void {
-    console.log('WebSocketClientBackand:: onClose:: ', event);
+    console.log('WebSocketClientBackand::onClose:: ', event);
     if (this.pingInterval) {
       clearInterval(this.pingInterval);
     }
@@ -97,7 +97,7 @@ export class WebSocketClientBackand extends WebSocketClient {
       this.requestNotificationsSubscribe()
         .then((message: IWebSocketMessageFromServer) => {
           const msg = new WebSocketMessageFromServer(message);
-          console.error('WebSocketClientBackand::onWsCoreMessage:: requestNotificationsSubscribe: response:', message);
+          console.log('WebSocketClientBackand::onWsCoreMessage:: requestNotificationsSubscribe: response:', message);
           if (!msg.isSuccessful()) {
             console.error('WebSocketClientBackand::onWsCoreMessage:: - notification subscription failed');
           } else {

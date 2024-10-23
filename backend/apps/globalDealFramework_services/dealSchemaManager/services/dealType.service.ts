@@ -12,6 +12,7 @@ import {
   DealTypeCreateRequest,
   DealTypeCreateRequestValidator,
   DealTypeFilterRequest,
+  DealTypeFilterRequestValidator,
   DealTypeFilterResponse,
   DealTypeGetRequest,
   DealTypeGetRequestValidator,
@@ -64,10 +65,25 @@ export class DealTypeService {
    * @param params
    */
   public async getDealTypeFilter(params: DealTypeFilterRequest): Promise<DealTypeFilterResponse> {
-    //eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const validObject = DealTemplateFilterRequestValidator.parse(params);
+    console.log("Oprávnění splněno params", params);
+    const validObject = DealTypeFilterRequestValidator.parse(params);
     if (await rbacRequiredUserSignature(dealSchemaManager_rbac_type_Get, null, false)) {
-      // TODO
+      const entites = await dealSchemaManager_mongoCollection_DealSchema.find({});
+
+      // Print a message if no documents were found
+      if ((await dealSchemaManager_mongoCollection_DealSchema.countDocuments({})) === 0) {
+        console.log("No documents found!");
+      }
+      // Print returned documents
+      const list = [];
+      for await (const doc of entites) {
+        list.push(dealTypeConvertFromEntity(doc as DealTypeEntity));
+        console.log("entitieso", doc);
+      }
+
+      return {
+        list: list,
+      };
     } else {
       // TODO
     }
