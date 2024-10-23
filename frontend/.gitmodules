@@ -1,3 +1,0 @@
-[submodule ".meta/deployment/cloud/secrets"]
-	path = .meta/deployment/cloud/secrets
-	url = git@github.groupondev.com:merchant-experience/b2b-ui-secrets.git

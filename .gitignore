@@ -13,15 +13,15 @@
 /backend/src/**/*.js
 
 # Frontend ================================================
-/frontend/.idea
-/frontend/.nx/installation
-/frontend/.nx/cache
-/frontend/.nx/workspace-data
-/frontend/node_modules
-/frontend/dist
-/frontend/build
-/frontend/.next
-/frontend/out
-/frontend/apps/groupon_admin/.env.local
+/frontend_legacy/.idea
+/frontend_legacy/.nx/installation
+/frontend_legacy/.nx/cache
+/frontend_legacy/.nx/workspace-data
+/frontend_legacy/node_modules
+/frontend_legacy/dist
+/frontend_legacy/build
+/frontend_legacy/.next
+/frontend_legacy/out
+/frontend_legacy/apps/groupon_admin/.env.local
 .nx
 .next
