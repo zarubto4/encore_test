@@ -10,7 +10,7 @@ export const DealTypeDBEntitySchema = z.object({
 
 export type DealTypeEntity = z.infer<typeof DealTypeDBEntitySchema>;
 
-// DTO -------------------------------------------------------------------------------------------------------
+// DTO -----------------------------------------------------------------------------------------------------------------
 export const DealTypeDTOSchema = z.object({
   id: z.string(),
   name: DealTypeDBEntitySchema.shape.name,
@@ -19,6 +19,7 @@ export const DealTypeDTOSchema = z.object({
 
 export type DealTypeDTO = z.infer<typeof DealTypeDTOSchema>;
 
+// Convert -------------------------------------------------------------------------------------------------------------
 export function dealTypeConvertFromEntity(entity: DealTypeEntity): DealTypeDTO {
   const candidate: DealTypeDTO = {
     ...entity,

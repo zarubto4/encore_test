@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { IDealTemplateModel } from "./dealTemplate.orm";
 import { DealTypeDBEntitySchema } from "./dealType.orm";
 import { defaultGroupon_objectId } from "../../../../libs/core/parsing_and_formating/defaultValidators";
+import { IDealCustomFieldModel } from "./dealCustomField.orm";
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Create
@@ -9,19 +9,19 @@ import { defaultGroupon_objectId } from "../../../../libs/core/parsing_and_forma
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Template for Rest Api - Create Template
-export interface DealTemplateCreateRequest {
+export interface DealCustomFieldCreateRequest {
   name: string;
   email: string;
 }
 
 // Validator for Rest Api - Create Template
-export const DealTemplateCreateRequestValidator = z.object({
+export const DealCustomFieldCreateRequestValidator = z.object({
   name: DealTypeDBEntitySchema.shape.name,
   email: DealTypeDBEntitySchema.shape.email,
 });
 
 // Type for Typescript usage
-export type DealTemplateCreateRequestValidator = z.infer<typeof DealTemplateCreateRequestValidator>;
+export type DealCustomFieldCreateRequestValidator = z.infer<typeof DealCustomFieldCreateRequestValidator>;
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Update
@@ -29,21 +29,21 @@ export type DealTemplateCreateRequestValidator = z.infer<typeof DealTemplateCrea
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Template for Rest Api - Update Template
-export interface DealTemplateUpdateRequest {
+export interface DealCustomFieldUpdateRequest {
   id: string;
   name: string;
   email: string;
 }
 
 // Validator for Rest Api - Update Template
-export const DealTemplateUpdateRequestValidator = z.object({
+export const DealCustomFieldUpdateRequestValidator = z.object({
   id: DealTypeDBEntitySchema.shape._id,
   name: DealTypeDBEntitySchema.shape.name,
   email: DealTypeDBEntitySchema.shape.email,
 });
 
 // Type for Typescript usage
-export type DealTemplateUpdateRequestValidator = z.infer<typeof DealTemplateUpdateRequestValidator>;
+export type DealCustomFieldUpdateRequestValidator = z.infer<typeof DealCustomFieldUpdateRequestValidator>;
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Get
@@ -51,17 +51,17 @@ export type DealTemplateUpdateRequestValidator = z.infer<typeof DealTemplateUpda
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Template for Rest Api - Get Template
-export interface DealTemplateGetRequest {
+export interface DealCustomFieldGetRequest {
   id: string;
 }
 
 // Validator for Rest Api - Get Template
-export const DealTemplateGetRequestValidator = z.object({
+export const DealCustomFieldGetRequestValidator = z.object({
   id: defaultGroupon_objectId,
 });
 
 // Type for Typescript usage
-export type DealTemplateGetRequestValidator = z.infer<typeof DealTemplateGetRequestValidator>;
+export type DealCustomFieldGetRequestValidator = z.infer<typeof DealCustomFieldGetRequestValidator>;
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Remove
@@ -69,17 +69,17 @@ export type DealTemplateGetRequestValidator = z.infer<typeof DealTemplateGetRequ
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Template for Rest Api - Remove Template
-export interface DealTemplateRemoveRequest {
+export interface DealCustomFieldRemoveRequest {
   id: string;
 }
 
 // Validator for Rest Api - Remove Template
-export const DealTemplateRemoveRequestValidator = z.object({
+export const DealCustomFieldRemoveRequestValidator = z.object({
   id: defaultGroupon_objectId,
 });
 
 // Type for Typescript usage
-export type DealTemplateRemoveRequestValidator = z.infer<typeof DealTemplateRemoveRequestValidator>;
+export type DealCustomFieldRemoveRequestValidator = z.infer<typeof DealCustomFieldRemoveRequestValidator>;
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Filter
@@ -87,17 +87,17 @@ export type DealTemplateRemoveRequestValidator = z.infer<typeof DealTemplateRemo
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Template for Rest Api - Get List of Templates
-export interface DealTemplateFilterRequest {
+export interface DealCustomFieldFilterRequest {
   alias: string;
 }
 
 // Validator for Rest Api - Get List of Template
-export const DealTemplateFilterRequestValidator = z.object({
+export const DealCustomFieldFilterRequestValidator = z.object({
   alias: z.string(),
 });
 
 // Type for Typescript usage
-export type DealTemplateFilterRequestValidator = z.infer<typeof DealTemplateFilterRequestValidator>;
+export type DealCustomFieldFilterRequestValidator = z.infer<typeof DealCustomFieldFilterRequestValidator>;
 
 /** -------------------------------------------------------------------------------------------------------------------
  * Return public Models
@@ -105,7 +105,7 @@ export type DealTemplateFilterRequestValidator = z.infer<typeof DealTemplateFilt
  * -------------------------------------------------------------------------------------------------------------------*/
 
 // Return a public model from DB
-export interface DealTemplateResponse {
+export interface DealCustomFieldResponse {
   id: string;
   name: string;
   email: string;
@@ -114,18 +114,18 @@ export interface DealTemplateResponse {
 }
 
 // Return a public models in list from DB
-export interface DealTemplateFilterResponse {
-  list: DealTemplateResponse[];
+export interface DealCustomFieldFilterResponse {
+  list: DealCustomFieldResponse[];
 }
 
 // Model for Rest Api - Return Template (Public fields)
-export class DealTemplateResponseClass implements DealTemplateResponse {
+export class DealCustomFieldResponseClass implements DealCustomFieldResponse {
   id: string;
   name: string;
   email: string;
   created_at: string;
   updated_at: string;
-  constructor(dtoSchema: IDealTemplateModel) {
+  constructor(dtoSchema: IDealCustomFieldModel) {
     this.name = dtoSchema.name;
     this.email = dtoSchema.email;
     this.created_at = dtoSchema.created_at.toISOString();

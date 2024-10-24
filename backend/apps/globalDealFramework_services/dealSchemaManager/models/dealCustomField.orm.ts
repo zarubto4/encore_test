@@ -9,26 +9,26 @@ import {
 } from "../../../../libs/core/databases/mongo/mongo_orm.models";
 
 // Model Content as Interface  -----------------------------------------------------------------------------------------
-export interface IDealTemplate extends MongoOrmBaseFields {
+export interface IDealCustomField extends MongoOrmBaseFields {
   name: string;
   email: string;
 }
 
 // Model Methods as Interface ------------------------------------------------------------------------------------------
-export interface IDealTemplateMethods extends MongoOrmBaseMethods {
+export interface IDealCustomFieldMethods extends MongoOrmBaseMethods {
   fullName(): string;
 }
 
 // Model Static methods ------------------------------------------------------------------------------------------------
-interface IDealTemplateORMModel extends Model<IDealTemplate, unknown, IDealTemplateMethods> {
-  remove(name: ObjectId): Promise<HydratedDocument<IDealTemplate, IDealTemplateMethods>>;
+interface IDealCustomFieldORMModel extends Model<IDealCustomField, unknown, IDealCustomFieldMethods> {
+  remove(name: ObjectId): Promise<HydratedDocument<IDealCustomField, IDealCustomFieldMethods>>;
 }
 
 // Model ---------------------------------------------------------------------------------------------------------------
-export type IDealTemplateModel = IDealTemplate & IDealTemplateMethods;
+export type IDealCustomFieldModel = IDealCustomField & IDealCustomFieldMethods;
 
 // Schema In Database  -------------------------------------------------------------------------------------------------
-const schema = new Schema<IDealTemplate, IDealTemplateORMModel, IDealTemplateMethods>(
+const schema = new Schema<IDealCustomField, IDealCustomFieldORMModel, IDealCustomFieldMethods>(
   {
     ...MongoOrmBaseSchema,
     name: String,
@@ -53,7 +53,7 @@ schema.static("remove", function remove(id: ObjectId) {
 });
 
 // ORM Model -----------------------------------------------------------------------------------------------------------
-export const DealTemplate: IDealTemplateORMModel = dealSchemaManager_ormDatabase.db.model<IDealTemplate, IDealTemplateORMModel>(
-  "DealTemplate",
+export const DealCustomField: IDealCustomFieldORMModel = dealSchemaManager_ormDatabase.db.model<IDealCustomField, IDealCustomFieldORMModel>(
+  "DealCustomField",
   schema,
 );

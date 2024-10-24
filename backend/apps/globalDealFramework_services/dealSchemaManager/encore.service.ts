@@ -54,6 +54,10 @@ export const dealSchemaManager_ormDatabase = await new MongoOrmService(
 
 // ==== SERVICE PERMISSIONS ============================================================================================
 const rbac_Scope = "DMG";
+export const dealSchemaManager_rbac_custom_field_Create = new RBACPermissions(rbac_Scope, "GLOBAL", "CREATE_CUSTOM_FIELD");
+export const dealSchemaManager_rbac_custom_field_Update = new RBACPermissions(rbac_Scope, "GLOBAL", "UPDATE_CUSTOM_FIELD");
+export const dealSchemaManager_rbac_custom_field_Remove = new RBACPermissions(rbac_Scope, "GLOBAL", "REMOVE_CUSTOM_FIELD");
+export const dealSchemaManager_rbac_custom_field_Get = new RBACPermissions(rbac_Scope, "GLOBAL", "GET_CUSTOM_FIELD");
 export const dealSchemaManager_rbac_type_Create = new RBACPermissions(rbac_Scope, "GLOBAL", "CREATE_TYPE");
 export const dealSchemaManager_rbac_type_Update = new RBACPermissions(rbac_Scope, "GLOBAL", "UPDATE_TYPE");
 export const dealSchemaManager_rbac_type_Remove = new RBACPermissions(rbac_Scope, "GLOBAL", "REMOVE_TYPE");
