@@ -54,10 +54,7 @@ export const DealTypeFilterRequestValidator = z.object({
 });
 
 export interface DealTypeFilterResponse {
-  list: {
-    name: string;
-    email: string;
-  }[];
+  list: DealTypeResponse[];
 }
 // TODO
 

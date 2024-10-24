@@ -22,7 +22,6 @@ import {
   DealTypeUpdateRequest,
   DealTypeUpdateRequestValidator,
 } from "../models/dealType.models";
-import { DealTemplateFilterRequestValidator } from "../models/dealTemplate.models";
 import { rbacRequiredUserSignature } from "../utils/utils";
 
 export class DealTypeService {
@@ -67,28 +66,18 @@ export class DealTypeService {
   public async getDealTypeFilter(params: DealTypeFilterRequest): Promise<DealTypeFilterResponse> {
     console.log("Oprávnění splněno params", params);
     const validObject = DealTypeFilterRequestValidator.parse(params);
+    console.log("Test", validObject);
     if (await rbacRequiredUserSignature(dealSchemaManager_rbac_type_Get, null, false)) {
-      const entites = await dealSchemaManager_mongoCollection_DealSchema.find({});
-
-      // Print a message if no documents were found
-      if ((await dealSchemaManager_mongoCollection_DealSchema.countDocuments({})) === 0) {
-        console.log("No documents found!");
-      }
-      // Print returned documents
-      const list = [];
-      for await (const doc of entites) {
-        list.push(dealTypeConvertFromEntity(doc as DealTypeEntity));
-        console.log("entitieso", doc);
-      }
-
       return {
-        list: list,
+        list: (await dealSchemaManager_mongoCollection_DealSchema.find({}).toArray()).map(
+          (e) => new DealTypeResponseClass(dealTypeConvertFromEntity(e as DealTypeEntity)),
+        ),
       };
     } else {
-      // TODO
+      return {
+        list: [],
+      };
     }
-    // @ts-expect-error @ts-ignore
-    return null;
   }
 
   /**

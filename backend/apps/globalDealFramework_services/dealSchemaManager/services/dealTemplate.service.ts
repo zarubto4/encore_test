@@ -67,12 +67,15 @@ export class DealTemplateService {
     //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const validObject = DealTemplateFilterRequestValidator.parse(request);
     if (await rbacRequiredUserSignature(dealSchemaManager_rbac_template_Get, null)) {
-      // TODO
+      const findQuery = {};
+      return {
+        list: (await DealTemplate.find(findQuery)).map((e) => new DealTemplateResponseClass(e)),
+      };
     } else {
-      // TODO
+      return {
+        list: [],
+      };
     }
-    // @ts-expect-error @ts-ignore
-    return null;
   }
 
   /**

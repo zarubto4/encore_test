@@ -55,7 +55,7 @@ export interface DealTemplateFilterRequest {
 }
 
 export interface DealTemplateFilterResponse {
-  user_id: string;
+  list: DealTemplateResponse[];
 }
 
 // Validator for Rest Api - Create Template
